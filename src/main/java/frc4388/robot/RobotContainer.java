@@ -16,7 +16,9 @@ import frc4388.robot.Constants.*;
 import frc4388.robot.commands.Swerve.JoystickPlayback;
 import frc4388.robot.commands.Swerve.JoystickRecorder;
 import frc4388.robot.subsystems.LED;
+import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.LEDPatterns;
+import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
 
@@ -34,9 +36,16 @@ public class RobotContainer {
     /* Subsystems */
     private final LED m_robotLED = new LED(m_robotMap.LEDController);
 
+    public final SwerveDrive m_robotSwerveDrive = new SwerveDrive(m_robotMap.leftFront,
+                                                                  m_robotMap.rightFront,
+                                                                  m_robotMap.leftBack,
+                                                                  m_robotMap.rightBack,
+                                                                  m_robotMap.gyro);
+    
+
     /* Controllers */
-    private final XboxController m_driverXbox = new XboxController(OIConstants.XBOX_DRIVER_ID);
-    private final XboxController m_operatorXbox = new XboxController(OIConstants.XBOX_OPERATOR_ID);
+    private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
+    private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -74,9 +83,9 @@ public class RobotContainer {
 
         /* Operator Buttons */
         // activates "Lit Mode"
-        new JoystickButton(getOperatorJoystick(), XboxController.A_BUTTON)
-                .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
-                .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+        //         .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
+        //         .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
     }
 
     /**
@@ -92,28 +101,11 @@ public class RobotContainer {
     /**
      * Add your docs here.
      */
-    public IHandController getDriverController() {
-        return m_driverXbox;
+    public DeadbandedXboxController getDeadbandedDriverController() {
+        return this.m_driverXbox;
     }
 
-    /**
-     * Add your docs here.
-     */
-    public IHandController getOperatorController() {
-        return m_operatorXbox;
-    }
-
-    /**
-     * Add your docs here.
-     */
-    public Joystick getOperatorJoystick() {
-        return m_operatorXbox.getJoyStick();
-    }
-
-    /**
-     * Add your docs here.
-     */
-    public Joystick getDriverJoystick() {
-        return m_driverXbox.getJoyStick();
+    public DeadbandedXboxController getDeadbandedOperatorController() {
+        return this.m_operatorXbox;
     }
 }
