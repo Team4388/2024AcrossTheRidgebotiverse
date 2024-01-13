@@ -55,6 +55,11 @@ public class RobotContainer {
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
+        m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
+            m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(),
+                                              getDeadbandedDriverController().getRight(),
+                                true);
+        }));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
     }
@@ -67,25 +72,11 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        // test command to spin the robot while pressing A on the driver controller
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-        //     .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-        //                                     () -> getDeadbandedDriverController().getLeftX(),
-        //                                     () -> getDeadbandedDriverController().getLeftY(),
-        //                                     () -> getDeadbandedDriverController().getRightX(),
-        //                                     () -> getDeadbandedDriverController().getRightY(),
-        //                                     "Blue1Path.txt"))
-        //     .onFalse(new InstantCommand());
-
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Blue1Path.txt"))
-        //     .onFalse(new InstantCommand()); 
+        
 
         /* Operator Buttons */
         // activates "Lit Mode"
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-        //         .whenPressed(() -> m_robotLED.setPattern(LEDPatterns.LAVA_RAINBOW))
-        //         .whenReleased(() -> m_robotLED.setPattern(LEDConstants.DEFAULT_PATTERN));
+        
     }
 
     /**
