@@ -86,11 +86,12 @@ public class RobotGyro implements Gyro {
      */
     @Override
     public void calibrate() {
-        if (m_isGyroAPigeon) {
-            m_pigeon.calibrate();
-        } else {
-            m_navX.calibrate();
-        }
+        return;
+        // if (m_isGyroAPigeon) {
+        //     m_pigeon.calibrate();
+        // } else {
+        //     m_navX.calibrate();
+        // }
     }
 
     @Override
