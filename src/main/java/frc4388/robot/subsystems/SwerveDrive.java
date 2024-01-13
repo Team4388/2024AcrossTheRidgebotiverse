@@ -9,10 +9,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.RobotGyro;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class  SwerveDrive extends SubsystemBase {
   
@@ -67,10 +67,11 @@ public class  SwerveDrive extends SubsystemBase {
         }
 
         SmartDashboard.putBoolean("drift correction", true);
+        
         rot = ((rotTarget - gyro.getAngle()) / 360) * SwerveDriveConstants.ROT_CORRECTION_SPEED;
 
       }
-
+      
       // Use the left joystick to set speed. Apply a cubic curve and the set max speed.
       Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
       // Translation2d cubedSpeed = new Translation2d(Math.pow(speed.getX(), 3.00), Math.pow(speed.getY(), 3.00));

@@ -59,7 +59,8 @@ public class RobotContainer {
             m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(),
                                               getDeadbandedDriverController().getRight(),
                                 true);
-        }));
+        }, m_robotSwerveDrive)
+        .withName("SwerveDrive DefaultCommand"));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
     }
@@ -72,7 +73,8 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        
+        new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
 
         /* Operator Buttons */
         // activates "Lit Mode"

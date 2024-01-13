@@ -36,13 +36,13 @@ public final class Constants {
         public static final double TURBO_SPEED = 4.0;
     
         public static final class IDs {
-          public static final int LEFT_FRONT_WHEEL_ID = 4;
-          public static final int LEFT_FRONT_STEER_ID = 5;
-          public static final int LEFT_FRONT_ENCODER_ID = 11;
-    
           public static final int RIGHT_FRONT_WHEEL_ID = 2;
           public static final int RIGHT_FRONT_STEER_ID = 3;
           public static final int RIGHT_FRONT_ENCODER_ID = 10;
+          
+          public static final int LEFT_FRONT_WHEEL_ID = 4;
+          public static final int LEFT_FRONT_STEER_ID = 5;
+          public static final int LEFT_FRONT_ENCODER_ID = 11;
     
           public static final int LEFT_BACK_WHEEL_ID = 6;
           public static final int LEFT_BACK_STEER_ID = 7;
@@ -56,7 +56,7 @@ public final class Constants {
         public static final class PIDConstants {
           public static final int SWERVE_SLOT_IDX = 0;
           public static final int SWERVE_PID_LOOP_IDX = 1;
-          public static final Gains SWERVE_GAINS = new Gains(0.5, 0.0, 0.0, 0.0, 0, 1.0);
+          public static final Gains SWERVE_GAINS = new Gains(0.05, 0.0, 0.0, 0.0, 0, 1.0);
         }
     
         public static final class AutoConstants {

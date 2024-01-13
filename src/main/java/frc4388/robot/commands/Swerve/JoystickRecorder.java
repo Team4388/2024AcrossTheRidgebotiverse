@@ -11,11 +11,11 @@ import java.util.ArrayList;
 import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.UtilityStructs.TimedOutput;
 
-public class JoystickRecorder extends CommandBase {
+public class JoystickRecorder extends Command {
   public  final SwerveDrive            swerve;
 
   public  final Supplier<Double>       leftX;
