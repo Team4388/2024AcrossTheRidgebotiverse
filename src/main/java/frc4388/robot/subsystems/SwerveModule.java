@@ -7,9 +7,13 @@ package frc4388.robot.subsystems;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
+//import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+//import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix6.hardware.TalonFX;
+//import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -20,40 +24,45 @@ import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.Gains;
 
 public class SwerveModule extends SubsystemBase {
-    private WPI_TalonFX driveMotor;
-    private WPI_TalonFX angleMotor;
-    private CANCoder encoder;
+    private TalonFX driveMotor;
+    private TalonFX angleMotor;
+    private CANcoder encoder;
 
     public static Gains swerveGains = SwerveDriveConstants.PIDConstants.SWERVE_GAINS;
   
     /** Creates a new SwerveModule. */
-    public SwerveModule(WPI_TalonFX driveMotor, WPI_TalonFX angleMotor, CANCoder encoder, double offset) {
+    public SwerveModule(TalonFX driveMotor, TalonFX angleMotor, CANcoder encoder, double offset) {
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.encoder = encoder;
 
         TalonFXConfiguration angleConfig = new TalonFXConfiguration();
-        angleConfig.slot0.kP = swerveGains.kP;
-        angleConfig.slot0.kI = swerveGains.kI;
-        angleConfig.slot0.kD = swerveGains.kD;
+        angleConfig.Slot0.kP = swerveGains.kP;
+        angleConfig.Slot0.kI = swerveGains.kI;
+        angleConfig.Slot0.kD = swerveGains.kD;
 
         // use the CANcoder as the remote sensor for the primary TalonFX PID
-        angleConfig.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
-        angleConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
-        angleConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
-        angleMotor.configAllSettings(angleConfig);
+        angleConfig.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID(); // ! difficulties porting pheonix 5 to 6
+        angleConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANcoder; // ! difficulties porting pheonix 5 to 6
+        angleConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0; // ! difficulties porting pheonix 5 to 6
+        angleMotor.getConfigurator().apply(angleConfig);
 
-        encoder.configMagnetOffset(offset);
+        MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
+        magnetSensorConfigs.MagnetOffset = offset;
+        encoder.getConfigurator().apply(magnetSensorConfigs);
         
-        driveMotor.setSelectedSensorPosition(0);
-        driveMotor.config_kP(0, 0.2);
+        driveMotor.setSelectedSensorPosition(0); // ! difficulties porting pheonix 5 to 6
+        
+        TalonFXConfiguration driveConfig = new TalonFXConfiguration();
+        driveConfig.Slot0.kP = 0;
+        driveMotor.getConfigurator().apply(driveConfig, 0.2);
     }
 
     /**
      * Get the drive motor of the SwerveModule
      * @return the drive motor of the SwerveModule
      */
-    public WPI_TalonFX getDriveMotor() {
+    public TalonFX getDriveMotor() {
         return this.driveMotor;
     }
 
@@ -61,7 +70,7 @@ public class SwerveModule extends SubsystemBase {
      * Get the angle motor of the SwerveModule
      * @return the angle motor of the SwerveModule
      */
-    public WPI_TalonFX getAngleMotor() {
+    public TalonFX getAngleMotor() {
         return this.angleMotor;
     }
 
@@ -69,7 +78,7 @@ public class SwerveModule extends SubsystemBase {
      * Get the CANcoder of the SwerveModule
      * @return the CANcoder of the SwerveModule
      */
-    public CANCoder getEncoder() {
+    public CANcoder getEncoder() {
         return this.encoder;
     }
 
@@ -78,8 +87,8 @@ public class SwerveModule extends SubsystemBase {
      * @return the angle of a SwerveModule as a Rotation2d
      */
     public Rotation2d getAngle() {
-        // * Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees.
-        return Rotation2d.fromDegrees(encoder.getAbsolutePosition());
+        // * Note: This assumes that the CANcoders are setup with the default feedback coefficient and the sensor value reports degrees.
+        return Rotation2d.fromDegrees(encoder.getAbsolutePosition().getValue());
     }
     
     public double getAngularVel() {
@@ -137,7 +146,7 @@ public class SwerveModule extends SubsystemBase {
         // calculate the new absolute position of the SwerveModule based on the difference in rotation
         double deltaTicks = (rotationDelta.getDegrees() / 360.) * SwerveDriveConstants.Conversions.CANCODER_TICKS_PER_ROTATION;
 
-        // convert the CANCoder from its position reading to ticks
+        // convert the CANcoder from its position reading to ticks
         double currentTicks = encoder.getPosition() / encoder.configGetFeedbackCoefficient();
 
         angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
