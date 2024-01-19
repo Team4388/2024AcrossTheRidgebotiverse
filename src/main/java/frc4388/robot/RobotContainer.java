@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -76,6 +77,18 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
 
+        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+            .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+                                            () -> getDeadbandedDriverController().getLeftX(),
+                                            () -> getDeadbandedDriverController().getLeftY(),
+                                            () -> getDeadbandedDriverController().getRightX(),
+                                            () -> getDeadbandedDriverController().getRightY(),
+                                            "Taxi.txt"))
+            .onFalse(new InstantCommand());
+
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
+            .onFalse(new InstantCommand()); 
         /* Operator Buttons */
         // activates "Lit Mode"
         
