@@ -8,19 +8,17 @@
 package frc4388.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import frc4388.robot.Constants.*;
+import frc4388.robot.Constants.OIConstants;
+import frc4388.robot.commands.Autos.PlaybackChooser;
 import frc4388.robot.commands.Swerve.JoystickPlayback;
 import frc4388.robot.commands.Swerve.JoystickRecorder;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.SwerveDrive;
-import frc4388.utility.LEDPatterns;
 import frc4388.utility.controller.DeadbandedXboxController;
-import frc4388.utility.controller.IHandController;
 import frc4388.utility.controller.XboxController;
 
 /**
@@ -48,6 +46,10 @@ public class RobotContainer {
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
 
+    private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
+
+    private PlaybackChooser playbackChooser;
+
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
@@ -64,6 +66,10 @@ public class RobotContainer {
         .withName("SwerveDrive DefaultCommand"));
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
+
+        playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
+            .addOption("Taxi Auto", new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
+            .buildDisplay();
     }
 
     /**
@@ -76,21 +82,31 @@ public class RobotContainer {
         /* Driver Buttons */
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
+        
+        /* Auto Recording */
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+        //     .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+        //                                     () -> getDeadbandedDriverController().getLeftX(),
+        //                                     () -> getDeadbandedDriverController().getLeftY(),
+        //                                     () -> getDeadbandedDriverController().getRightX(),
+        //                                     () -> getDeadbandedDriverController().getRightY(),
+        //                                     "Taxi.txt"))
+        //     .onFalse(new InstantCommand());
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-            .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-                                            () -> getDeadbandedDriverController().getLeftX(),
-                                            () -> getDeadbandedDriverController().getLeftY(),
-                                            () -> getDeadbandedDriverController().getRightX(),
-                                            () -> getDeadbandedDriverController().getRightY(),
-                                            "Taxi.txt"))
-            .onFalse(new InstantCommand());
-
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
-            .onFalse(new InstantCommand()); 
-        /* Operator Buttons */
-        // activates "Lit Mode"
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
+        //     .onFalse(new InstantCommand()); 
+        
+        /* Speed */
+        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.setToTurbo()))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
+        
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
+        
+            /* Operator Buttons */
+        // activates "Lit Mode"s
         
     }
 
@@ -101,7 +117,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // no auto
-        return new InstantCommand();
+        return playbackChooser.getCommand();
     }
 
     /**
