@@ -61,47 +61,47 @@ public final class Constants {
         }
     
         public static final class PIDConstants {
-          public static final int SWERVE_SLOT_IDX = 0;
-          public static final int SWERVE_PID_LOOP_IDX = 1;
-          public static final Gains SWERVE_GAINS = new Gains(1.2, 0.0, 0, 0.0, 0, 1.0);
+            public static final int SWERVE_SLOT_IDX = 0;
+            public static final int SWERVE_PID_LOOP_IDX = 1;
+            public static final Gains SWERVE_GAINS = new Gains(1.2, 0.0, 0, 0.0, 0, 1.0);
         }
     
         public static final class AutoConstants {
-          public static final Gains X_CONTROLLER = new Gains(0.8, 0.0, 0.0);
-          public static final Gains Y_CONTROLLER = new Gains(0.8, 0.0, 0.0);
-          public static final Gains THETA_CONTROLLER = new Gains(-0.8, 0.0, 0.0);
-          public static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = new TrapezoidProfile.Constraints(Math.PI/2, Math.PI/2); // TODO: tune
-    
-          public static final double PATH_MAX_VEL = 0.3; // TODO: find the actual value
-          public static final double PATH_MAX_ACC = 0.3; // TODO: find the actual value
+            public static final Gains X_CONTROLLER = new Gains(0.8, 0.0, 0.0);
+            public static final Gains Y_CONTROLLER = new Gains(0.8, 0.0, 0.0);
+            public static final Gains THETA_CONTROLLER = new Gains(-0.8, 0.0, 0.0);
+            public static final TrapezoidProfile.Constraints THETA_CONSTRAINTS = new TrapezoidProfile.Constraints(Math.PI/2, Math.PI/2); // TODO: tune
+            
+            public static final double PATH_MAX_VEL = 0.3; // TODO: find the actual value
+            public static final double PATH_MAX_ACC = 0.3; // TODO: find the actual value
         }
     
         public static final class Conversions {
-          public static final int CANCODER_TICKS_PER_ROTATION = 4096;
-    
-          public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 4.8;
-          public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 0.8;
-    
-          public static final double MOTOR_REV_PER_WHEEL_REV = 5.12;
-          public static final double MOTOR_REV_PER_STEER_REV = 12.8;
-    
-          public static final double TICKS_PER_MOTOR_REV = 2048;
-          public static final double WHEEL_DIAMETER_INCHES = 3.9;
-          public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
-    
-          public static final double WHEEL_REV_PER_MOTOR_REV = 1 / MOTOR_REV_PER_WHEEL_REV;
-          public static final double TICKS_PER_WHEEL_REV = TICKS_PER_MOTOR_REV * MOTOR_REV_PER_WHEEL_REV;
-          public static final double TICKS_PER_INCH = TICKS_PER_WHEEL_REV / INCHES_PER_WHEEL_REV;
-          public static final double INCHES_PER_TICK = 1 / TICKS_PER_INCH;
-    
-          public static final double TICK_TIME_TO_SECONDS = 10;
-          public static final double SECONDS_TO_TICK_TIME = 1 / TICK_TIME_TO_SECONDS;
+            public static final int CANCODER_TICKS_PER_ROTATION = 4096;
+        
+            public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 4.8;
+            public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 0.8;
+        
+            public static final double MOTOR_REV_PER_WHEEL_REV = 5.12;
+            public static final double MOTOR_REV_PER_STEER_REV = 12.8;
+        
+            public static final double TICKS_PER_MOTOR_REV = 2048;
+            public static final double WHEEL_DIAMETER_INCHES = 3.9;
+            public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
+        
+            public static final double WHEEL_REV_PER_MOTOR_REV = 1 / MOTOR_REV_PER_WHEEL_REV;
+            public static final double TICKS_PER_WHEEL_REV = TICKS_PER_MOTOR_REV * MOTOR_REV_PER_WHEEL_REV;
+            public static final double TICKS_PER_INCH = TICKS_PER_WHEEL_REV / INCHES_PER_WHEEL_REV;
+            public static final double INCHES_PER_TICK = 1 / TICKS_PER_INCH;
+        
+            public static final double TICK_TIME_TO_SECONDS = 10;
+            public static final double SECONDS_TO_TICK_TIME = 1 / TICK_TIME_TO_SECONDS;
         }
     
         public static final class Configurations {
-          public static final double OPEN_LOOP_RAMP_RATE = 0.2; // TODO: find the actual value
-          public static final double CLOSED_LOOP_RAMP_RATE = 0.2; // TODO: find the actual value
-          public static final double NEUTRAL_DEADBAND = 0.04; // TODO: find the actual value
+            public static final double OPEN_LOOP_RAMP_RATE = 0.2; // TODO: find the actual value
+            public static final double CLOSED_LOOP_RAMP_RATE = 0.2; // TODO: find the actual value
+            public static final double NEUTRAL_DEADBAND = 0.04; // TODO: find the actual value
         }
     
         public static final double MAX_SPEED_FEET_PER_SECOND = 5; // TODO: find the actual value
@@ -118,7 +118,7 @@ public final class Constants {
         public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
       }
     
-      public static final class VisionConstants {
+    public static final class VisionConstants {
         public static final String NAME = "photonCamera";
     
         public static final int LIME_HIXELS = 640;
@@ -138,7 +138,7 @@ public final class Constants {
     
         public static final double APRIL_HEIGHT = -1.0; // TODO: find actual value
     
-      }
+    }
     
     public static final class DriveConstants {
         public static final int DRIVE_PIGEON_ID = 14;
@@ -150,6 +150,17 @@ public final class Constants {
         public static final int LED_SPARK_ID = 0;
 
         public static final LEDPatterns DEFAULT_PATTERN = LEDPatterns.FOREST_WAVES;
+    }
+
+    public static final class ShooterConstants {
+        public static final int LEFT_SHOOTER_ID = 15; //TODO:
+        public static final int RIGHT_SHOOTER_ID = 16; //TODO:
+        public static final double SHOOTER_SPEED = 1.d; //TODO:
+    }
+
+    public static final class IntakeConstants {
+        public static final int INTAKE_MOTOR_ID = 17; //TODO:
+        public static final double INTAKE_SPEED = 0.2; //TODO:
     }
 
     public static final class OIConstants {

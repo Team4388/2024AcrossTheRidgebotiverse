@@ -11,10 +11,14 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
+import frc4388.robot.Constants.ShooterConstants;
+import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.subsystems.SwerveModule;
 import frc4388.utility.RobotGyro;
 
@@ -57,6 +61,13 @@ public class RobotMap {
     public final WPI_TalonFX rightBackWheel = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_BACK_WHEEL_ID);
     public final WPI_TalonFX rightBackSteer = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_BACK_STEER_ID);
     public final CANCoder rightBackEncoder = new CANCoder(SwerveDriveConstants.IDs.RIGHT_BACK_ENCODER_ID);
+
+    /* Shooter Subsystem */
+    public final WPI_TalonFX leftShooter = new WPI_TalonFX(ShooterConstants.LEFT_SHOOTER_ID);
+    public final WPI_TalonFX rightShooter = new WPI_TalonFX(ShooterConstants.RIGHT_SHOOTER_ID);
+
+    /* Intake Subsystem */
+    public final CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushed); //TODO: MOTOR TYPE
 
     void configureLEDMotorControllers() {    
     }
