@@ -43,9 +43,9 @@ public class RobotContainer {
                                                                   m_robotMap.rightBack,
                                                                   m_robotMap.gyro);
     
-    private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter);
+    // private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter);
     
-    private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor);
+    //private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor);
 
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
@@ -110,11 +110,11 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
         
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
+        //     .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter));
         
         /* Operator Buttons */
-        new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
-            .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter));
         
         
     }
