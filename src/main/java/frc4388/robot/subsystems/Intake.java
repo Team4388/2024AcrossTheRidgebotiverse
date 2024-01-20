@@ -10,6 +10,7 @@ import com.revrobotics.SparkLimitSwitch;
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
@@ -20,7 +21,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void spinIntakeMotor() {
-    intakeMotor.set(0.2);
+    intakeMotor.set(IntakeConstants.INTAKE_SPEED);
   }
 
   @Override
