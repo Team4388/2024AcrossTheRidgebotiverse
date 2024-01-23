@@ -8,20 +8,22 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.ShooterConstants;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 
 public class Shooter extends SubsystemBase {
-  private WPI_TalonFX leftShooter;
-  private WPI_TalonFX rightShooter;
+  private TalonFX leftShooter;
+  private TalonFX rightShooter;
 
   /** Creates a new Shooter. */
-  public Shooter(WPI_TalonFX leftTalonFX, WPI_TalonFX rightTalonFX) {
+  public Shooter(TalonFX leftTalonFX, TalonFX rightTalonFX) {
     leftShooter  = leftTalonFX;
     rightShooter = rightTalonFX;
 
-    leftShooter.setNeutralMode(NeutralMode.Coast);
-    rightShooter.setNeutralMode(NeutralMode.Coast);
+    leftShooter.setNeutralMode(NeutralModeValue.Coast);
+    rightShooter.setNeutralMode(NeutralModeValue.Coast);
   }
 
   public void spin() {
