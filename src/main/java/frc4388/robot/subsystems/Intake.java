@@ -14,9 +14,9 @@ import frc4388.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  private Spark intakeMotor;
-  private Spark pivot;
-  public Intake(Spark intakeMotor, Spark pivot) {
+  private CANSparkMax intakeMotor;
+  private CANSparkMax pivot;
+  public Intake(CANSparkMax intakeMotor, CANSparkMax pivot) {
     this.intakeMotor = intakeMotor;
     this.pivot = pivot;
   }
