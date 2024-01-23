@@ -14,14 +14,28 @@ import frc4388.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
-  private CANSparkMax intakeMotor;
-  public Intake(CANSparkMax intakeMotor) {
+  private Spark intakeMotor;
+  private Spark pivot;
+  public Intake(Spark intakeMotor, Spark pivot) {
     this.intakeMotor = intakeMotor;
-    
+    this.pivot = pivot;
   }
 
   public void spinIntakeMotor() {
     intakeMotor.set(IntakeConstants.INTAKE_SPEED);
+  }
+
+  public void rotateArmIn() { //handoff
+    //TODO
+  }
+
+  public void rotateArmOut() { //intake
+    //TODO
+    spinIntakeMotor();
+  }
+
+  public void rotateArm() {
+    //TODO
   }
 
   @Override
