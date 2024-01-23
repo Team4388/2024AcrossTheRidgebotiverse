@@ -90,25 +90,25 @@ public class RobotContainer {
         
         /* Auto Recording */
         // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-        //     .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-        //                                     () -> getDeadbandedDriverController().getLeftX(),
-        //                                     () -> getDeadbandedDriverController().getLeftY(),
-        //                                     () -> getDeadbandedDriverController().getRightX(),
-        //                                     () -> getDeadbandedDriverController().getRightY(),
-        //                                     "Taxi.txt"))
-        //     .onFalse(new InstantCommand());
+        //    .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+        //                                    () -> getDeadbandedDriverController().getLeftX(),
+        //                                    () -> getDeadbandedDriverController().getLeftY(),
+        //                                    () -> getDeadbandedDriverController().getRightX(),
+        //                                    () -> getDeadbandedDriverController().getRightY(),
+        //                                    "IntenseTaxi.txt"))
+        //    .onFalse(new InstantCommand());
 
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-        //     .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
-        //     .onFalse(new InstantCommand()); 
+        //new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        //    .onTrue(new JoystickPlayback(m_robotSwerveDrive, "IntenseTaxi.txt"))
+        //    .onFalse(new InstantCommand()); 
         
         /* Speed */
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.setToTurbo()))
-            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
+            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+         //   .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
         
         // new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
         //     .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
