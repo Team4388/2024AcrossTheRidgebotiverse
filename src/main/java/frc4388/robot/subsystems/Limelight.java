@@ -130,35 +130,35 @@ public class Limelight extends SubsystemBase {
     return distanceToApril;
   }
 
-  public PhotonTrackedTarget getLowestTape() {
-    if (!cam.isConnected()) return null;
+  // public PhotonTrackedTarget getLowestTape() {
+  //   if (!cam.isConnected()) return null;
 
-    PhotonPipelineResult result = cam.getLatestResult();
+  //   PhotonPipelineResult result = cam.getLatestResult();
 
-    if (!result.hasTargets()) return null;
+  //   if (!result.hasTargets()) return null;
 
-    ArrayList<PhotonTrackedTarget> points = (ArrayList<PhotonTrackedTarget>) result.getTargets();
+  //   ArrayList<PhotonTrackedTarget> points = (ArrayList<PhotonTrackedTarget>) result.getTargets();
 
-    PhotonTrackedTarget lowest = points.get(0);
-    for (PhotonTrackedTarget point : points) {
-      if (point.getPitch() < lowest.getPitch()) {
-        lowest = point;
-      }
-    }
+  //   PhotonTrackedTarget lowest = points.get(0);
+  //   for (PhotonTrackedTarget point : points) {
+  //     if (point.getPitch() < lowest.getPitch()) {
+  //       lowest = point;
+  //     }
+  //   }
 
-    return lowest;
-  }
+  //   return lowest;
+  // }
 
-  public double getDistanceToTape() {    
-    PhotonTrackedTarget tapePoint = getLowestTape();
-    if (tapePoint == null) return -1;
+  // public double getDistanceToTape() {    
+  //   PhotonTrackedTarget tapePoint = getLowestTape();
+  //   if (tapePoint == null) return -1;
 
-    double tapeHeight = VisionConstants.MID_TAPE_HEIGHT - VisionConstants.LIME_HEIGHT;
-    double theta = 35.0 + tapePoint.getPitch();
+  //   double tapeHeight = VisionConstants.MID_TAPE_HEIGHT - VisionConstants.LIME_HEIGHT;
+  //   double theta = 35.0 + tapePoint.getPitch();
 
-    double distanceToTape = tapeHeight / Math.tan(Math.toRadians(theta));
-    return distanceToTape;
-  }
+  //   double distanceToTape = tapeHeight / Math.tan(Math.toRadians(theta));
+  //   return distanceToTape;
+  // }
 
   @Override
   public void periodic() {}
