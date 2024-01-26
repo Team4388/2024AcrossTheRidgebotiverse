@@ -63,11 +63,12 @@ public class RobotMap {
     public final CANCoder rightBackEncoder = new CANCoder(SwerveDriveConstants.IDs.RIGHT_BACK_ENCODER_ID);
 
     /* Shooter Subsystem */
-    //public final WPI_TalonFX leftShooter = new WPI_TalonFX(ShooterConstants.LEFT_SHOOTER_ID);
-    //public final WPI_TalonFX rightShooter = new WPI_TalonFX(ShooterConstants.RIGHT_SHOOTER_ID);
+    public final WPI_TalonFX leftShooter = new WPI_TalonFX(ShooterConstants.LEFT_SHOOTER_ID);
+    public final WPI_TalonFX rightShooter = new WPI_TalonFX(ShooterConstants.RIGHT_SHOOTER_ID);
 
     /* Intake Subsystem */
-    //public final CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushed); //TODO: MOTOR TYPE
+    // public final CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
+    // public final CANSparkMax pivotMotor = new CANSparkMax(IntakeConstants.PIVOT_MOTOR_ID, MotorType.kBrushless);
 
     void configureLEDMotorControllers() {    
     }
