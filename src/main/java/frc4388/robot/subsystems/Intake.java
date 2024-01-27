@@ -21,17 +21,26 @@ public class Intake extends SubsystemBase {
     this.pivot = pivot;
   }
 
+  //hanoff
   public void spinIntakeMotor() {
     intakeMotor.set(IntakeConstants.INTAKE_SPEED);
   }
 
-  public void rotateArmIn() { //handoff
+  //Rotate robot in for handoff
+  public void rotateArmIn() {
     //TODO
+    pivot.set(IntakeConstants.PIVOT_SPEED);
   }
 
-  public void rotateArmOut() { //intake
+  //Rotates robot out for intake
+  public void rotateArmOut() {
     //TODO
-    spinIntakeMotor();
+    pivot.set(-IntakeConstants.INTAKE_SPEED);
+
+  }
+
+  public void stopIntakeMotors() {
+    intakeMotor.set(0);
   }
 
   public void rotateArm() {
