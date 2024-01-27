@@ -44,6 +44,8 @@ public class RobotContainer {
                                                                   m_robotMap.gyro);
     
      private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter);
+
+     private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
     
     //private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
 
@@ -110,12 +112,16 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
         
+        
+        
+        /* Operator Buttons */
          new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
              .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
              .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter));
-        
-        /* Operator Buttons */
-        
+
+        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor()))
+            .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors()));
         
     }
 

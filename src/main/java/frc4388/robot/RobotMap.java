@@ -11,10 +11,13 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.Constants.ShooterConstants;
@@ -63,12 +66,12 @@ public class RobotMap {
     public final CANCoder rightBackEncoder = new CANCoder(SwerveDriveConstants.IDs.RIGHT_BACK_ENCODER_ID);
 
     /* Shooter Subsystem */
-    public final WPI_TalonFX leftShooter = new WPI_TalonFX(ShooterConstants.LEFT_SHOOTER_ID);
-    public final WPI_TalonFX rightShooter = new WPI_TalonFX(ShooterConstants.RIGHT_SHOOTER_ID);
+    public final TalonFX leftShooter = new TalonFX(ShooterConstants.LEFT_SHOOTER_ID);
+    public final TalonFX rightShooter = new TalonFX(ShooterConstants.RIGHT_SHOOTER_ID);
 
     /* Intake Subsystem */
-    // public final CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, MotorType.kBrushless);
-    // public final CANSparkMax pivotMotor = new CANSparkMax(IntakeConstants.PIVOT_MOTOR_ID, MotorType.kBrushless);
+    public final CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless);
+    public final CANSparkMax pivotMotor = new CANSparkMax(IntakeConstants.PIVOT_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless);
 
     void configureLEDMotorControllers() {    
     }
