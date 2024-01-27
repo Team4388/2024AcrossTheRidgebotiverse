@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 
 
 public class Shooter extends SubsystemBase {
+  
   private TalonFX leftShooter;
   private TalonFX rightShooter;
 

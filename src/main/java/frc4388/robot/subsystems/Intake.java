@@ -13,9 +13,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.IntakeConstants;
 
 public class Intake extends SubsystemBase {
-  /** Creates a new Intake. */
+  
   private CANSparkMax intakeMotor;
   private CANSparkMax pivot;
+  
+  /** Creates a new Intake. */
   public Intake(CANSparkMax intakeMotor, CANSparkMax pivot) {
     this.intakeMotor = intakeMotor;
     this.pivot = pivot;
@@ -28,15 +30,17 @@ public class Intake extends SubsystemBase {
 
   //Rotate robot in for handoff
   public void rotateArmIn() {
-    //TODO
     pivot.set(IntakeConstants.PIVOT_SPEED);
   }
 
   //Rotates robot out for intake
   public void rotateArmOut() {
-    //TODO
-    pivot.set(-IntakeConstants.INTAKE_SPEED);
+    pivot.set(-IntakeConstants.PIVOT_SPEED);
 
+  }
+
+  public void handoff() {
+    intakeMotor.set(-IntakeConstants.INTAKE_SPEED);
   }
 
   public void stopIntakeMotors() {
@@ -44,7 +48,6 @@ public class Intake extends SubsystemBase {
   }
 
   public void rotateArm() {
-    //TODO
   }
 
   @Override
