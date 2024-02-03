@@ -5,17 +5,19 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import frc4388.robot.Constants.VisionConstants;
 
 public class Vision {
+    // camerapose_robotspace_set "3D transform of the camera in the coordinate system of the robot (array (6))"
     private final NetworkTableEntry nt_ll_tx;
     private final NetworkTableEntry nt_ll_ty;
     private final NetworkTableEntry nt_ll_ta;
     private final NetworkTableEntry nt_ll_ts;
 
     public Vision() {
-        final var tagTable = NetworkTableInstance.getDefault().getTable("limelight`");
+        final var tagTable = NetworkTableInstance.getDefault().getTable("limelight");
 
-        nt_ll_tx = tagTable.getEntry("tx"); //TODO
+        nt_ll_tx = tagTable.getEntry("camerapose_robotspace_set").setDoubleArray(VisionConstants); //TODO
         nt_ll_ty = tagTable.getEntry("ty"); //TODO
         nt_ll_ta = tagTable.getEntry("ta"); //TODO
         nt_ll_ts = tagTable.getEntry("ts"); //TODO
