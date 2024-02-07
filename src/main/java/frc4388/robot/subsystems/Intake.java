@@ -6,7 +6,7 @@ package frc4388.robot.subsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
-
+import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,7 +16,7 @@ public class Intake extends SubsystemBase {
   
   private CANSparkMax intakeMotor;
   private CANSparkMax pivot;
-  
+
   /** Creates a new Intake. */
   public Intake(CANSparkMax intakeMotor, CANSparkMax pivot) {
     this.intakeMotor = intakeMotor;
@@ -46,8 +46,14 @@ public class Intake extends SubsystemBase {
   public void stopIntakeMotors() {
     intakeMotor.set(0);
   }
-
+  public RelativeEncoder getEncoder() {
+    return pivot.getEncoder();
+  }
+  public void setVoltage(double voltage) {
+   pivot.setVoltage(voltage);
+  }
   public void rotateArm() {
+
   }
 
   @Override

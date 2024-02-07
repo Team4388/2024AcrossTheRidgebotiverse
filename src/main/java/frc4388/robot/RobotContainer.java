@@ -16,6 +16,7 @@ import frc4388.robot.Constants.OIConstants;
 import frc4388.robot.commands.Autos.PlaybackChooser;
 import frc4388.robot.commands.Swerve.JoystickPlayback;
 import frc4388.robot.commands.Swerve.JoystickRecorder;
+import frc4388.robot.commands.Intake.RotateIntakeToPosition;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.subsystems.Shooter;
@@ -46,7 +47,7 @@ public class RobotContainer {
      private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter);
 
      private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
-    
+
     //private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
 
     /* Controllers */
@@ -115,11 +116,14 @@ public class RobotContainer {
         
         
         /* Operator Buttons */
-         new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
+         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
              .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
              .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter));
-
-        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+             
+         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+             .onTrue(new InstantCommand(() ->  new RotateIntakeToPosition(m_robotIntake, 360).execute(), m_robotIntake))
+             .onFalse(new InstantCommand(() -> new RotateIntakeToPosition(m_robotIntake, 0).execute(), m_robotShooter));
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor()))
             .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors()));
         
