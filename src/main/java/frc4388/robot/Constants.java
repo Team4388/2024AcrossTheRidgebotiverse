@@ -164,6 +164,10 @@ public final class Constants {
         public static final double INTAKE_SPEED = 0.2; //TODO:
         public static final double HANDOFF_SPEED = 0.2; //TODO:
         public static final double PIVOT_SPEED = 0.2; //TODO:
+
+        public static final class ArmPID {
+            public static final Gains INTAKE_GAINS = new Gains(0, 0, 0, 0, 0, 1.0);
+        }
     }
 
     public static final class OIConstants {
