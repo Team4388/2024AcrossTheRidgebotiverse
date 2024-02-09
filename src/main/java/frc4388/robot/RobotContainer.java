@@ -116,17 +116,17 @@ public class RobotContainer {
         
         
         /* Operator Buttons */
-         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+        new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
              .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
              .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter));
              
-         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-             .onTrue(new InstantCommand(() ->  new RotateIntakeToPosition(m_robotIntake, 360).execute(), m_robotIntake))
-             .onFalse(new InstantCommand(() -> new RotateIntakeToPosition(m_robotIntake, 0).execute(), m_robotShooter));
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+        //      .onTrue(new InstantCommand(() ->  new RotateIntakeToPosition(m_robotIntake, 360).execute(), m_robotIntake))
+        //      .onFalse(new InstantCommand(() -> new RotateIntakeToPosition(m_robotIntake, 0).execute(), m_robotShooter));
              
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor()))
-            .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors()));
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor()))
+        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors()));
         
     }
 
