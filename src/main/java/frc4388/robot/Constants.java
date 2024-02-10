@@ -162,12 +162,12 @@ public final class Constants {
         public static final int INTAKE_MOTOR_ID = 18; //TODO:
         public static final int PIVOT_MOTOR_ID = 17; //TODO:
         public static final double INTAKE_SPEED = 0.75; //TODO:
-        public static final double INTAKE_OUT_SPEED = 0.2;
+        public static final double INTAKE_OUT_SPEED = 0.5;
         public static final double HANDOFF_SPEED = 0.2; //TODO:
         public static final double PIVOT_SPEED = 0.2; //TODO:
 
         public static final class ArmPID {
-            public static final Gains INTAKE_GAINS = new Gains(0.00005, 0, 0, 0, 0, 1.0);
+            public static final Gains INTAKE_GAINS = new Gains(0.05, 0, 0, 0, 0, 1.0);
         }
     }
 

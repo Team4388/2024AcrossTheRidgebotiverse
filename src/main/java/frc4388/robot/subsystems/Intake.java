@@ -4,6 +4,8 @@
 
 package frc4388.robot.subsystems;
 
+import java.util.function.BooleanSupplier;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
@@ -78,13 +80,36 @@ public class Intake extends SubsystemBase {
   }
 
   public void pidIn() {
-    m_spedController.setReference(8000, CANSparkMax.ControlType.kVelocity);
+    m_spedController.setReference(2.5, CANSparkMax.ControlType.kPosition);
     //SmartDashboard.putNumber("Velocity Output", pivot.getEncoder().getVelocity());
   }
 
-  public void pidOut() {
-    m_spedController.setReference(-8000, CANSparkMax.ControlType.kVelocity);
+  public void limitNote() {
+    if (intakeforwardLimit.isPressed()) {
+      rotateArmIn2();
+    } else {
+      spinIntakeMotor();
+    }
+  }
 
+  public void pidOut() {
+    m_spedController.setReference(-53, CANSparkMax.ControlType.kPosition);
+  }
+
+  public void rotateArmOut2() {
+    if(reverseLimit.isPressed()){
+      stopArmMotor();
+    } else {
+      pidOut();
+    }
+  }
+
+  public void rotateArmIn2() {
+    if(forwardLimit.isPressed()){
+      stopArmMotor();
+    } else {
+      pidIn();
+    }
   }
 
   
@@ -129,6 +154,10 @@ public class Intake extends SubsystemBase {
 
   public void rotateArm() {
 
+  }
+
+  public BooleanSupplier getArmFowardLimitState() {
+    return forwardLimit::isPressed;
   }
 
   @Override
