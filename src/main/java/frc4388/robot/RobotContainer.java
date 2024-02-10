@@ -8,6 +8,7 @@
 package frc4388.robot;
 
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -56,7 +57,9 @@ public class RobotContainer {
 
     private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
 
-    private PlaybackChooser playbackChooser;
+    
+
+  //  private PlaybackChooser playbackChooser;
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -75,9 +78,12 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
 
-        playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
-            .addOption("Taxi Auto", new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
-            .buildDisplay();
+        // playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
+        //     .addOption("Taxi Auto", new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
+        //     .buildDisplay();
+        //SmartDashboard.putNumber("Velocity Output", m_robotIntake.getVelocity());
+
+       // m_robotIntake.resetPostion();
     }
 
     /**
@@ -123,6 +129,18 @@ public class RobotContainer {
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
         //      .onTrue(new InstantCommand(() ->  new RotateIntakeToPosition(m_robotIntake, 360).execute(), m_robotIntake))
         //      .onFalse(new InstantCommand(() -> new RotateIntakeToPosition(m_robotIntake, 0).execute(), m_robotShooter));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.rotateArmIn()))
+            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.rotateArmOut()))
+            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.pidIn()))
+            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
              
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
         //     .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor()))
@@ -135,10 +153,10 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
-        // no auto
-        return playbackChooser.getCommand();
-    }
+    // public Command getAutonomousCommand() {
+         // no auto
+    //     return playbackChooser.getCommand();
+    // }
 
     /**
      * Add your docs here.
