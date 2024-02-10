@@ -161,7 +161,8 @@ public final class Constants {
     public static final class IntakeConstants {
         public static final int INTAKE_MOTOR_ID = 18; //TODO:
         public static final int PIVOT_MOTOR_ID = 17; //TODO:
-        public static final double INTAKE_SPEED = 0.2; //TODO:
+        public static final double INTAKE_SPEED = 0.75; //TODO:
+        public static final double INTAKE_OUT_SPEED = 0.2;
         public static final double HANDOFF_SPEED = 0.2; //TODO:
         public static final double PIVOT_SPEED = 0.2; //TODO:
 
