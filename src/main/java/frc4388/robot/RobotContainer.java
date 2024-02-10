@@ -7,11 +7,16 @@
 
 package frc4388.robot;
 
+import java.time.Instant;
+
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.OIConstants;
 import frc4388.robot.commands.Autos.PlaybackChooser;
@@ -56,6 +61,28 @@ public class RobotContainer {
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
 
     private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
+
+   
+
+    private SequentialCommandGroup intakeToShoot = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotIntake.pidIn()),
+        new InstantCommand(() -> m_robotShooter.spin(0.4))
+    );
+
+    private SequentialCommandGroup outtakeToShootFull = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotShooter.spin()),
+        new InstantCommand(() -> m_robotIntake.handoff())
+    );
+ 
+    private SequentialCommandGroup intakeInToOut = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotIntake.rotateArmOut2()),
+        new RunCommand(() -> m_robotIntake.limitNote()).until(m_robotIntake.getArmFowardLimitState()),
+        new InstantCommand(() -> m_robotShooter.spin(0.4))
+    );
+
+
+
+    
 
     
 
@@ -140,25 +167,43 @@ public class RobotContainer {
         //     .onTrue(new InstantCommand(() -> m_robotIntake.rotateArmOut()))
         //     .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.pidIn(), m_robotIntake))
-            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor(), m_robotIntake));
+        // //Pull arm in
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotIntake.pidIn(), m_robotIntake))
+        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor(), m_robotIntake));
+
+        // //Pull arm out
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotIntake.pidOut(), m_robotIntake))
+        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor(), m_robotIntake));
+        
+        // //Intake Note
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor(), m_robotIntake))
+        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake));
+        
+        // //Outtake Note
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake))
+        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake));
+            
+        // //Spin Shooter Motors
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+        //      .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
+        //      .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter));
+
+        // //Intake Note and ramp up shooter to 40%
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
+        //     .onTrue(intakeToShoot);
+        
+        // //Ramps up shooter to 100% to Shooter
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+        //     .onTrue(outtakeToShootFull);
+        
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.pidOut(), m_robotIntake))
-            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor(), m_robotIntake));
+            .whileTrue(intakeInToOut);
         
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor(), m_robotIntake))
-            .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake));
-        
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_TRIGGER_AXIS)
-            .onTrue(new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake))
-            .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake));
-            
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_TRIGGER_AXIS)
-             .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
-             .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter));
         
         
     }
