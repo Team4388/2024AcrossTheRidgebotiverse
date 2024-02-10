@@ -25,6 +25,12 @@ public class Intake extends SubsystemBase {
   private static Gains armGains = IntakeConstants.ArmPID.INTAKE_GAINS;
   private SparkLimitSwitch forwardLimit;
   private SparkLimitSwitch reverseLimit;
+  private SparkLimitSwitch intakeforwardLimit;  
+  private SparkLimitSwitch intakereverseLimit;
+
+  private Shooter shooter;
+
+
 
   /** Creates a new Intake. */
   public Intake(CANSparkMax intakeMotor, CANSparkMax pivot) {
@@ -38,7 +44,14 @@ public class Intake extends SubsystemBase {
     reverseLimit = pivot.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     forwardLimit.enableLimitSwitch(true);
     reverseLimit.enableLimitSwitch(true);
+
+    intakeMotor.restoreFactoryDefaults();
+
     
+    intakeforwardLimit = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    intakereverseLimit = intakeMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    intakeforwardLimit.enableLimitSwitch(true);
+    intakereverseLimit.enableLimitSwitch(false);
 
     //Arm PID
     m_spedController = pivot.getPIDController();
@@ -70,12 +83,16 @@ public class Intake extends SubsystemBase {
   }
 
   public void pidOut() {
+    m_spedController.setReference(-8000, CANSparkMax.ControlType.kVelocity);
 
   }
 
+  
   public void handoff() {
-    intakeMotor.set(-IntakeConstants.INTAKE_SPEED);
+    intakeMotor.set(-IntakeConstants.INTAKE_OUT_SPEED);
   }
+
+ 
 
   public void stopIntakeMotors() {
     intakeMotor.set(0);

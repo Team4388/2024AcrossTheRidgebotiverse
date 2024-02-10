@@ -59,7 +59,9 @@ public class RobotContainer {
 
     
 
-  //  private PlaybackChooser playbackChooser;
+    private PlaybackChooser playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
+            .addOption("Taxi Auto", new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
+            .buildDisplay();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -78,10 +80,8 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
 
-        // playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
-        //     .addOption("Taxi Auto", new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
-        //     .buildDisplay();
-        //SmartDashboard.putNumber("Velocity Output", m_robotIntake.getVelocity());
+        
+        SmartDashboard.putNumber("Velocity Output", m_robotIntake.getVelocity());
 
        // m_robotIntake.resetPostion();
     }
@@ -96,6 +96,8 @@ public class RobotContainer {
         /* Driver Buttons */
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
+        
+        
         
         /* Auto Recording */
         // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
@@ -122,29 +124,42 @@ public class RobotContainer {
         
         
         /* Operator Buttons */
-        new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
-             .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
-             .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
+        //      .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor(), m_robotIntake))
+        //      .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake));
              
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
         //      .onTrue(new InstantCommand(() ->  new RotateIntakeToPosition(m_robotIntake, 360).execute(), m_robotIntake))
         //      .onFalse(new InstantCommand(() -> new RotateIntakeToPosition(m_robotIntake, 0).execute(), m_robotShooter));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.rotateArmIn()))
-            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
-
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.rotateArmOut()))
-            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
-
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.pidIn()))
-            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
-             
         // new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor()))
-        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors()));
+        //     .onTrue(new InstantCommand(() -> m_robotIntake.rotateArmIn()))
+        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
+
+        // new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotIntake.rotateArmOut()))
+        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.pidIn(), m_robotIntake))
+            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor(), m_robotIntake));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.pidOut(), m_robotIntake))
+            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor(), m_robotIntake));
+        
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor(), m_robotIntake))
+            .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake));
+        
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_TRIGGER_AXIS)
+            .onTrue(new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake))
+            .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake));
+            
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_TRIGGER_AXIS)
+             .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
+             .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter));
+        
         
     }
 
