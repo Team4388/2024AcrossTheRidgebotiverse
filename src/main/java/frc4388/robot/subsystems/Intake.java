@@ -32,6 +32,10 @@ public class Intake extends SubsystemBase {
 
   private Shooter shooter;
 
+  private BooleanSupplier sup = () -> true;
+  private BooleanSupplier dup = () -> false;
+  
+
 
 
   /** Creates a new Intake. */
@@ -111,13 +115,10 @@ public class Intake extends SubsystemBase {
       pidIn();
     }
   }
-
   
   public void handoff() {
     intakeMotor.set(-IntakeConstants.INTAKE_OUT_SPEED);
   }
-
- 
 
   public void stopIntakeMotors() {
     intakeMotor.set(0);
@@ -130,6 +131,19 @@ public class Intake extends SubsystemBase {
   public RelativeEncoder getEncoder() {
     return pivot.getEncoder();
   }
+
+  public boolean getForwardLimitSwitchState() {
+    return forwardLimit.isPressed();
+  }
+
+  public boolean getReverseLimitSwitchState() {
+    return reverseLimit.isPressed();
+  }
+
+  public boolean getIntakeLimitSwtichState() {
+    return intakeforwardLimit.isPressed();
+  }
+
   public void setVoltage(double voltage) {
    pivot.setVoltage(voltage);
   }
@@ -143,7 +157,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void resetPosition1() {
-    if(forwardLimit.isPressed() == true) {
+    if(forwardLimit.isPressed()) {
       resetPostion();
     }
   }
@@ -157,7 +171,11 @@ public class Intake extends SubsystemBase {
   }
 
   public BooleanSupplier getArmFowardLimitState() {
-    return forwardLimit::isPressed;
+    if(forwardLimit.isPressed()) {
+      return sup;
+    } else {
+      return dup;
+    }
   }
 
   @Override
