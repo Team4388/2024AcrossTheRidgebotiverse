@@ -4,6 +4,8 @@
 
 package frc4388.robot.subsystems;
 
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.ShooterConstants;
 
@@ -23,8 +25,8 @@ public class Shooter extends SubsystemBase {
     leftShooter  = leftTalonFX;
     rightShooter = rightTalonFX;
 
-    leftShooter.setNeutralMode(NeutralModeValue.Coast);
-    rightShooter.setNeutralMode(NeutralModeValue.Coast);
+    leftShooter.setNeutralMode(NeutralModeValue.Brake);
+    rightShooter.setNeutralMode(NeutralModeValue.Brake);
   }
 
   public void spin() {
@@ -40,9 +42,15 @@ public class Shooter extends SubsystemBase {
     spin(0.d);
   }
 
+  public void idle() {
+    spin(ShooterConstants.SHOOTER_IDLE);
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Left Shooter RPM", leftShooter.getRotorVelocity().getValue());
+    SmartDashboard.putNumber("Right Shooter RPM", rightShooter.getRotorVelocity().getValue());
     
   }
 }
