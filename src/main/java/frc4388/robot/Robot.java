@@ -51,6 +51,11 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    // This has to be run after the m_robotContainer is initiated
+    // It will instantly return after it is run
+    m_robotContainer.autoAlign.updateAlliance();
+    
+    
     m_robotTime.updateTimes();
     //mled.updateLED();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
