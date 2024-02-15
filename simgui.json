@@ -8,27 +8,10 @@
   },
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo",
-      "/Shuffleboard/Auto Chooser/Add Sequence": "Command",
-      "/Shuffleboard/Auto Chooser/Command: 1": "String Chooser",
-      "/Shuffleboard/Auto Chooser/Command: 10": "String Chooser",
-      "/Shuffleboard/Auto Chooser/Command: 2": "String Chooser",
-      "/Shuffleboard/Auto Chooser/Command: 3": "String Chooser",
-      "/Shuffleboard/Auto Chooser/Command: 4": "String Chooser",
-      "/Shuffleboard/Auto Chooser/Command: 5": "String Chooser",
-      "/Shuffleboard/Auto Chooser/Command: 6": "String Chooser",
-      "/Shuffleboard/Auto Chooser/Command: 7": "String Chooser",
-      "/Shuffleboard/Auto Chooser/Command: 8": "String Chooser",
-      "/Shuffleboard/Auto Chooser/Command: 9": "String Chooser"
+      "/FMSInfo": "FMSInfo"
     }
   },
   "NetworkTables Info": {
-    "Server": {
-      "Subscribers": {
-        "open": true
-      },
-      "open": true
-    },
     "visible": true
   }
 }

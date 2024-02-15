@@ -139,12 +139,7 @@ public final class Constants {
         public static final double APRIL_HEIGHT = -1.0; // TODO: find actual value
     
     }
-   
-    public static final class AutoAlignConstants {
-        public static final double MoveSpeed = 0.0;
-        public static final double RotSpeed = 0.0;
-    }
-
+    
     public static final class DriveConstants {
         public static final int DRIVE_PIGEON_ID = 14;
 

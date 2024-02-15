@@ -66,13 +66,7 @@ public class PlaybackChooser {
     public void nextChooser() {
         SendableChooser<Command> chooser = m_choosers.get(m_cmdNum++);
 
-        String[] dirs = m_dir.list();
-
-        if(dirs == null){ // Fix funny error
-            return;
-        }
-
-        for (String auto : dirs) {
+        for (String auto : m_dir.list()) {
             chooser.addOption(auto, new JoystickPlayback(m_swerve, auto));
         }
         for (var cmd_name : m_commandPool.keySet()) {
