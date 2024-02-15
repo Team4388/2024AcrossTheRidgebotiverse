@@ -19,14 +19,12 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.OIConstants;
-import frc4388.robot.commands.Autos.AutoAlign;
 import frc4388.robot.commands.Autos.PlaybackChooser;
 import frc4388.robot.commands.Swerve.JoystickPlayback;
 import frc4388.robot.commands.Swerve.JoystickRecorder;
 import frc4388.robot.commands.Intake.ArmIntakeIn;
 import frc4388.robot.commands.Intake.RotateIntakeToPosition;
 import frc4388.robot.subsystems.LED;
-import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.Intake;
@@ -62,14 +60,11 @@ public class RobotContainer {
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
-    
-    /* Autos */
-    private Limelight limelight = new Limelight();
-    private AutoAlign autoAlign = new AutoAlign(m_robotSwerveDrive, limelight);
 
     private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
-    private Command MoveToSpeaker = new JoystickPlayback(m_robotSwerveDrive, "MoveToSpeaker.txt");
     private Command intakeToShootStuff = new ArmIntakeIn(m_robotIntake, m_robotShooter);
+
+   
 
     private SequentialCommandGroup intakeToShoot = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotIntake.pidIn()),
@@ -86,12 +81,6 @@ public class RobotContainer {
         new RunCommand(() -> m_robotIntake.limitNote(), m_robotIntake).until(m_robotIntake.getArmFowardLimitState()),
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter)
     );
-
-    private SequentialCommandGroup autoShoot = new SequentialCommandGroup(
-        new RunCommand(() -> MoveToSpeaker.execute()),
-        new RunCommand(() -> autoAlign.execute())
-    );
-
 
     private SequentialCommandGroup i = new SequentialCommandGroup(
         intakeToShootStuff, intakeToShoot
