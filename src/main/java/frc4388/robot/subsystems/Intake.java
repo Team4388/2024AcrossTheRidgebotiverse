@@ -6,6 +6,7 @@ package frc4388.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
 
+import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
@@ -52,6 +53,8 @@ public class Intake extends SubsystemBase {
     reverseLimit.enableLimitSwitch(true);
 
     intakeMotor.restoreFactoryDefaults();
+    intakeMotor.setIdleMode(CANSparkBase.IdleMode.kCoast);
+    
 
     
     intakeforwardLimit = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);

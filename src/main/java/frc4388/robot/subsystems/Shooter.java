@@ -25,8 +25,8 @@ public class Shooter extends SubsystemBase {
     leftShooter  = leftTalonFX;
     rightShooter = rightTalonFX;
 
-    leftShooter.setNeutralMode(NeutralModeValue.Brake);
-    rightShooter.setNeutralMode(NeutralModeValue.Brake);
+    leftShooter.setNeutralMode(NeutralModeValue.Coast);
+    rightShooter.setNeutralMode(NeutralModeValue.Coast);
   }
 
   public void spin() {
