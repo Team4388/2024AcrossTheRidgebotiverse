@@ -79,7 +79,7 @@ public class RobotContainer {
     private SequentialCommandGroup intakeInToOut = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotIntake.rotateArmOut2(), m_robotIntake),
         new RunCommand(() -> m_robotIntake.limitNote(), m_robotIntake).until(m_robotIntake.getArmFowardLimitState()),
-        new InstantCommand(() -> m_robotShooter.idle(), m_robotShooter)
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter)
     );
 
     private SequentialCommandGroup i = new SequentialCommandGroup(
