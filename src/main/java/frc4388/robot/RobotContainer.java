@@ -51,11 +51,14 @@ public class RobotContainer {
                                                                   m_robotMap.rightFront,
                                                                   m_robotMap.leftBack,
                                                                   m_robotMap.rightBack,
+                                              
                                                                   m_robotMap.gyro);
-    
-     private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter);
+    /* Limelight */
+    private final Limelight limelight = new Limelight();
 
-     private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
+    private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter, limelight);
+
+    private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
 
     //private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
 
@@ -64,8 +67,8 @@ public class RobotContainer {
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
     
     /* Autos */
-    private Limelight limelight = new Limelight();
-    public AutoAlign autoAlign = new AutoAlign(m_robotSwerveDrive, limelight);
+    // This shoud be in a SequentialCommandGroup vvv
+    //public AutoAlign autoAlign = new AutoAlign(m_robotSwerveDrive, limelight, false);
 
     private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
     private Command MoveToSpeaker = new JoystickPlayback(m_robotSwerveDrive, "MoveToSpeaker.txt");
@@ -87,9 +90,10 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter)
     );
 
+    
     private SequentialCommandGroup autoShoot = new SequentialCommandGroup(
         new RunCommand(() -> MoveToSpeaker.execute()),
-        new RunCommand(() -> autoAlign.execute())
+        new RunCommand(() -> new AutoAlign(m_robotSwerveDrive, limelight, false))
     );
 
 
