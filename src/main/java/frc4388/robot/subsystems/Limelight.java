@@ -6,30 +6,75 @@ package frc4388.robot.subsystems;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
+import frc4388.robot.Constants.VisionConstants;
 
 // Look at vvv for networktables stuff
 // https://docs.limelightvision.io/docs/docs-limelight/apis/complete-networktables-api#apriltag-and-3d-data
 
 public class Limelight extends SubsystemBase {
+
+  // [X, Y, Z, Roll, Pitch, Yaw]
   private double[] cameraPose;
+  private boolean isTag;
 
-  public Pose2d getPose() {
-    //TODO - Get actual values!
+  private Pose2d pose;
+  private boolean isNearSpeaker;
 
-    double x = 0;
-    double y = 0;
-    double yaw = 0;
+  public boolean getIsTag() {
+    return isTag;
+  }
+
+  private void update() {
+    if(!isTag){
+      return;
+    }
+
+    double x = cameraPose[0];
+    double y = cameraPose[1];
+    double yaw = cameraPose[5];
 
     Rotation2d rot = Rotation2d.fromDegrees(yaw);
 
-    return new Pose2d(x, y, rot);
+    pose = new Pose2d(x, y, rot);
+
+    boolean isRed = DriverStation.getAlliance().get() == Alliance.Red;
+    
+    double distance;
+
+    if(isRed){
+      distance = pose.getTranslation().getDistance(VisionConstants.RedSpeakerCenter);
+    }else{
+      distance = pose.getTranslation().getDistance(VisionConstants.BlueSpeakerCenter);
+    }
+    
+    isNearSpeaker = distance <= VisionConstants.SpeakerBubbleDistance;
+  }
+
+  public Pose2d getPose() {
+    return pose;
+  }
+
+  public boolean isNearSpeaker() {
+    return isNearSpeaker;
   }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    cameraPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("camerapose_targetspace").getDoubleArray(new double[6]);
+
+    isTag = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getBoolean(false);
+    double[] newPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+    
+    SmartDashboard.putBoolean("Apriltag", isTag);
+
+    if(newPose != cameraPose){
+      cameraPose = newPose;
+      update();
+    }
   }
 }
