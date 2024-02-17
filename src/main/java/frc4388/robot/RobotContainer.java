@@ -7,10 +7,7 @@
 
 package frc4388.robot;
 
-import java.time.Instant;
-
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -23,7 +20,6 @@ import frc4388.robot.commands.Autos.PlaybackChooser;
 import frc4388.robot.commands.Swerve.JoystickPlayback;
 import frc4388.robot.commands.Swerve.JoystickRecorder;
 import frc4388.robot.commands.Intake.ArmIntakeIn;
-import frc4388.robot.commands.Intake.RotateIntakeToPosition;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
@@ -70,17 +66,6 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotShooter.spin())
     );
 
-    private SequentialCommandGroup outtakeToShootFull = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotShooter.spin()),
-        new InstantCommand(() -> m_robotIntake.handoff())
-    );
- 
-    private SequentialCommandGroup intakeInToOut = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.rotateArmOut2(), m_robotIntake),
-        new RunCommand(() -> m_robotIntake.limitNote(), m_robotIntake).until(m_robotIntake.getArmFowardLimitState()),
-        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter)
-    );
-
     private SequentialCommandGroup i = new SequentialCommandGroup(
         intakeToShootStuff, intakeToShoot
     );
@@ -101,22 +86,22 @@ public class RobotContainer {
     private Command startRightMoveLeft = new JoystickPlayback(m_robotSwerveDrive, "StartRightMoveLeft.txt");
 
     private SequentialCommandGroup oneNoteStartingSpeaker = new SequentialCommandGroup (
-        ejectToShoot,
-        taxi
+        ejectToShoot.asProxy(),
+        taxi.asProxy()
     );
     private SequentialCommandGroup oneNoteStartingFromLeft = new SequentialCommandGroup(
-        startLeftMoveRight,
-        ejectToShoot,
-        taxi
+        startLeftMoveRight.asProxy(),
+        ejectToShoot.asProxy(),
+        taxi.asProxy()
     );
     private SequentialCommandGroup oneNoteStartingFromRight = new SequentialCommandGroup(
-        startRightMoveLeft,
-        ejectToShoot,
-        taxi
+        startRightMoveLeft.asProxy(),
+        ejectToShoot.asProxy(),
+        taxi.asProxy()
     );
 
     private PlaybackChooser playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
-            .addOption("Taxi Auto", taxi)
+            .addOption("Taxi Auto", taxi.asProxy())
             .addOption("One Note Auto Starting in Front of Speaker", oneNoteStartingSpeaker)
             .addOption("One Note Auto Starting from Left Position", oneNoteStartingFromLeft)
             .addOption("One Note Auto Starting from Right Position", oneNoteStartingFromRight)
@@ -141,10 +126,6 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
 
-        
-       // SmartDashboard.putNumber("Velocity Output", m_robotIntake.getVelocity());
-
-       // m_robotIntake.resetPostion();
     }
 
     /**
@@ -185,13 +166,6 @@ public class RobotContainer {
         
         
         /* Operator Buttons */
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
-        //      .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor(), m_robotIntake))
-        //      .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake));
-             
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-        //      .onTrue(new InstantCommand(() ->  new RotateIntakeToPosition(m_robotIntake, 360).execute(), m_robotIntake))
-        //      .onFalse(new InstantCommand(() -> new RotateIntakeToPosition(m_robotIntake, 0).execute(), m_robotShooter));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotIntake.pidIn()))
@@ -204,45 +178,16 @@ public class RobotContainer {
 
         // Override Intake Position encoder: out
         new JoystickButton(getDeadbandedOperatorController(), XboxController.BACK_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.setPosition(-53), m_robotIntake));
+            .onTrue(new InstantCommand(() -> m_robotIntake.setPivotEncoderPosition(-53), m_robotIntake));
 
-        // Override Intake Position encoder: out
+        // Override Intake Position encoder: in
         new JoystickButton(getDeadbandedOperatorController(), XboxController.START_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.setPosition(0), m_robotIntake));
+            .onTrue(new InstantCommand(() -> m_robotIntake.setPivotEncoderPosition(0), m_robotIntake));
 
-        // //Pull arm in
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotIntake.pidIn(), m_robotIntake))
-        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor(), m_robotIntake));
-
-        // //Pull arm out
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotIntake.pidOut(), m_robotIntake))
-        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor(), m_robotIntake));
-        
-        // //Intake Note
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor(), m_robotIntake))
-        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake));
-        
-        // //Outtake Note
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake))
-        //     .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake));
-            
         //Spin Shooter Motors
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
              .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
              .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter));
-
-        // //Intake Note and ramp up shooter to 40%
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-        //     .onTrue(intakeToShoot);
-        
-        // //Ramps up shooter to 100% to Shooter
-        // new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
-        //     .onTrue(outtakeToShootFull);
-        
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(ejectToShoot)
