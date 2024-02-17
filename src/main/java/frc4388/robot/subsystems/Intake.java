@@ -30,9 +30,7 @@ public class Intake extends SubsystemBase {
   private SparkLimitSwitch reverseLimit;
   private SparkLimitSwitch intakeforwardLimit;  
   private SparkLimitSwitch intakereverseLimit;
-
-  private Shooter shooter;
-
+  
   private BooleanSupplier sup = () -> true;
   private BooleanSupplier dup = () -> false;
 
@@ -64,7 +62,7 @@ public class Intake extends SubsystemBase {
     m_spedController.setI(armGains.kI);
     m_spedController.setD(armGains.kD);
 
-    SmartDashboard.putNumber("Intake Speed", 0.5);
+    SmartDashboard.putNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
   }
 
   //hanoff
@@ -204,6 +202,6 @@ public class Intake extends SubsystemBase {
     resetPosition();
     changeIntakeNeutralState();
 
-    smartDashboardOuttakeValue = SmartDashboard.getNumber("Intake Speed", 0.5);
+    smartDashboardOuttakeValue = SmartDashboard.getNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
   }
 }
