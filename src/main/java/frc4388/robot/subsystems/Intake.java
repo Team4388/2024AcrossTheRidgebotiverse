@@ -36,10 +36,7 @@ public class Intake extends SubsystemBase {
   private BooleanSupplier sup = () -> true;
   private BooleanSupplier dup = () -> false;
 
-  private double val;
-  
-
-
+  private double smartDashboardOuttakeValue;
 
   /** Creates a new Intake. */
   public Intake(CANSparkMax intakeMotor, CANSparkMax pivot) {
@@ -66,6 +63,8 @@ public class Intake extends SubsystemBase {
     m_spedController.setP(armGains.kP);
     m_spedController.setI(armGains.kI);
     m_spedController.setD(armGains.kD);
+
+    SmartDashboard.putNumber("Intake Speed", 0.5);
   }
 
   //hanoff
@@ -123,9 +122,9 @@ public class Intake extends SubsystemBase {
 
   public void handoff2() {
     if(intakeforwardLimit.isPressed()) {
-      intakeMotor.set(-val);
+      intakeMotor.set(-smartDashboardOuttakeValue);
     } else {
-      intakeMotor.set(-val);
+      intakeMotor.set(-smartDashboardOuttakeValue);
     }
   }
 
@@ -161,17 +160,13 @@ public class Intake extends SubsystemBase {
     return pivot.getEncoder().getVelocity();
   }
 
-  public void resetPostion() {
-    setPosition(0);
-  }
-
-  public void setPosition(int val) {
+  public void setPivotEncoderPosition(int val) {
     pivot.getEncoder().setPosition(val);
   }
 
-  public void resetPosition1() {
+  public void resetPosition() {
     if(forwardLimit.isPressed()) {
-      resetPostion();
+      setPivotEncoderPosition(0);
     }
   }
 
@@ -206,9 +201,9 @@ public class Intake extends SubsystemBase {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Vel Output", getVelocity());
     SmartDashboard.putNumber("Position", getPos());
-    resetPosition1();
+    resetPosition();
     changeIntakeNeutralState();
 
-    val = SmartDashboard.getNumber("Intake Speed", 0.5);
+    smartDashboardOuttakeValue = SmartDashboard.getNumber("Intake Speed", 0.5);
   }
 }
