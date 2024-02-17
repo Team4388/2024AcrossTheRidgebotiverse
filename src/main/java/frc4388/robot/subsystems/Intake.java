@@ -35,6 +35,8 @@ public class Intake extends SubsystemBase {
 
   private BooleanSupplier sup = () -> true;
   private BooleanSupplier dup = () -> false;
+
+  private double val;
   
 
 
@@ -53,9 +55,6 @@ public class Intake extends SubsystemBase {
     reverseLimit.enableLimitSwitch(true);
 
     intakeMotor.restoreFactoryDefaults();
-    intakeMotor.setIdleMode(CANSparkBase.IdleMode.kCoast);
-    
-
     
     intakeforwardLimit = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     intakereverseLimit = intakeMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
@@ -76,7 +75,6 @@ public class Intake extends SubsystemBase {
 
   //Rotate robot in for handoff
   public void rotateArmIn() {
-    //pivot.set(IntakeConstants.PIVOT_SPEED);
     pivot.set(IntakeConstants.PIVOT_SPEED);
   }
 
@@ -90,6 +88,10 @@ public class Intake extends SubsystemBase {
     m_spedController.setReference(2.5, CANSparkMax.ControlType.kPosition);
     //SmartDashboard.putNumber("Velocity Output", pivot.getEncoder().getVelocity());
   }
+  
+  public void pidOut() {
+    m_spedController.setReference(-53, CANSparkMax.ControlType.kPosition);
+  }
 
   public void limitNote() {
     if (intakeforwardLimit.isPressed()) {
@@ -97,10 +99,6 @@ public class Intake extends SubsystemBase {
     } else {
       spinIntakeMotor();
     }
-  }
-
-  public void pidOut() {
-    m_spedController.setReference(-53, CANSparkMax.ControlType.kPosition);
   }
 
   public void rotateArmOut2() {
@@ -120,7 +118,15 @@ public class Intake extends SubsystemBase {
   }
   
   public void handoff() {
-    intakeMotor.set(-IntakeConstants.INTAKE_OUT_SPEED);
+    intakeMotor.set(-IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
+  }
+
+  public void handoff2() {
+    if(intakeforwardLimit.isPressed()) {
+      intakeMotor.set(-val);
+    } else {
+      intakeMotor.set(-val);
+    }
   }
 
   public void stopIntakeMotors() {
@@ -156,7 +162,11 @@ public class Intake extends SubsystemBase {
   }
 
   public void resetPostion() {
-    pivot.getEncoder().setPosition(0);
+    setPosition(0);
+  }
+
+  public void setPosition(int val) {
+    pivot.getEncoder().setPosition(val);
   }
 
   public void resetPosition1() {
@@ -167,6 +177,10 @@ public class Intake extends SubsystemBase {
 
   public double getPos() {
     return pivot.getEncoder().getPosition();
+  }
+
+  public double getIntakeVelocity() {
+    return intakeMotor.getEncoder().getVelocity();
   }
 
   public void rotateArm() {
@@ -181,11 +195,20 @@ public class Intake extends SubsystemBase {
     }
   }
 
+  public void changeIntakeNeutralState() {
+    if(forwardLimit.isPressed()) {
+      intakeMotor.setIdleMode(CANSparkBase.IdleMode.kCoast);
+    }
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     SmartDashboard.putNumber("Vel Output", getVelocity());
     SmartDashboard.putNumber("Position", getPos());
     resetPosition1();
+    changeIntakeNeutralState();
+
+    val = SmartDashboard.getNumber("Intake Speed", 0.5);
   }
 }

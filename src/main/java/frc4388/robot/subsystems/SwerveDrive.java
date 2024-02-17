@@ -58,7 +58,7 @@ public class  SwerveDrive extends SubsystemBase {
       if (rightStick.getNorm() > 0.05) {
         rotTarget = gyro.getAngle();
         rot = rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED;
-        SmartDashboard.putBoolean("drift correction", false);
+      //  SmartDashboard.putBoolean("drift correction", false);
         stopped = false;
       } else if(leftStick.getNorm() > 0.05) {
         if (!stopped) {
@@ -66,7 +66,7 @@ public class  SwerveDrive extends SubsystemBase {
           stopped = true;
         }
 
-        SmartDashboard.putBoolean("drift correction", true);
+     //   SmartDashboard.putBoolean("drift correction", true);
         
         rot = ((rotTarget - gyro.getAngle()) / 360) * SwerveDriveConstants.ROT_CORRECTION_SPEED;
 
