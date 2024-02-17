@@ -7,6 +7,7 @@
 
 package frc4388.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -114,6 +115,8 @@ public class RobotContainer {
      */
     public RobotContainer() {
         configureButtonBindings();
+
+        DriverStation.silenceJoystickConnectionWarning(true);
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
