@@ -2,7 +2,7 @@ package frc4388.robot.commands.Autos;
 import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.Constants.AutoAlignConstants;
-
+import frc4388.robot.Constants.VisionConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -18,22 +18,50 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 public class AutoAlign extends Command {
     private SwerveDrive swerve;
     private Limelight limelight;
+
     private Pose2d pose;
+    private Translation2d targetPos;
 
     private Optional<Alliance> alliance;
+    private boolean isRed;
 
     private boolean isFinished;
     private boolean isReverseFinished;
-    
+
     private boolean reverseAfterFinish;
     private Translation2d[] moveStickReplayArr;
     private Translation2d[] rotStickReplayArr;
     private int replayIndex;
 
-    public AutoAlign(SwerveDrive swerve, Limelight limelight, boolean reverseAfterFinish) {
+    public AutoAlign(SwerveDrive swerve, Limelight limelight) {
         this.swerve = swerve;
         this.limelight = limelight;
         this.reverseAfterFinish = reverseAfterFinish;
+    }
+
+    // Calc the closest point on a circle, to the center of the speaker 
+    private Translation2d calcTargetPos(){
+        final double R = VisionConstants.targetPosDistance;
+        double cX;
+        double cY;
+        if(isRed){
+            cX = VisionConstants.RedSpeakerCenter.getX();
+            cY = VisionConstants.RedSpeakerCenter.getY();
+        }else{
+            cX = VisionConstants.BlueSpeakerCenter.getX();
+            cY = VisionConstants.BlueSpeakerCenter.getY();
+        }
+        final double pX = pose.getX();
+        final double pY = pose.getY();
+
+        // Code is from https://stackoverflow.com/questions/300871/best-way-to-find-a-point-on-a-circle-closest-to-a-given-point
+        double vX = pX - cX;
+        double vY = pY - cY;
+        double magV = Math.sqrt(vX*vX + vY*vY);
+        double aX = cX + vX / magV * R;
+        double aY = cY + vY / magV * R;
+
+        return new Translation2d(aX, aY);
     }
 
     private Translation2d calcMoveStick(){
@@ -42,10 +70,6 @@ public class AutoAlign extends Command {
         final double curX = pose.getX();
         final double curY = pose.getY();
         final double curYaw = pose.getRotation().getDegrees();
-
-        final boolean isred = alliance.get() == DriverStation.Alliance.Red;
-
-        
 
         // This is not math
         double stickX = curX * AutoAlignConstants.MoveSpeed * AutoAlignConstants.RotSpeed;
@@ -61,8 +85,6 @@ public class AutoAlign extends Command {
         final double curY = pose.getY();
         final double curYaw = pose.getRotation().getDegrees();
 
-        final boolean isred = alliance.get() == DriverStation.Alliance.Red;
-
         // This is not math
         double stickX = curX * AutoAlignConstants.MoveSpeed * AutoAlignConstants.RotSpeed;
         double stickY = curY * AutoAlignConstants.MoveSpeed * AutoAlignConstants.RotSpeed;
@@ -70,12 +92,18 @@ public class AutoAlign extends Command {
         return new Translation2d(stickX, stickY);
     }
 
+    public void reverse() {
+        this.reverseAfterFinish = true;
+    }
+
     // Called when the command is initially scheduled.
 	@Override 
 	public final void initialize() {
+        isRed = alliance.get() == DriverStation.Alliance.Red;
         if(reverseAfterFinish){
-            isReverseFinished = false;
+            // isReverseFinished = false;
             replayIndex = 0;
+        }else{
             moveStickReplayArr = new Translation2d[]{};
             rotStickReplayArr = new Translation2d[]{};
         }
@@ -93,14 +121,14 @@ public class AutoAlign extends Command {
 
         // Regular replay
         if(!isFinished){
+            targetPos = calcTargetPos();
+
             moveStick = calcMoveStick();
             rotStick = calcRotStick();
 
             // This is a way of appending...
-            if(reverseAfterFinish){
-                moveStickReplayArr[moveStickReplayArr.length] = moveStick;
-                rotStickReplayArr[rotStickReplayArr.length] = rotStick;
-            }
+            moveStickReplayArr[moveStickReplayArr.length] = moveStick;
+            rotStickReplayArr[rotStickReplayArr.length] = rotStick;
 
             // if(isFinished != limelight.isNearSpeaker() && isReverseFinished){
             //     replayIndex
@@ -121,7 +149,7 @@ public class AutoAlign extends Command {
         }
 
         // This would greatly benifit from having feild Relative implemented.
-        swerve.driveWithInput(moveStick, rotStick, false);
+        swerve.driveWithInput(moveStick, rotStick, true);
     }
 
     // Returns true when the command should end.

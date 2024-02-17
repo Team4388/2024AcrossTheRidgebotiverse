@@ -143,7 +143,8 @@ public final class Constants {
         public static final Translation2d RedSpeakerCenter = new Translation2d(7.914259, -3.221609);
         public static final Translation2d BlueSpeakerCenter = new Translation2d(-8.308975, 1.442593);
 
-        public static final double SpeakerBubbleDistance = 1.5;
+        public static final double SpeakerBubbleDistance = 3;
+        public static final double targetPosDistance = 1.5;
     
     }
    

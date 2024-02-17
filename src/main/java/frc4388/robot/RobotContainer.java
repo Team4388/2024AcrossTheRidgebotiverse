@@ -68,7 +68,6 @@ public class RobotContainer {
     
     /* Autos */
     // This shoud be in a SequentialCommandGroup vvv
-    //public AutoAlign autoAlign = new AutoAlign(m_robotSwerveDrive, limelight, false);
 
     private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
     private Command MoveToSpeaker = new JoystickPlayback(m_robotSwerveDrive, "MoveToSpeaker.txt");
@@ -90,10 +89,17 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter)
     );
 
-    
+
+    private AutoAlign autoAlign = new AutoAlign(m_robotSwerveDrive, limelight);
+
     private SequentialCommandGroup autoShoot = new SequentialCommandGroup(
-        new RunCommand(() -> MoveToSpeaker.execute()),
-        new RunCommand(() -> new AutoAlign(m_robotSwerveDrive, limelight, false))
+        MoveToSpeaker,
+        autoAlign,
+        new InstantCommand(() -> m_robotShooter.spin()),
+        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake),
+        new InstantCommand(() -> m_robotShooter.idle()),
+        new InstantCommand(() -> autoAlign.reverse()),
+        autoAlign
     );
 
 

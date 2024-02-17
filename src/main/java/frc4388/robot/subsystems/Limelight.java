@@ -53,6 +53,10 @@ public class Limelight extends SubsystemBase {
     }
     
     isNearSpeaker = distance <= VisionConstants.SpeakerBubbleDistance;
+
+    SmartDashboard.putBoolean("nearSpeaker", isNearSpeaker);
+    SmartDashboard.putBoolean("Apriltag", isTag);
+    SmartDashboard.putNumber("speakerDistance", distance);
   }
 
   public Pose2d getPose() {
@@ -69,8 +73,6 @@ public class Limelight extends SubsystemBase {
 
     isTag = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getBoolean(false);
     double[] newPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
-    
-    SmartDashboard.putBoolean("Apriltag", isTag);
 
     if(newPose != cameraPose){
       cameraPose = newPose;
