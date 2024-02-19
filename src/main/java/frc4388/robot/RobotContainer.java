@@ -7,6 +7,9 @@
 
 package frc4388.robot;
 
+import com.fasterxml.jackson.databind.ser.std.InetAddressSerializer;
+
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.OIConstants;
@@ -87,8 +91,22 @@ public class RobotContainer {
     private Command startRightMoveLeft = new JoystickPlayback(m_robotSwerveDrive, "StartRightMoveLeft.txt");
 
     private SequentialCommandGroup oneNoteStartingSpeaker = new SequentialCommandGroup (
-        ejectToShoot.asProxy(),
-        taxi.asProxy()
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+        new WaitCommand(1).asProxy(),
+        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake),
+        new WaitCommand(1).asProxy(),
+        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
+        new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake),
+        new WaitCommand(1).asProxy(),
+        new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt")
+    );
+    private SequentialCommandGroup oneNoteStartingSpeakerStationary = new SequentialCommandGroup (
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+        new WaitCommand(1).asProxy(),
+        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake),
+        new WaitCommand(1).asProxy(),
+        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
+        new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake)
     );
     private SequentialCommandGroup oneNoteStartingFromLeft = new SequentialCommandGroup(
         startLeftMoveRight.asProxy(),
@@ -100,10 +118,31 @@ public class RobotContainer {
         ejectToShoot.asProxy(),
         taxi.asProxy()
     );
-
+    private SequentialCommandGroup twoNoteStartingFromSpeaker = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+        new WaitCommand(1).asProxy(),
+        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake),
+        new WaitCommand(1).asProxy(),
+        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
+        new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake),
+        intakeToShootStuff.asProxy(),
+        new WaitCommand(1).asProxy(),
+        new JoystickPlayback(m_robotSwerveDrive, "TwoNotePrt1.txt"),
+        intakeToShoot.asProxy(),
+        new WaitCommand(1).asProxy(),
+        new JoystickPlayback(m_robotSwerveDrive, "TwoNotePrt2.txt"),
+        new WaitCommand(0.5).asProxy(),
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+        new WaitCommand(1).asProxy(),
+        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake),
+        new WaitCommand(1).asProxy(),
+        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
+        new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake)
+    );
     private PlaybackChooser playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
             .addOption("Taxi Auto", taxi.asProxy())
             .addOption("One Note Auto Starting in Front of Speaker", oneNoteStartingSpeaker)
+            .addOption("One Note Auto Starting in Front of Speaker, But Stay", oneNoteStartingSpeakerStationary)
             .addOption("One Note Auto Starting from Left Position", oneNoteStartingFromLeft)
             .addOption("One Note Auto Starting from Right Position", oneNoteStartingFromRight)
             .buildDisplay();
@@ -117,6 +156,7 @@ public class RobotContainer {
         configureButtonBindings();
 
         DriverStation.silenceJoystickConnectionWarning(true);
+        CameraServer.startAutomaticCapture();
 
         /* Default Commands */
         // drives the robot with a two-axis input from the driver controller
@@ -145,26 +185,28 @@ public class RobotContainer {
         
         
         /* Auto Recording */
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-        //    .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-        //                                    () -> getDeadbandedDriverController().getLeftX(),
-        //                                    () -> getDeadbandedDriverController().getLeftY(),
-        //                                    () -> getDeadbandedDriverController().getRightX(),
-        //                                    () -> getDeadbandedDriverController().getRightY(),
-        //                                    "IntenseTaxi.txt"))
-        //    .onFalse(new InstantCommand());
+        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+           .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+                                           () -> getDeadbandedDriverController().getLeftX(),
+                                           () -> getDeadbandedDriverController().getLeftY(),
+                                           () -> getDeadbandedDriverController().getRightX(),
+                                           () -> getDeadbandedDriverController().getRightY(),
+                                           () -> getDeadbandedOperatorController().getLeftBumper(),
+                                           () -> getDeadbandedOperatorController().getRightBumper(),
+                                           "TwoNotePrt1.txt"))
+           .onFalse(new InstantCommand());
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
            .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
            .onFalse(new InstantCommand()); 
         
-        /* Speed */
-        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
-         //   .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
+        // /* Speed */
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+        //     .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+        //  //   .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
         
         
         
@@ -177,6 +219,10 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotIntake.pidOut()))
             .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
+
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor()))
+            .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors()));
 
 
         // Override Intake Position encoder: out
