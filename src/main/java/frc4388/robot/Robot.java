@@ -38,7 +38,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-   // CameraServer.startAutomaticCapture();
   }
 
   /**
@@ -84,20 +83,20 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // /*
-    //  * String autoSelected = SmartDashboard.getString("Auto Selector",
-    //  * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
-    //  * = new MyAutoCommand(); break; case "Default Auto": default:
-    //  * autonomousCommand = new ExampleCommand(); break; }
-    //  */
+    /*
+     * String autoSelected = SmartDashboard.getString("Auto Selector",
+     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
+     * = new MyAutoCommand(); break; case "Default Auto": default:
+     * autonomousCommand = new ExampleCommand(); break; }
+     */
 
-    // // schedule the autonomous command (example)
-    // if (m_autonomousCommand != null) {
-    //   m_autonomousCommand.schedule();
-    // }
-    // m_robotTime.startMatchTime();
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      m_autonomousCommand.schedule();
+    }
+    m_robotTime.startMatchTime();
   }
 
   /**

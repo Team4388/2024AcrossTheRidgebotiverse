@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.Constants.ShooterConstants;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -20,7 +21,8 @@ public class Shooter extends SubsystemBase {
   
   private TalonFX leftShooter;
   private TalonFX rightShooter;
-
+  
+  private double smartDashboardShooterSpeed;
   /** Creates a new Shooter. */
   public Shooter(TalonFX leftTalonFX, TalonFX rightTalonFX) {
     leftShooter  = leftTalonFX;
@@ -28,6 +30,8 @@ public class Shooter extends SubsystemBase {
 
     leftShooter.setNeutralMode(NeutralModeValue.Coast);
     rightShooter.setNeutralMode(NeutralModeValue.Coast);
+    SmartDashboard.putNumber("Shooter Speed", ShooterConstants.SHOOTER_SPEED);
+
   }
 
   public Shooter(TalonFX leftShooter) {
@@ -44,11 +48,11 @@ public class Shooter extends SubsystemBase {
   }
 
   public void spin() {
-    spin(ShooterConstants.SHOOTER_SPEED);
+    spin(smartDashboardShooterSpeed);
   }
 
   public void spin(double speed) {
-    leftShooter.set(speed);    
+    leftShooter.set(-speed);    
     rightShooter.set(-speed);
   }
 
@@ -70,6 +74,8 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
   //  SmartDashboard.putNumber("Left Shooter RPM", leftShooter.getRotorVelocity().getValue());
     //SmartDashboard.putNumber("Right Shooter RPM", rightShooter.getRotorVelocity().getValue());
+    smartDashboardShooterSpeed = SmartDashboard.getNumber("Shooter Speed", ShooterConstants.SHOOTER_SPEED);
+
     
   }
 }

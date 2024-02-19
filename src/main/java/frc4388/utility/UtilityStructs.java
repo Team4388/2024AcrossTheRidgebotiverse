@@ -6,6 +6,10 @@ public class UtilityStructs {
         public double leftY  = 0.0;
         public double rightX = 0.0;
         public double rightY = 0.0;
+
+        public boolean OPLB;
+        public boolean OPRB;
+
     
         public long timedOffset = 0;
     }
