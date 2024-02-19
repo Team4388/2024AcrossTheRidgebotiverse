@@ -10,6 +10,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 
 import java.util.Optional;
 
+import org.opencv.core.RotatedRect;
+
 import edu.wpi.first.math.geometry.Pose2d;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -18,9 +20,9 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 public class AutoAlign extends Command {
     private SwerveDrive swerve;
     private Limelight limelight;
-
     private Pose2d pose;
     private Translation2d targetPos;
+    private Rotation2d targetRot;
 
     private Optional<Alliance> alliance;
     private boolean isRed;
@@ -33,17 +35,20 @@ public class AutoAlign extends Command {
     private Translation2d[] rotStickReplayArr;
     private int replayIndex;
 
+    // PID Stuff
+    private double prevError;
+    private double cumError;
+
     public AutoAlign(SwerveDrive swerve, Limelight limelight) {
         this.swerve = swerve;
         this.limelight = limelight;
-        this.reverseAfterFinish = reverseAfterFinish;
     }
 
     // Calc the closest point on a circle, to the center of the speaker 
     private Translation2d calcTargetPos(){
         final double R = VisionConstants.targetPosDistance;
-        double cX;
-        double cY;
+        final double cX;
+        final double cY;
         if(isRed){
             cX = VisionConstants.RedSpeakerCenter.getX();
             cY = VisionConstants.RedSpeakerCenter.getY();
@@ -64,32 +69,70 @@ public class AutoAlign extends Command {
         return new Translation2d(aX, aY);
     }
 
-    private Translation2d calcMoveStick(){
-        //TODO - DO THE MATH!
+    // Calculate the angle facing the center, at the target rot
+    private Rotation2d calcTargetRot() {
+        final double R = VisionConstants.targetPosDistance;
+        final double cX;
+        final double cY;
+        if(isRed){
+            cX = VisionConstants.RedSpeakerCenter.getX();
+            cY = VisionConstants.RedSpeakerCenter.getY();
+        }else{
+            cX = VisionConstants.BlueSpeakerCenter.getX();
+            cY = VisionConstants.BlueSpeakerCenter.getY();
+        }
+        final double pX = pose.getX();
+        final double pY = pose.getY();
 
+        final double dX = pX - cX;
+        final double dY = pY - cY;
+
+        final double yaw = ((Math.atan2(dX, dY)*360/Math.PI) % 360);
+
+        return Rotation2d.fromDegrees(yaw);
+    }
+
+    // Clamp to a circle, like an xbox controller
+    private Translation2d clamp(double oldX, double oldY){
+        // Code is from https://stackoverflow.com/questions/74329985/how-can-i-clamp-a-position-to-a-circley
+        final double alpha = (Math.atan2(oldX, -oldY) * 180 / Math.PI + 360) % 360;
+        final double maxX = Math.abs(Math.cos(alpha / 180 * Math.PI));
+        final double maxY = Math.abs(Math.sin(alpha / 180 * Math.PI));
+
+        final double newX = Math.max(-maxX, Math.min(maxX, oldX));
+        final double newY = Math.max(-maxY, Math.min(maxY, oldY));
+
+        return new Translation2d(newX, newY);
+    }
+
+    private Translation2d calcMoveStick(){
         final double curX = pose.getX();
         final double curY = pose.getY();
-        final double curYaw = pose.getRotation().getDegrees();
 
-        // This is not math
-        double stickX = curX * AutoAlignConstants.MoveSpeed * AutoAlignConstants.RotSpeed;
-        double stickY = curY * AutoAlignConstants.MoveSpeed * AutoAlignConstants.RotSpeed;
+        // I think this might work, assuming the constants are good
+        double stickX = -(curX - targetPos.getX()) * AutoAlignConstants.MoveSpeed;
+        double stickY = -(curY - targetPos.getY()) * AutoAlignConstants.MoveSpeed;
 
-        return new Translation2d(stickX, stickY);
+        return clamp(stickX, stickY);
     }
 
     private Translation2d calcRotStick(){
-        //TODO - DO THE MATH!
+        double error = pose.getRotation().getDegrees() - targetRot.getDegrees();
+		cumError += error * .02; // 20 ms
+		double delta = error - prevError;
 
-        final double curX = pose.getX();
-        final double curY = pose.getY();
-        final double curYaw = pose.getRotation().getDegrees();
+        final double kP = 4;
+        final double kI = 4;
+        final double kD = 4;
+        final double kF = 4;
 
-        // This is not math
-        double stickX = curX * AutoAlignConstants.MoveSpeed * AutoAlignConstants.RotSpeed;
-        double stickY = curY * AutoAlignConstants.MoveSpeed * AutoAlignConstants.RotSpeed;
+		double output = error * kP;
+		output += cumError * kI;
+		output += delta * kD;
+		output += kF;
 
-        return new Translation2d(stickX, stickY);
+        prevError = error;
+        return clamp(output, 0);
     }
 
     public void reverse() {
@@ -122,6 +165,7 @@ public class AutoAlign extends Command {
         // Regular replay
         if(!isFinished){
             targetPos = calcTargetPos();
+            targetRot = calcTargetRot();
 
             moveStick = calcMoveStick();
             rotStick = calcRotStick();
@@ -135,7 +179,7 @@ public class AutoAlign extends Command {
             // }
             isFinished = limelight.isNearSpeaker();
 
-        // If reverseAfterFinish, then loop back over and replay
+        // If reverseAfterFinish, then loop back over and replay in reverse
         }else if(reverseAfterFinish && !isReverseFinished){
             // Get reverse direction
             moveStick = moveStickReplayArr[replayIndex-moveStickReplayArr.length-1];
@@ -146,6 +190,10 @@ public class AutoAlign extends Command {
             rotStick = new Translation2d(rotStick.getX()*-1, rotStick.getY()*-1);
 
             replayIndex++;
+
+            if(replayIndex >= moveStickReplayArr.length){
+                reverseAfterFinish = true;
+            }
         }
 
         // This would greatly benifit from having feild Relative implemented.

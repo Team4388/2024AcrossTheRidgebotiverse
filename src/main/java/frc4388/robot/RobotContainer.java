@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.OIConstants;
@@ -96,10 +97,12 @@ public class RobotContainer {
         MoveToSpeaker,
         autoAlign,
         new InstantCommand(() -> m_robotShooter.spin()),
+        new WaitCommand(3.0),
         new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake),
+        new WaitCommand(3.0),
         new InstantCommand(() -> m_robotShooter.idle()),
         new InstantCommand(() -> autoAlign.reverse()),
-        autoAlign
+        autoAlign.asProxy()
     );
 
 
