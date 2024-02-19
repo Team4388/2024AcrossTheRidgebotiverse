@@ -4,6 +4,7 @@
 
 package frc4388.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -35,6 +36,7 @@ public class  SwerveDrive extends SubsystemBase {
   public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW; // * slow by default
   
   public double rotTarget = 0.0;
+  public Rotation2d orientRotTarget = new Rotation2d();
   public ChassisSpeeds chassisSpeeds = new ChassisSpeeds();
 
   /** Creates a new SwerveDrive. */
@@ -55,6 +57,7 @@ public class  SwerveDrive extends SubsystemBase {
 
       double rot = 0;
       
+      // ! drift correction
       if (rightStick.getNorm() > 0.05) {
         rotTarget = gyro.getAngle();
         rot = rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED;
@@ -83,6 +86,24 @@ public class  SwerveDrive extends SubsystemBase {
     }
     setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds));
   }
+
+  public void driveWithInputOrientation(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
+
+    if(fieldRelative) {
+      double rot = 0;
+      if(rightStick.getNorm() > 0.5) {
+        orientRotTarget = rightStick.getAngle().minus(new Rotation2d(0, 1));
+        rot = orientRotTarget.minus(gyro.getRotation2d()).getRadians();
+      }
+
+    Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
+
+    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), -1 * speed.getY(), rot * SwerveDriveConstants.ROTATION_SPEED, gyro.getRotation2d());//.times(-1));
+    } else {      // Create robot-relative speeds.
+      chassisSpeeds = new ChassisSpeeds(-1 * leftStick.getX(), -1 * leftStick.getY(), -1 * rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
+    }
+    setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds));  
+    }
 
   /**
    * Set each module of the swerve drive to the corresponding desired state.

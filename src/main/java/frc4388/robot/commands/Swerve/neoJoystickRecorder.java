@@ -69,7 +69,7 @@ public class neoJoystickRecorder extends Command {
     }
     @Override
     public void end(boolean interrupted) {
-        try (FileOutputStream stream = new FileOutputStream("./" + filename)) {
+        try (FileOutputStream stream = new FileOutputStream("/home/lvuser/autos/" + filename)) {
             // header: size of 0x5
             // byte Number of axes per controller
             // byte Number of POVs per controller

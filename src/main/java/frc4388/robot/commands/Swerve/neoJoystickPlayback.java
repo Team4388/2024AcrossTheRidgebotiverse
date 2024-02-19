@@ -16,11 +16,11 @@ public class neoJoystickPlayback extends Command {
     private final String                        filename;
     private final VirtualController[]           controllers;
     private final ArrayList<AutoRecordingFrame> frames         = new ArrayList<>();
-    private int                                 frame_index    = 0;
-    private long                                startTime      = 0;
-    private long                                playbackTime   = 0;
-    private boolean                             m_finished     = false; // ! There is no better way.
-    private boolean                             m_shouldfree   = false; // should free memory on ending
+    private       int                           frame_index    = 0;
+    private       long                          startTime      = 0;
+    private       long                          playbackTime   = 0;
+    private       boolean                       m_finished     = false; // ! There is no better way.
+    private       boolean                       m_shouldfree   = false; // should free memory on ending
 
     private byte  m_numAxes = 0;
     private byte  m_numPOVs = 0;
@@ -42,7 +42,7 @@ public class neoJoystickPlayback extends Command {
     }
     
     public boolean loadAuto() {
-        try (FileInputStream stream = new FileInputStream("./" + filename)) {
+        try (FileInputStream stream = new FileInputStream("/home/lvuser/autos/" + filename)) {
             if (m_numFrames != -1 && m_numFrames == frames.size()) {
                 System.out.println("AUTOPLAYBACK: Auto Already loaded.");
                 return true;
