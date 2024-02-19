@@ -68,13 +68,13 @@ public class PlaybackChooser {
 
         String[] dirs = m_dir.list();
 
-        if(dirs == null){ // Fix funny error
-            return;
+        if(dirs != null){ // Fix funny error
+            for (String auto : dirs) {
+                chooser.addOption(auto, new JoystickPlayback(m_swerve, auto));
+            }
         }
 
-        for (String auto : dirs) {
-            chooser.addOption(auto, new JoystickPlayback(m_swerve, auto));
-        }
+        
         for (var cmd_name : m_commandPool.keySet()) {
             chooser.addOption(cmd_name, m_commandPool.get(cmd_name));
         }
