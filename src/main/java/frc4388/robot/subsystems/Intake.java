@@ -6,8 +6,6 @@ package frc4388.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
 
-import javax.swing.text.Position;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.can.TalonSRXPIDSetConfiguration;
