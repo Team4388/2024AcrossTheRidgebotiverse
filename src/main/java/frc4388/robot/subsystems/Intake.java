@@ -6,6 +6,22 @@ package frc4388.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
 
+import javax.swing.text.Position;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.can.TalonSRXPIDSetConfiguration;
+import com.ctre.phoenix6.configs.HardwareLimitSwitchConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.ForwardLimitTypeValue;
+import com.ctre.phoenix6.signals.ForwardLimitValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.ReverseLimitTypeValue;
+import com.ctre.phoenix6.signals.ReverseLimitValue;
 import com.revrobotics.CANSparkBase;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkLimitSwitch;
@@ -13,6 +29,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.CAN;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants;
@@ -22,14 +39,26 @@ import frc4388.utility.Gains;
 
 public class Intake extends SubsystemBase {
   
+  //NEO
   private CANSparkMax intakeMotor;
   private CANSparkMax pivot;
   private SparkPIDController m_spedController;
-  private static Gains armGains = IntakeConstants.ArmPID.INTAKE_GAINS;
   private SparkLimitSwitch forwardLimit;
   private SparkLimitSwitch reverseLimit;
   private SparkLimitSwitch intakeforwardLimit;  
   private SparkLimitSwitch intakereverseLimit;
+
+  //Talon
+  private TalonFX talonIntake;
+  private TalonFX talonPivot;
+  private CANcoder encoder;
+
+  private HardwareLimitSwitchConfigs l;
+
+  TalonFXConfiguration doodooController = new TalonFXConfiguration();
+
+
+  public static Gains armGains = IntakeConstants.ArmPID.INTAKE_GAINS;
   
   private BooleanSupplier sup = () -> true;
   private BooleanSupplier dup = () -> false;
@@ -37,6 +66,7 @@ public class Intake extends SubsystemBase {
   private double smartDashboardOuttakeValue;
 
   /** Creates a new Intake. */
+  //For NEO
   public Intake(CANSparkMax intakeMotor, CANSparkMax pivot) {
     this.intakeMotor = intakeMotor;
     this.pivot = pivot;
@@ -65,6 +95,63 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
   }
 
+  //For Talon
+  public Intake(TalonFX talonIntake, TalonFX talonPivot) {
+    this.talonIntake = talonIntake;
+    this.talonPivot = talonPivot;
+
+    talonIntake.getConfigurator().apply(new TalonFXConfiguration());
+    talonPivot.getConfigurator().apply(new TalonFXConfiguration());
+
+    talonIntake.setNeutralMode(NeutralModeValue.Brake);
+    talonPivot.setNeutralMode(NeutralModeValue.Brake);
+
+    talonPivot.getConfigurator().apply(new HardwareLimitSwitchConfigs());
+    talonIntake.getConfigurator().apply(new HardwareLimitSwitchConfigs());
+
+  
+    
+    doodooController.Slot0.kP = armGains.kP;
+    doodooController.Slot1.kI = armGains.kI;
+    doodooController.Slot2.kD = armGains.kD;
+
+    // in init function, set slot 0 gains
+    var slot0Configs = new Slot0Configs();
+    slot0Configs.kP = 0.05; // An error of 0.5 rotations results in 12 V output
+    slot0Configs.kI = 0.0; // no output for integrated error
+    slot0Configs.kD = 0.0; // A velocity of 1 rps results in 0.1 V output
+
+    talonPivot.getConfigurator().apply(slot0Configs);
+
+    
+  }
+
+  // ! Talon Methods
+  public void talonPIDIn() {
+    PositionVoltage request = new PositionVoltage(0).withSlot(0);
+    talonPivot.setControl(request.withPosition(53)); //TODO: Find actual value
+  }
+
+  public void talonPIDOut() {
+    PositionVoltage request = new PositionVoltage(53).withSlot(53);
+    talonPivot.setControl(request.withPosition(0)); //TODO: Find actual value
+  }
+
+  public void talonHandoff() {
+    talonIntake.set(-IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
+  }
+
+  public void talonSpinIntakeMotor() {
+    talonIntake.set(IntakeConstants.INTAKE_SPEED);
+  }
+
+  public boolean getTalonIntakeLimitSwitchState() {
+    return false;
+  }
+
+
+
+  // ! NEO Methods
   //hanoff
   public void spinIntakeMotor() {
     intakeMotor.set(IntakeConstants.INTAKE_SPEED);

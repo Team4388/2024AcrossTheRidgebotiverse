@@ -185,16 +185,16 @@ public class RobotContainer {
         
         
         /* Auto Recording */
-        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-           .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-                                           () -> getDeadbandedDriverController().getLeftX(),
-                                           () -> getDeadbandedDriverController().getLeftY(),
-                                           () -> getDeadbandedDriverController().getRightX(),
-                                           () -> getDeadbandedDriverController().getRightY(),
-                                           () -> getDeadbandedOperatorController().getLeftBumper(),
-                                           () -> getDeadbandedOperatorController().getRightBumper(),
-                                           "TwoNotePrt1.txt"))
-           .onFalse(new InstantCommand());
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+        //    .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+        //                                    () -> getDeadbandedDriverController().getLeftX(),
+        //                                    () -> getDeadbandedDriverController().getLeftY(),
+        //                                    () -> getDeadbandedDriverController().getRightX(),
+        //                                    () -> getDeadbandedDriverController().getRightY(),
+        //                                    () -> getDeadbandedOperatorController().getLeftBumper(),
+        //                                    () -> getDeadbandedOperatorController().getRightBumper(),
+        //                                    "TwoNotePrt1.txt"))
+        //    .onFalse(new InstantCommand());
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
            .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
