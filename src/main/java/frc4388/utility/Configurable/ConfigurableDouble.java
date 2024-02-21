@@ -1,4 +1,4 @@
-package frc4388.utility.configurable;
+package frc4388.utility.Configurable;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 

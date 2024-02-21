@@ -15,8 +15,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.OIConstants;
+import frc4388.robot.commands.Autos.AutoAlign;
 import frc4388.robot.commands.Autos.PlaybackChooser;
 import frc4388.robot.commands.Swerve.JoystickPlayback;
 import frc4388.robot.commands.Swerve.JoystickRecorder;
@@ -50,11 +52,14 @@ public class RobotContainer {
                                                                   m_robotMap.rightFront,
                                                                   m_robotMap.leftBack,
                                                                   m_robotMap.rightBack,
+                                              
                                                                   m_robotMap.gyro);
-    
-     private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter);
+    /* Limelight */
+    private final Limelight limelight = new Limelight();
 
-     private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
+    private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter);
+
+    private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
 
     //private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
 
@@ -68,13 +73,39 @@ public class RobotContainer {
     private final VirtualController m_virtualDriver = new VirtualController(0);
     private final VirtualController m_virtualOperator = new VirtualController(1);
 
-    private Limelight limelight = new Limelight();
     private Command intakeToShootStuff = new ArmIntakeIn(m_robotIntake, m_robotShooter);
 
     private SequentialCommandGroup intakeToShoot = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotIntake.talonPIDIn()),
         new InstantCommand(() -> m_robotShooter.spin())
     );
+
+    private SequentialCommandGroup outtakeToShootFull = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotShooter.spin()),
+        new InstantCommand(() -> m_robotIntake.handoff())
+    );
+ 
+    private SequentialCommandGroup intakeInToOut = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotIntake.rotateArmOut2(), m_robotIntake),
+        new RunCommand(() -> m_robotIntake.limitNote(), m_robotIntake).until(m_robotIntake.getArmFowardLimitState()),
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter)
+    );
+
+
+    private AutoAlign autoAlign = new AutoAlign(m_robotSwerveDrive, limelight);
+
+    private SequentialCommandGroup autoShoot = new SequentialCommandGroup(
+        // MoveToSpeaker,
+        autoAlign,
+        new InstantCommand(() -> m_robotShooter.spin()),
+        new WaitCommand(3.0),
+        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake),
+        new WaitCommand(3.0),
+        new InstantCommand(() -> m_robotShooter.idle()),
+        new InstantCommand(() -> autoAlign.reverse()),
+        autoAlign.asProxy()
+    );
+
 
     private SequentialCommandGroup i = new SequentialCommandGroup(
         intakeToShootStuff, intakeToShoot
