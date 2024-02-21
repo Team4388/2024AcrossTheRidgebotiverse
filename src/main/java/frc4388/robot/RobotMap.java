@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.revrobotics.CANSparkLowLevel;
 import com.revrobotics.CANSparkMax;
@@ -74,6 +75,11 @@ public class RobotMap {
     public final TalonFX pivotMotor = new TalonFX(IntakeConstants.PIVOT_MOTOR_ID);
 
     void configureLEDMotorControllers() {    
+    }
+
+    void configureIntakeMotorControllers() {
+        intakeMotor.getConfigurator().apply(new TalonFXConfiguration());
+        pivotMotor.getConfigurator().apply(new TalonFXConfiguration());
     }
 
     void configureDriveMotorControllers() {

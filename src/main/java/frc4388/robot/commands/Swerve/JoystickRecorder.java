@@ -65,7 +65,7 @@ public class JoystickRecorder extends Command {
 
     intakeToShootStuff = new ArmIntakeIn(m_robotIntake, m_robotShooter);
     intakeToShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.pidIn()),
+        new InstantCommand(() -> m_robotIntake.talonPIDIn()),
         new InstantCommand(() -> m_robotShooter.spin())
     );
     i = new SequentialCommandGroup(
@@ -105,14 +105,14 @@ public class JoystickRecorder extends Command {
 
     if(lastOPLB != inputs.OPLB && inputs.OPLB == true){
       m_robotShooter.spin();
-      m_robotIntake.handoff();
+      m_robotIntake.talonHandoff();
     }else if(lastOPLB != inputs.OPLB && inputs.OPLB == false){
 
     }
 
     if(lastOPRB != inputs.OPRB){
       m_robotShooter.spin();
-      m_robotIntake.handoff();
+      m_robotIntake.talonHandoff();
     }
     
     System.out.println("RECORDING");
