@@ -104,14 +104,14 @@ public class Intake extends SubsystemBase {
     talonIntake.setNeutralMode(NeutralModeValue.Brake);
     talonPivot.setNeutralMode(NeutralModeValue.Brake);
 
-    talonPivot.getConfigurator().apply(new HardwareLimitSwitchConfigs());
-    talonIntake.getConfigurator().apply(new HardwareLimitSwitchConfigs());
+    // talonPivot.getConfigurator().apply(new HardwareLimitSwitchConfigs());
+    // talonIntake.getConfigurator().apply(new HardwareLimitSwitchConfigs());
 
   
     
-    doodooController.Slot0.kP = armGains.kP;
-    doodooController.Slot1.kI = armGains.kI;
-    doodooController.Slot2.kD = armGains.kD;
+    // doodooController.Slot0.kP = armGains.kP;
+    // doodooController.Slot1.kI = armGains.kI;
+    // doodooController.Slot2.kD = armGains.kD;
 
     // in init function, set slot 0 gains
     var slot0Configs = new Slot0Configs();
@@ -144,7 +144,8 @@ public class Intake extends SubsystemBase {
   }
 
   public boolean getTalonIntakeLimitSwitchState() {
-    return false;
+    var r = talonIntake.getForwardLimit().getValue().value == 1;
+    return r;
   }
 
 
