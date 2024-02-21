@@ -22,12 +22,12 @@ public class Shooter extends SubsystemBase {
   private TalonFX leftShooter;
   private TalonFX rightShooter;
 
+  private double smartDashboardShooterSpeed;
+
   /** Creates a new Shooter. */
-  public Shooter(TalonFX leftTalonFX, TalonFX rightTalonFX, Limelight limelight) {
+  public Shooter(TalonFX leftTalonFX, TalonFX rightTalonFX) {
     leftShooter  = leftTalonFX;
     rightShooter = rightTalonFX;
-
-    this.limelight = limelight;
 
     leftShooter.setNeutralMode(NeutralModeValue.Coast);
     rightShooter.setNeutralMode(NeutralModeValue.Coast);
@@ -63,18 +63,11 @@ public class Shooter extends SubsystemBase {
   }
 
   public void stop() {
-    shooterMode = 0;
     spin(0.d);
   }
 
   public void idle() {
-    if(limelight.isNearSpeaker()){
-      shooterMode = 2;
-      spin(ShooterConstants.SHOOTER_IDLE_LIMELIGHT);
-    }else{
-      shooterMode = 1;
       spin(ShooterConstants.SHOOTER_IDLE);
-    }
   }
 
   @Override
