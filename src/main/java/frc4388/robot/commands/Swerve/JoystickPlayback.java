@@ -102,7 +102,7 @@ public class JoystickPlayback extends Command {
         return;
       }
       lastIndex = i;
-    }
+    } // Why is this done rather than using the variable counter 
 
     TimedOutput lastOut = outputs.get(lastIndex - 1);
     TimedOutput out     = outputs.get(lastIndex);
