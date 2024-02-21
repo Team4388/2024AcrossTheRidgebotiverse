@@ -13,17 +13,17 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc4388.robot.Constants.OIConstants;
 import frc4388.robot.commands.Autos.PlaybackChooser;
-import frc4388.robot.commands.Swerve.JoystickPlayback;
-import frc4388.robot.commands.Swerve.JoystickRecorder;
+//import frc4388.robot.commands.Swerve.JoystickPlayback;
+//import frc4388.robot.commands.Swerve.JoystickRecorder;
+import frc4388.robot.commands.Swerve.neoJoystickPlayback;
+import frc4388.robot.commands.Swerve.neoJoystickRecorder;
 import frc4388.robot.commands.Intake.ArmIntakeIn;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Limelight;
@@ -31,6 +31,7 @@ import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.Intake;
 import frc4388.utility.controller.DeadbandedXboxController;
+import frc4388.utility.controller.VirtualController;
 import frc4388.utility.controller.XboxController;
 
 /**
@@ -61,7 +62,13 @@ public class RobotContainer {
 
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
-    private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);
+    private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);    
+    private final DeadbandedXboxController m_autoRecorderXbox = new DeadbandedXboxController(2);
+
+
+    /* Virtual Controllers */
+    private final VirtualController m_virtualDriver = new VirtualController(0);
+    private final VirtualController m_virtualOperator = new VirtualController(1);
 
     private Limelight limelight = new Limelight();
     private Command intakeToShootStuff = new ArmIntakeIn(m_robotIntake, m_robotShooter);
@@ -86,9 +93,9 @@ public class RobotContainer {
     );
 
     /* Autos */
-    private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
-    private Command startLeftMoveRight = new JoystickPlayback(m_robotSwerveDrive, "StartLeftMoveRight.txt");
-    private Command startRightMoveLeft = new JoystickPlayback(m_robotSwerveDrive, "StartRightMoveLeft.txt");
+    private Command taxi = new InstantCommand(); // new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
+    private Command startLeftMoveRight = new InstantCommand(); // new JoystickPlayback(m_robotSwerveDrive, "StartLeftMoveRight.txt");
+    private Command startRightMoveLeft = new InstantCommand(); // new JoystickPlayback(m_robotSwerveDrive, "StartRightMoveLeft.txt");
 
     private SequentialCommandGroup oneNoteStartingSpeaker = new SequentialCommandGroup (
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
@@ -153,7 +160,9 @@ public class RobotContainer {
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
     public RobotContainer() {
-        configureButtonBindings();
+        configureButtonBindings();        
+        configureVirtualButtonBindings();
+
 
         DriverStation.silenceJoystickConnectionWarning(true);
         CameraServer.startAutomaticCapture();
@@ -182,8 +191,6 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
         
-        
-        
         /* Auto Recording */
         // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
         //    .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
@@ -196,10 +203,22 @@ public class RobotContainer {
         //                                    "TwoNotePrt1.txt"))
         //    .onFalse(new InstantCommand());
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-           .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
-           .onFalse(new InstantCommand()); 
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        //    .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
+        //    .onFalse(new InstantCommand()); 
+        new JoystickButton(m_autoRecorderXbox, XboxController.LEFT_BUMPER_BUTTON)
+           .whileTrue(new neoJoystickRecorder(m_robotSwerveDrive,
+                        new DeadbandedXboxController[]{getDeadbandedDriverController(), getDeadbandedOperatorController()},
+                                           "2note.auto"))
+           .onFalse(new InstantCommand());
         
+        new JoystickButton(m_autoRecorderXbox, XboxController.RIGHT_BUMPER_BUTTON)
+           .onTrue(new neoJoystickPlayback(m_robotSwerveDrive,
+           "2note.auto",
+           new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
+           true, false))
+           .onFalse(new InstantCommand());
+
         // /* Speed */
         // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
         //     .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
@@ -247,7 +266,63 @@ public class RobotContainer {
             .onTrue(i)
             .onFalse(new InstantCommand(() -> m_robotIntake.talonPIDIn()));
         
+        //spins up shooter, no wind down
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_JOYSTICK_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter));
         
+    }
+
+    private void configureVirtualButtonBindings() {
+        /* Driver Buttons */
+        new JoystickButton(getVirtualDriverController(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro(), m_robotSwerveDrive));
+        
+        /* Speed */
+        new JoystickButton(getVirtualDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+         //   .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
+        
+        new JoystickButton(getVirtualDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+        
+        
+        
+        /* Operator Buttons */
+
+        new JoystickButton(getVirtualOperatorController(), XboxController.Y_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.pidIn()))
+            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
+
+        new JoystickButton(getVirtualOperatorController(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.pidOut()))
+            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
+
+
+        // Override Intake Position encoder: out
+        new JoystickButton(getVirtualOperatorController(), XboxController.BACK_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.setPivotEncoderPosition(-53), m_robotIntake));
+
+        // Override Intake Position encoder: in
+        new JoystickButton(getVirtualOperatorController(), XboxController.START_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.setPivotEncoderPosition(0), m_robotIntake));
+
+        //Spin Shooter Motors
+        new JoystickButton(getVirtualOperatorController(), XboxController.X_BUTTON)
+             .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
+             .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter));
+
+        new JoystickButton(getVirtualOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
+            .onTrue(ejectToShoot)
+            .onFalse(turnOffShoot);
+
+
+        new JoystickButton(getVirtualOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
+            .onTrue(i)
+            .onFalse(new InstantCommand(() -> m_robotIntake.pidIn()));
+        
+        
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_JOYSTICK_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter));
     }
 
     /**
@@ -256,8 +331,12 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-         //no auto
-        return playbackChooser.getCommand();
+        //no auto
+        return new neoJoystickPlayback(m_robotSwerveDrive,
+           "2note.auto",
+           new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
+           true, false);
+        //return playbackChooser.getCommand();
     }
 
     /**
@@ -269,5 +348,13 @@ public class RobotContainer {
 
     public DeadbandedXboxController getDeadbandedOperatorController() {
         return this.m_operatorXbox;
+    }
+
+    public VirtualController getVirtualDriverController() {
+        return m_virtualDriver;
+    }
+
+    public VirtualController getVirtualOperatorController() {
+        return m_virtualOperator;
     }
 }

@@ -13,4 +13,14 @@ public class UtilityStructs {
     
         public long timedOffset = 0;
     }
+    public static class AutoRecordingControllerFrame {
+        public double[] axes = new double[6];
+        public short button = 0;
+        public short[] POV = new short[1];
+
+    }
+    public static class AutoRecordingFrame {
+        public AutoRecordingControllerFrame[] controllerFrames = new AutoRecordingControllerFrame[2];
+        public int timeStamp;
+    }
 }
