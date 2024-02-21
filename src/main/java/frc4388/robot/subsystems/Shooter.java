@@ -49,7 +49,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void spin() {
-    spin(smartDashboardShooterSpeed);
+    spin(ShooterConstants.SHOOTER_SPEED);
   }
 
   public void spin(double speed) {

@@ -169,7 +169,7 @@ public final class Constants {
         public static final int LEFT_SHOOTER_ID = 15; // final
         public static final int RIGHT_SHOOTER_ID = 16; // final
         public static final double SHOOTER_SPEED = 0.35; // final
-        public static final double SHOOTER_IDLE = 0.4; // final
+        public static final double SHOOTER_IDLE = 0.35; // final
         public static final double SHOOTER_IDLE_LIMELIGHT = 0.8;
     }
 

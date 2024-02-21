@@ -139,6 +139,11 @@ public class  SwerveDrive extends SubsystemBase {
     gyro.reset();
     rotTarget = 0.0;
   }
+
+  public void resetGyroFlip() {
+    gyro.resetFlip();
+    rotTarget = 0.0;
+  }
   
   public void stopModules() {
     for (SwerveModule module : this.modules) {
