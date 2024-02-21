@@ -5,8 +5,10 @@
 package frc4388.robot.subsystems;
 
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.Constants.ShooterConstants;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -20,15 +22,6 @@ public class Shooter extends SubsystemBase {
   private TalonFX leftShooter;
   private TalonFX rightShooter;
 
-  private Limelight limelight;
-
-  // 0 = Stop
-  // 1 = Idle, no limelight
-  // 2 = limelight
-  // 3 = Shooting
-  private int shooterMode;
-
-  
   /** Creates a new Shooter. */
   public Shooter(TalonFX leftTalonFX, TalonFX rightTalonFX, Limelight limelight) {
     leftShooter  = leftTalonFX;
@@ -38,16 +31,35 @@ public class Shooter extends SubsystemBase {
 
     leftShooter.setNeutralMode(NeutralModeValue.Coast);
     rightShooter.setNeutralMode(NeutralModeValue.Coast);
+    SmartDashboard.putNumber("Shooter Speed", ShooterConstants.SHOOTER_SPEED);
+
+  }
+
+  public Shooter(TalonFX leftShooter) {
+    this.leftShooter = leftShooter;
+    leftShooter.setNeutralMode(NeutralModeValue.Coast);
+  }
+
+  public void singleSpin() {
+    leftShooter.set(1.0);
+  }
+
+  public void singleSpin(double speed) {
+    leftShooter.set(speed);
   }
 
   public void spin() {
-    shooterMode = 3;
-    spin(ShooterConstants.SHOOTER_SPEED);
+    spin(smartDashboardShooterSpeed);
   }
 
   public void spin(double speed) {
     leftShooter.set(-speed);    
-    rightShooter.set(speed);
+    rightShooter.set(-speed);
+  }
+
+  public void spin(double leftSpeed, double rightSpeed) {
+    leftShooter.set(leftSpeed);    
+    rightShooter.set(-rightSpeed);
   }
 
   public void stop() {
@@ -68,15 +80,10 @@ public class Shooter extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+  //  SmartDashboard.putNumber("Left Shooter RPM", leftShooter.getRotorVelocity().getValue());
+    //SmartDashboard.putNumber("Right Shooter RPM", rightShooter.getRotorVelocity().getValue());
+    smartDashboardShooterSpeed = SmartDashboard.getNumber("Shooter Speed", ShooterConstants.SHOOTER_SPEED);
 
-    if(limelight.isNearSpeaker() && shooterMode == 0){
-      shooterMode = 1;
-      spin(ShooterConstants.SHOOTER_IDLE_LIMELIGHT);
-    }
-
-    SmartDashboard.putNumber("Shooter Speed mode", shooterMode);
-    SmartDashboard.putNumber("Left Shooter RPM", leftShooter.getRotorVelocity().getValue());
-    SmartDashboard.putNumber("Right Shooter RPM", rightShooter.getRotorVelocity().getValue());
     
   }
 }

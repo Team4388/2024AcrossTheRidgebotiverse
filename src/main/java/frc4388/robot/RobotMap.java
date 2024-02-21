@@ -70,8 +70,8 @@ public class RobotMap {
     public final TalonFX rightShooter = new TalonFX(ShooterConstants.RIGHT_SHOOTER_ID);
 
     /* Intake Subsystem */
-    public final CANSparkMax intakeMotor = new CANSparkMax(IntakeConstants.INTAKE_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless);
-    public final CANSparkMax pivotMotor = new CANSparkMax(IntakeConstants.PIVOT_MOTOR_ID, CANSparkLowLevel.MotorType.kBrushless);
+    public final TalonFX intakeMotor = new TalonFX(IntakeConstants.INTAKE_MOTOR_ID);
+    public final TalonFX pivotMotor = new TalonFX(IntakeConstants.PIVOT_MOTOR_ID);
 
     void configureLEDMotorControllers() {    
     }
