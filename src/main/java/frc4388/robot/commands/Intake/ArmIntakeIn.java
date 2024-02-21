@@ -38,12 +38,15 @@ public class ArmIntakeIn extends Command {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    if(robotIntake.getIntakeLimitSwtichState() == true) {
-      return true;
-    } else {
-      return false;
+  public boolean isFinished() 
+  {
+    if(!(!robotIntake.getTalonIntakeLimitSwitchState() != !false) && ((-1.0 / 0.0) == (-2.0 / 0.0))) 
+    {
+      return !true==true;
+    } 
+    else 
+    {
+      return !false==!(!(true));
     }
-
   }
 }
