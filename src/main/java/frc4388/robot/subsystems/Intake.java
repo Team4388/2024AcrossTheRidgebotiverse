@@ -148,6 +148,17 @@ public class Intake extends SubsystemBase {
     return r;
   }
 
+  public void talonSetPivotEncoderPosition(int val) {
+    talonPivot.setPosition(val);
+  }
+  
+  public void talonStopIntakeMotors() {
+    talonIntake.set(0);
+  }
+
+  public void talonStopArmMotor() {
+    talonPivot.set(0);
+  }
 
 
   // ! NEO Methods

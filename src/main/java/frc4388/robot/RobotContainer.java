@@ -67,7 +67,7 @@ public class RobotContainer {
     private Command intakeToShootStuff = new ArmIntakeIn(m_robotIntake, m_robotShooter);
 
     private SequentialCommandGroup intakeToShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.pidIn()),
+        new InstantCommand(() -> m_robotIntake.talonPIDIn()),
         new InstantCommand(() -> m_robotShooter.spin())
     );
 
@@ -77,12 +77,12 @@ public class RobotContainer {
 
     private SequentialCommandGroup ejectToShoot = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
-        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake)
+        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake)
     );
 
     private SequentialCommandGroup turnOffShoot = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
-        new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake)
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
     );
 
     /* Autos */
@@ -93,20 +93,20 @@ public class RobotContainer {
     private SequentialCommandGroup oneNoteStartingSpeaker = new SequentialCommandGroup (
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
         new WaitCommand(1).asProxy(),
-        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake),
+        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
         new WaitCommand(1).asProxy(),
         new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
-        new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake),
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake),
         new WaitCommand(1).asProxy(),
         new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt")
     );
     private SequentialCommandGroup oneNoteStartingSpeakerStationary = new SequentialCommandGroup (
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
         new WaitCommand(1).asProxy(),
-        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake),
+        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
         new WaitCommand(1).asProxy(),
         new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
-        new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake)
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
     );
     private SequentialCommandGroup oneNoteStartingFromLeft = new SequentialCommandGroup(
         startLeftMoveRight.asProxy(),
@@ -121,10 +121,10 @@ public class RobotContainer {
     private SequentialCommandGroup twoNoteStartingFromSpeaker = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
         new WaitCommand(1).asProxy(),
-        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake),
+        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
         new WaitCommand(1).asProxy(),
         new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
-        new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake),
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake),
         intakeToShootStuff.asProxy(),
         new WaitCommand(1).asProxy(),
         new JoystickPlayback(m_robotSwerveDrive, "TwoNotePrt1.txt"),
@@ -134,10 +134,10 @@ public class RobotContainer {
         new WaitCommand(0.5).asProxy(),
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
         new WaitCommand(1).asProxy(),
-        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake),
+        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
         new WaitCommand(1).asProxy(),
         new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
-        new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake)
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
     );
     private PlaybackChooser playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
             .addOption("Taxi Auto", taxi.asProxy())
@@ -213,25 +213,25 @@ public class RobotContainer {
         /* Operator Buttons */
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.pidIn()))
-            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
+            .onTrue(new InstantCommand(() -> m_robotIntake.talonPIDIn()))
+            .onFalse(new InstantCommand(() -> m_robotIntake.talonStopArmMotor()));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.pidOut()))
-            .onFalse(new InstantCommand(() -> m_robotIntake.stopArmMotor()));
+            .onTrue(new InstantCommand(() -> m_robotIntake.talonPIDOut()))
+            .onFalse(new InstantCommand(() -> m_robotIntake.talonStopArmMotor()));
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.spinIntakeMotor()))
-            .onFalse(new InstantCommand(() -> m_robotIntake.stopIntakeMotors()));
+            .onTrue(new InstantCommand(() -> m_robotIntake.talonSpinIntakeMotor()))
+            .onFalse(new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors()));
 
 
         // Override Intake Position encoder: out
         new JoystickButton(getDeadbandedOperatorController(), XboxController.BACK_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.setPivotEncoderPosition(-53), m_robotIntake));
+            .onTrue(new InstantCommand(() -> m_robotIntake.talonSetPivotEncoderPosition(-53), m_robotIntake));
 
         // Override Intake Position encoder: in
         new JoystickButton(getDeadbandedOperatorController(), XboxController.START_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotIntake.setPivotEncoderPosition(0), m_robotIntake));
+            .onTrue(new InstantCommand(() -> m_robotIntake.talonSetPivotEncoderPosition(0), m_robotIntake));
 
         //Spin Shooter Motors
         new JoystickButton(getDeadbandedOperatorController(), XboxController.X_BUTTON)
@@ -245,7 +245,7 @@ public class RobotContainer {
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
             .onTrue(i)
-            .onFalse(new InstantCommand(() -> m_robotIntake.pidIn()));
+            .onFalse(new InstantCommand(() -> m_robotIntake.talonPIDIn()));
         
         
     }
