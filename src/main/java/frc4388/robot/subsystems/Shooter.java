@@ -21,8 +21,9 @@ public class Shooter extends SubsystemBase {
   
   private TalonFX leftShooter;
   private TalonFX rightShooter;
-  
+
   private double smartDashboardShooterSpeed;
+
   /** Creates a new Shooter. */
   public Shooter(TalonFX leftTalonFX, TalonFX rightTalonFX) {
     leftShooter  = leftTalonFX;
@@ -66,7 +67,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public void idle() {
-    spin(ShooterConstants.SHOOTER_IDLE);
+      spin(ShooterConstants.SHOOTER_IDLE);
   }
 
   @Override

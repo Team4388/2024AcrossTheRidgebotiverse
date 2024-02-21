@@ -9,6 +9,8 @@ package frc4388.robot;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
+import edu.wpi.first.math.geometry.Translation2d;
+
 import frc4388.utility.LEDPatterns;
 import frc4388.utility.Gains;
 
@@ -119,27 +121,38 @@ public final class Constants {
       }
     
     public static final class VisionConstants {
-        public static final String NAME = "photonCamera";
+        // public static final String NAME = "photonCamera";
     
-        public static final int LIME_HIXELS = 640;
-        public static final int LIME_VIXELS = 480;
+        // public static final int LIME_HIXELS = 640;
+        // public static final int LIME_VIXELS = 480;
     
-        public static final double H_FOV = 59.6;
-        public static final double V_FOV = 45.7;
+        // public static final double H_FOV = 59.6;
+        // public static final double V_FOV = 45.7;
     
-        public static final double LIME_HEIGHT = 6.0;
-        public static final double LIME_ANGLE = 55.0;
+        // public static final double LIME_HEIGHT = 6.0;
+        // public static final double LIME_ANGLE = 55.0;
     
-        // public static final double HIGH_TARGET_HEIGHT = 46.0;
-        public static final double HIGH_TAPE_HEIGHT = 44.0;
+        // // public static final double HIGH_TARGET_HEIGHT = 46.0;
+        // public static final double HIGH_TAPE_HEIGHT = 44.0;
         
-        // public static final double MID_TARGET_HEIGHT = 34.0;
-        public static final double MID_TAPE_HEIGHT = 24.0;
+        // // public static final double MID_TARGET_HEIGHT = 34.0;
+        // public static final double MID_TAPE_HEIGHT = 24.0;
     
-        public static final double APRIL_HEIGHT = -1.0; // TODO: find actual value
+        // public static final double APRIL_HEIGHT = -1.0; // TODO: find actual value
+
+        public static final Translation2d RedSpeakerCenter = new Translation2d(7.914259, -3.221609);
+        public static final Translation2d BlueSpeakerCenter = new Translation2d(-8.308975, 1.442593);
+
+        public static final double SpeakerBubbleDistance = 3;
+        public static final double targetPosDistance = 1.5;
     
     }
-    
+   
+    public static final class AutoAlignConstants {
+        public static final double MoveSpeed = 0.0;
+        public static final double RotSpeed = 0.0;
+    }
+
     public static final class DriveConstants {
         public static final int DRIVE_PIGEON_ID = 14;
 
@@ -157,7 +170,7 @@ public final class Constants {
         public static final int RIGHT_SHOOTER_ID = 16; // final
         public static final double SHOOTER_SPEED = 0.35; // final
         public static final double SHOOTER_IDLE = 0.4; // final
-
+        public static final double SHOOTER_IDLE_LIMELIGHT = 0.8;
     }
 
     public static final class IntakeConstants {
