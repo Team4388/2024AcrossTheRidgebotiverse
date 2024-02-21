@@ -57,7 +57,7 @@ public class RobotContainer {
     /* Limelight */
     private final Limelight limelight = new Limelight();
 
-    private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter, limelight);
+    private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter);
 
     private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
 
@@ -73,7 +73,6 @@ public class RobotContainer {
     private final VirtualController m_virtualDriver = new VirtualController(0);
     private final VirtualController m_virtualOperator = new VirtualController(1);
 
-    private Limelight limelight = new Limelight();
     private Command intakeToShootStuff = new ArmIntakeIn(m_robotIntake, m_robotShooter);
 
     private SequentialCommandGroup intakeToShoot = new SequentialCommandGroup(
