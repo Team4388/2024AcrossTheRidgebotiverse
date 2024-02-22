@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -25,6 +26,7 @@ import frc4388.robot.commands.Swerve.JoystickRecorder;
 import frc4388.robot.commands.Swerve.neoJoystickPlayback;
 import frc4388.robot.commands.Swerve.neoJoystickRecorder;
 import frc4388.robot.commands.Intake.ArmIntakeIn;
+import frc4388.robot.commands.Autos.ArmIntakeInAuto;
 import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
@@ -76,8 +78,8 @@ public class RobotContainer {
     private Command intakeToShootStuff = new ArmIntakeIn(m_robotIntake, m_robotShooter);
 
     private SequentialCommandGroup intakeToShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.talonPIDIn())
-        //new InstantCommand(() -> m_robotShooter.spin())
+        new InstantCommand(() -> m_robotIntake.talonPIDIn()),
+        new InstantCommand(() -> m_robotShooter.spin())
     );
 
     // private SequentialCommandGroup outtakeToShootFull = new SequentialCommandGroup(
@@ -112,9 +114,9 @@ public class RobotContainer {
     );
 
     private SequentialCommandGroup ejectToShoot = new SequentialCommandGroup(
-         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter)
-        // new WaitCommand(0.75),
-        //new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake)
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+        new WaitCommand(0.75),
+        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake)
     );
 
     private SequentialCommandGroup turnOffShoot = new SequentialCommandGroup(
@@ -126,6 +128,7 @@ public class RobotContainer {
     private Command taxi = new InstantCommand(); // new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt");
     private Command startLeftMoveRight = new InstantCommand(); // new JoystickPlayback(m_robotSwerveDrive, "StartLeftMoveRight.txt");
     private Command startRightMoveLeft = new InstantCommand(); // new JoystickPlayback(m_robotSwerveDrive, "StartRightMoveLeft.txt");
+    private Command interrupt = new InstantCommand(() -> {}, m_robotSwerveDrive, m_robotIntake, m_robotShooter);
 
     private SequentialCommandGroup oneNoteStartingSpeaker = new SequentialCommandGroup (
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
@@ -155,6 +158,7 @@ public class RobotContainer {
         ejectToShoot.asProxy(),
         taxi.asProxy()
     );
+
     private SequentialCommandGroup twoNoteStartingFromSpeaker = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
         new WaitCommand(1).asProxy(),
@@ -162,26 +166,32 @@ public class RobotContainer {
         new WaitCommand(1).asProxy(),
         new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
         new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake),
-        intakeToShootStuff.asProxy(),
-        new WaitCommand(1).asProxy(),
-        new JoystickPlayback(m_robotSwerveDrive, "TwoNotePrt1.txt"),
-        intakeToShoot.asProxy(),
-        new WaitCommand(1).asProxy(),
-        new JoystickPlayback(m_robotSwerveDrive, "TwoNotePrt2.txt"),
-        new WaitCommand(0.5).asProxy(),
+        new ArmIntakeInAuto(m_robotIntake, m_robotShooter, m_robotSwerveDrive),
+        new InstantCommand(() -> m_robotIntake.talonPIDIn()),
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
-        new WaitCommand(1).asProxy(),
+        new WaitCommand(1.4).asProxy(),
         new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
-        new WaitCommand(1).asProxy(),
+        new WaitCommand(0.5),
         new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
-        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake),
+        new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt")
+        // new WaitCommand(1).asProxy(),
+        // new JoystickPlayback(m_robotSwerveDrive, "TwoNotePrt2.txt"),
+        // new WaitCommand(0.5).asProxy(),
+        // new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+        // new WaitCommand(1).asProxy(),
+        // new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
+        // new WaitCommand(1).asProxy(),
+        // new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
+        // new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
     );
     private PlaybackChooser playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
             .addOption("Taxi Auto", taxi.asProxy())
             .addOption("One Note Auto Starting in Front of Speaker", oneNoteStartingSpeaker)
             .addOption("One Note Auto Starting in Front of Speaker, But Stay", oneNoteStartingSpeakerStationary)
-            .addOption("One Note Auto Starting from Left Position", oneNoteStartingFromLeft)
-            .addOption("One Note Auto Starting from Right Position", oneNoteStartingFromRight)
+            // .addOption("One Note Auto Starting from Left Position", oneNoteStartingFromLeft)
+            // .addOption("One Note Auto Starting from Right Position", oneNoteStartingFromRight)
+            .addOption("Two Note Starting in Front of Speaker", twoNoteStartingFromSpeaker)
             .buildDisplay();
     
     
@@ -222,20 +232,18 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroFlip(), m_robotSwerveDrive));
         
         /* Auto Recording */
-        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-           .whileTrue(new JoystickRecorder(m_robotSwerveDrive, m_robotShooter, m_robotIntake,
-                                           () -> getDeadbandedDriverController().getLeftX(),
-                                           () -> getDeadbandedDriverController().getLeftY(),
-                                           () -> getDeadbandedDriverController().getRightX(),
-                                           () -> getDeadbandedDriverController().getRightY(),
-                                           () -> getDeadbandedOperatorController().getLeftBumper(),
-                                           () -> getDeadbandedOperatorController().getRightBumper(),
-                                           "Taxi.txt"))
-           .onFalse(new InstantCommand());
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+        //    .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+        //                                    () -> getDeadbandedDriverController().getLeftX(),
+        //                                    () -> getDeadbandedDriverController().getLeftY(),
+        //                                    () -> getDeadbandedDriverController().getRightX(),
+        //                                    () -> getDeadbandedDriverController().getRightY(),
+        //                                    "Taxi.txt"))
+        //    .onFalse(new InstantCommand());
 
-        new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-           .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
-           .onFalse(new InstantCommand()); 
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+        //    .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
+        //    .onFalse(new InstantCommand()); 
 
         // new JoystickButton(m_autoRecorderXbox, XboxController.LEFT_BUMPER_BUTTON)
         //    .whileTrue(new neoJoystickRecorder(m_robotSwerveDrive,
@@ -251,9 +259,9 @@ public class RobotContainer {
         //    .onFalse(new InstantCommand());
 
         // /* Speed */
-        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
-         //   .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
+       new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+             .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+          // .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
@@ -301,6 +309,11 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_JOYSTICK_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter));
         
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_JOYSTICK_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotIntake.talonSpinIntakeMotor(), m_robotIntake))
+            .onFalse(new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake));
+
+
     }
 
    private void configureVirtualButtonBindings() {
@@ -347,9 +360,9 @@ public class RobotContainer {
             .onFalse(turnOffShoot);
 
 
-        new JoystickButton(getVirtualOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
-            .onTrue(i)
-            .onFalse(new InstantCommand(() -> m_robotIntake.talonPIDIn()));
+        // new JoystickButton(getVirtualOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
+        //     .onTrue(i)
+        //     .onFalse(new InstantCommand(() -> m_robotIntake.talonPIDIn()));
         
         
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_JOYSTICK_BUTTON)
