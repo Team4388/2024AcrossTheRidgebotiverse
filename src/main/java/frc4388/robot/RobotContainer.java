@@ -227,11 +227,13 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-        /* Driver Buttons */
+
+        // ? /* Driver Buttons */
+
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroFlip(), m_robotSwerveDrive));
         
-        /* Auto Recording */
+        // ! /* Auto Recording */
         // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
         //    .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
         //                                    () -> getDeadbandedDriverController().getLeftX(),
@@ -258,7 +260,7 @@ public class RobotContainer {
         //    true, false))
         //    .onFalse(new InstantCommand());
 
-        // /* Speed */
+        // ! /* Speed */
        new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
              .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
           // .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
@@ -268,7 +270,7 @@ public class RobotContainer {
         
         
         
-        /* Operator Buttons */
+       //?  /* Operator Buttons */
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotIntake.talonPIDIn()))
