@@ -99,7 +99,7 @@ public class RobotGyro implements Gyro {
         resetZeroValues();
 
         if (m_isGyroAPigeon) {
-            m_pigeon.setYaw(180);
+            m_pigeon.setYaw(0);
         } else {
             m_navX.reset();
         }
