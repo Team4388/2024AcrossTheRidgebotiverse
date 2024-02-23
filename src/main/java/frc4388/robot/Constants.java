@@ -33,7 +33,7 @@ public final class Constants {
         public static final double CORRECTION_MIN = 10;
         public static final double CORRECTION_MAX = 50;
     
-        public static final double SLOW_SPEED = 0.8;
+        public static final double SLOW_SPEED = 0.4;
         public static final double FAST_SPEED = 1.0;
         public static final double TURBO_SPEED = 4.0;
     
