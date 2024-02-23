@@ -277,11 +277,11 @@ public class RobotContainer {
         
        //?  /* Operator Buttons */
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotIntake.talonPIDIn()))
             .onFalse(new InstantCommand(() -> m_robotIntake.talonStopArmMotor()));
 
-        new JoystickButton(getDeadbandedOperatorController(), XboxController.Y_BUTTON)
+        new JoystickButton(getDeadbandedOperatorController(), XboxController.B_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotIntake.talonPIDOut()))
             .onFalse(new InstantCommand(() -> m_robotIntake.talonStopArmMotor()));
 
