@@ -129,12 +129,12 @@ public class Intake extends SubsystemBase {
   // ! Talon Methods
   public void talonPIDIn() {
     PositionVoltage request = new PositionVoltage(-59);
-    talonPivot.setControl(request.withPosition(0)); //TODO: Find actual value
+    talonPivot.setControl(request.withPosition(0)); 
   }
 
   public void talonPIDOut() {
     PositionVoltage request = new PositionVoltage(0);
-    talonPivot.setControl(request.withPosition(-59)); //TODO: Find actual value
+    talonPivot.setControl(request.withPosition(-59)); 
   }
 
   public void talonHandoff() {
