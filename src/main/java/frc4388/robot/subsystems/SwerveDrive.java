@@ -87,12 +87,14 @@ public class  SwerveDrive extends SubsystemBase {
     setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds));
   }
 
-  public void driveWithInputOrientation(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
+  public void driveWithInputOrientation(Translation2d leftStick, double rightX, double rightY, boolean fieldRelative) {
+
+    Translation2d rightStick = new Translation2d(rightX, rightY);
 
     if(fieldRelative) {
       double rot = 0;
       if(rightStick.getNorm() > 0.5) {
-        orientRotTarget = rightStick.getAngle().minus(new Rotation2d(0, 1));
+        orientRotTarget = new Rotation2d(rightX, -rightY).minus(new Rotation2d(0,1));
         rot = orientRotTarget.minus(gyro.getRotation2d()).getRadians();
       }
     
