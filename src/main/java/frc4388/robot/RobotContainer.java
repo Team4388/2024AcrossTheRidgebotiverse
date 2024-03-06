@@ -32,6 +32,7 @@ import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.Intake;
+import frc4388.utility.DeferredBlock;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.VirtualController;
 import frc4388.utility.controller.XboxController;
@@ -76,6 +77,7 @@ public class RobotContainer {
     // private final VirtualController m_virtualOperator = new VirtualController(1);
 
     private Command intakeToShootStuff = new ArmIntakeIn(m_robotIntake, m_robotShooter);
+    private Command interrupt = new InstantCommand(() -> {}, m_robotIntake, m_robotShooter);
 
     private SequentialCommandGroup intakeToShoot = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotIntake.talonPIDIn())
@@ -93,6 +95,8 @@ public class RobotContainer {
     //     new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter)
     // );
 
+
+    // ! Teleop Commands
 
     private AutoAlign autoAlign = new AutoAlign(m_robotSwerveDrive, limelight);
 
@@ -124,22 +128,33 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
     );
 
+    private SequentialCommandGroup emergencyRetract = new SequentialCommandGroup(
+        interrupt,
+        new InstantCommand(() -> m_robotIntake.talonPIDIn(), m_robotIntake),
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
+    );
+
+    private SequentialCommandGroup ampShoot = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotIntake.ampPosition()),
+        new InstantCommand(() -> m_robotIntake.ampShoot(0.1)) //TODO: Find Actual Speed
+    );
+
     // ! /*  Autos */
     private Command taxi = new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"); //new InstantCommand();
     private Command startLeftMoveRight = new InstantCommand(); // new JoystickPlayback(m_robotSwerveDrive, "StartLeftMoveRight.txt");
     private Command startRightMoveLeft = new InstantCommand(); // new JoystickPlayback(m_robotSwerveDrive, "StartRightMoveLeft.txt");
-    private Command interrupt = new InstantCommand(() -> {}, m_robotIntake, m_robotShooter);
+    
 
     //Help Simplify Shooting
-    private SequentialCommandGroup pullInArmtoShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.talonPIDIn()),
-        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
-        new WaitCommand(1.4).asProxy(),
-        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
-        new WaitCommand(0.5),
-        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
-        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
-    );
+    // private SequentialCommandGroup pullInArmtoShoot = new SequentialCommandGroup(
+    //     new InstantCommand(() -> m_robotIntake.talonPIDIn()),
+    //     new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+    //     new WaitCommand(1.4).asProxy(),
+    //     new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
+    //     new WaitCommand(0.5),
+    //     new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
+    //     new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
+    // );
 
     private SequentialCommandGroup oneNoteStartingSpeaker = new SequentialCommandGroup (
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
@@ -170,11 +185,6 @@ public class RobotContainer {
         taxi.asProxy()
     );
 
-    private SequentialCommandGroup emergencyRetract = new SequentialCommandGroup(
-        interrupt,
-        new InstantCommand(() -> m_robotIntake.talonPIDIn(), m_robotIntake),
-        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
-    );
 
     private SequentialCommandGroup twoNoteStartingFromSpeaker = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
@@ -184,7 +194,13 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
         new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake),
         new ArmIntakeInAuto(m_robotIntake, m_robotShooter, m_robotSwerveDrive),
-        pullInArmtoShoot,
+        new InstantCommand(() -> m_robotIntake.talonPIDIn()),
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+        new WaitCommand(1.4).asProxy(),
+        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
+        new WaitCommand(0.5),
+        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake),
         new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt")
         // new WaitCommand(1).asProxy(),
         // new JoystickPlayback(m_robotSwerveDrive, "TwoNotePrt2.txt"),
@@ -197,6 +213,23 @@ public class RobotContainer {
         // new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
     );
 
+    private SequentialCommandGroup stayTwoNoteStartingFromSpeaker = new SequentialCommandGroup(
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+        new WaitCommand(1).asProxy(),
+        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
+        new WaitCommand(1).asProxy(),
+        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake),
+        new ArmIntakeInAuto(m_robotIntake, m_robotShooter, m_robotSwerveDrive),
+        new InstantCommand(() -> m_robotIntake.talonPIDIn()),
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+        new WaitCommand(1.4).asProxy(),
+        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
+        new WaitCommand(0.5),
+        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
+    );
+
     private SequentialCommandGroup threeNoteStartingFromSpeaker = new SequentialCommandGroup(
         new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
         new WaitCommand(1).asProxy(),
@@ -205,19 +238,32 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
         new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake),
         new ArmIntakeInAuto(m_robotIntake, m_robotShooter, m_robotSwerveDrive),
-        pullInArmtoShoot,
+        new InstantCommand(() -> m_robotIntake.talonPIDIn()),
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+        new WaitCommand(1.4).asProxy(),
+        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
+        new WaitCommand(0.5),
+        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake),
         //? Create Another Parallel Command Group :(
-        pullInArmtoShoot,
+        new InstantCommand(() -> m_robotIntake.talonPIDIn()),
+        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
+        new WaitCommand(1.4).asProxy(),
+        new InstantCommand(() -> m_robotIntake.talonHandoff(), m_robotIntake),
+        new WaitCommand(0.5),
+        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
+        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake),
         new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt")
     );
 
     private PlaybackChooser playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
             .addOption("Taxi Auto", taxi.asProxy())
-            .addOption("One Note Auto Starting in Front of Speaker", oneNoteStartingSpeaker)
-            .addOption("One Note Auto Starting in Front of Speaker, But Stay", oneNoteStartingSpeakerStationary)
-            // .addOption("One Note Auto Starting from Left Position", oneNoteStartingFromLeft)
-            // .addOption("One Note Auto Starting from Right Position", oneNoteStartingFromRight)
-            .addOption("Two Note Starting in Front of Speaker", twoNoteStartingFromSpeaker)
+            .addOption("One Note Auto Starting in Front of Speaker", oneNoteStartingSpeaker.asProxy())
+            .addOption("Stay One Note Auto Starting in Front of Speaker", oneNoteStartingSpeakerStationary.asProxy())
+            // .addOption("One Note Auto Starting from Left Position", oneNoteStartingFromLeft.asProxy())
+            // .addOption("One Note Auto Starting from Right Position", oneNoteStartingFromRight.asProxy())
+            .addOption("Two Note Starting in Front of Speaker", twoNoteStartingFromSpeaker.asProxy())
+            .addOption("Stay Two Note Starting in Front of Speaker", stayTwoNoteStartingFromSpeaker.asProxy())
             .buildDisplay();
     
     
@@ -228,6 +274,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureButtonBindings();        
        // configureVirtualButtonBindings();
+       new DeferredBlock(() -> m_robotSwerveDrive.resetGyroFlip());
 
 
         DriverStation.silenceJoystickConnectionWarning(true);

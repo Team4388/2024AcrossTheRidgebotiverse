@@ -145,6 +145,10 @@ public class Intake extends SubsystemBase {
     talonIntake.set(IntakeConstants.INTAKE_SPEED);
   }
 
+  public void talonSpinIntakeMotor(double speed) {
+    talonIntake.set(speed);
+  }
+
   public boolean getTalonIntakeLimitSwitchState() {
     if(r = talonIntake.getForwardLimit().getValue().value == 0) {
       return true;
@@ -172,6 +176,15 @@ public class Intake extends SubsystemBase {
     if(getTalonIntakeLimitSwitchState()){
      // talonPivot.setPosition(0);
     }
+  }
+
+  public void ampPosition() {
+    PositionVoltage request = new PositionVoltage(-0);
+    talonPivot.setControl(request.withPosition(-59)); //TODO: Find actual value
+  } 
+
+  public void ampShoot(double speed) {
+    talonSpinIntakeMotor(speed);
   }
 
 
