@@ -26,6 +26,6 @@ public class ArmIntakeInAuto extends ParallelCommandGroup {
     this.intake = intake;
     this.shooter = shooter;
     this.swerve = swerve;
-    addCommands(new ArmIntakeIn(intake, shooter), new WaitCommand(0.5).andThen(new JoystickPlayback(swerve, "TwoNotePrt1.txt")));
+    addCommands((new ArmIntakeInTimeout(intake, shooter).withTimeout(3)), new WaitCommand(0.5).andThen(new JoystickPlayback(swerve, "TwoNotePrt1.txt")));
   }
 }

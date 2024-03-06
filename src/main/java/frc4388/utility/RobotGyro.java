@@ -103,6 +103,7 @@ public class RobotGyro implements Gyro {
         } else {
             m_navX.reset();
         }
+
     }
 
     public void resetFlip() {
@@ -113,6 +114,29 @@ public class RobotGyro implements Gyro {
         } else {
             m_navX.reset();
         }
+
+    }
+
+    public void resetNinety() {
+        resetZeroValues();
+        
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(90);
+        } else {
+            m_navX.reset();
+        }
+        
+    }
+
+    public void resetTwoSeventy() {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(270);
+        } else {
+            m_navX.reset();
+        }
+
     }
 
     /**

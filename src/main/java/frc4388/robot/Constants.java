@@ -25,21 +25,23 @@ import frc4388.utility.Gains;
 public final class Constants {
     public static final class SwerveDriveConstants {
 
-        public static final double MAX_ROT_SPEED        = 1.5;
+        public static final double MAX_ROT_SPEED        = 3.5;
+        public static final double AUTO_MAX_ROT_SPEED = 1.5;
         public static final double MIN_ROT_SPEED        = 0.8;
         public static       double ROTATION_SPEED       = MAX_ROT_SPEED;
+        public static       double PLAYBACK_ROTATION_SPEED = AUTO_MAX_ROT_SPEED;
         public static       double ROT_CORRECTION_SPEED = 10; // MIN_ROT_SPEED;
     
         public static final double CORRECTION_MIN = 10;
         public static final double CORRECTION_MAX = 50;
     
-        public static final double SLOW_SPEED = 0.4;
+        public static final double SLOW_SPEED = 0.2;
         public static final double FAST_SPEED = 1.0;
         public static final double TURBO_SPEED = 4.0;
     
         public static final class DefaultSwerveRotOffsets {
           public static final double FRONT_LEFT_ROT_OFFSET = 130.957 + 90;
-          public static final double FRONT_RIGHT_ROT_OFFSET = 77.783 + 90;//-202.588;
+          public static final double FRONT_RIGHT_ROT_OFFSET = 77.783 + 45 + 90 ;//-202.588;
           public static final double BACK_LEFT_ROT_OFFSET = 347.871 + 90;
           public static final double BACK_RIGHT_ROT_OFFSET = 52.646 + 90;
         }
@@ -65,7 +67,7 @@ public final class Constants {
         public static final class PIDConstants {
             public static final int SWERVE_SLOT_IDX = 0;
             public static final int SWERVE_PID_LOOP_IDX = 1;
-            public static final Gains SWERVE_GAINS = new Gains(1.2, 0.0, 0, 0.0, 0, 1.0);
+            public static final Gains SWERVE_GAINS = new Gains(1.2, 0.0, 0.1, 0.0, 0, 1.0);
         }
     
         public static final class AutoConstants {
@@ -168,7 +170,7 @@ public final class Constants {
     public static final class ShooterConstants {
         public static final int LEFT_SHOOTER_ID = 15; // final
         public static final int RIGHT_SHOOTER_ID = 16; // final
-        public static final double SHOOTER_SPEED = 0.40; // final
+        public static final double SHOOTER_SPEED = 0.50; // final
         public static final double SHOOTER_IDLE = 0.35; // final
         public static final double SHOOTER_IDLE_LIMELIGHT = 0.8;
     }
