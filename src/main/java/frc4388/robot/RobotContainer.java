@@ -8,6 +8,7 @@
 package frc4388.robot;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -351,7 +352,12 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
         
-        
+        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+            .whileTrue(new InstantCommand(() -> 
+            m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
+                                              new Translation2d(0, 0),
+                                true), m_robotSwerveDrive));
+
         
        //?  /* Operator Buttons */
 
