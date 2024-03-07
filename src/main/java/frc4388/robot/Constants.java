@@ -40,9 +40,9 @@ public final class Constants {
         public static final double TURBO_SPEED = 4.0;
     
         public static final class DefaultSwerveRotOffsets {
-          public static final double FRONT_LEFT_ROT_OFFSET = 130.957 + 90;
-          public static final double FRONT_RIGHT_ROT_OFFSET = 77.783 + 45 + 90 ;//-202.588;
-          public static final double BACK_LEFT_ROT_OFFSET = 347.871 + 90;
+          public static final double FRONT_LEFT_ROT_OFFSET = 216.869140625;
+          public static final double FRONT_RIGHT_ROT_OFFSET = 226.119140625;//-212.695 + 90; //77.783 + 45 + 90 ;//-202.588;
+          public static final double BACK_LEFT_ROT_OFFSET = -277.5587969;
           public static final double BACK_RIGHT_ROT_OFFSET = 52.646 + 90;
         }
 
@@ -67,7 +67,7 @@ public final class Constants {
         public static final class PIDConstants {
             public static final int SWERVE_SLOT_IDX = 0;
             public static final int SWERVE_PID_LOOP_IDX = 1;
-            public static final Gains SWERVE_GAINS = new Gains(1.2, 0.0, 0.1, 0.0, 0, 1.0);
+            public static final Gains SWERVE_GAINS = new Gains(1.2, 0.0, 0.0, 0.0, 0, 1.0);
         }
     
         public static final class AutoConstants {
