@@ -34,6 +34,7 @@ import frc4388.robot.Constants;
 import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.commands.PID;
 import frc4388.utility.Gains;
+import frc4388.utility.configurable.ConfigurableDouble;
 
 public class Intake extends SubsystemBase {
   
@@ -57,9 +58,8 @@ public class Intake extends SubsystemBase {
 
   TalonFXConfiguration doodooController = new TalonFXConfiguration();
 
-
   public static Gains armGains = IntakeConstants.ArmPID.INTAKE_GAINS;
-  
+  private ConfigurableDouble outtakeSpeed = new ConfigurableDouble("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
   private BooleanSupplier sup = () -> true;
   private BooleanSupplier dup = () -> false;
 
@@ -138,7 +138,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void talonHandoff() {
-    talonIntake.set(-IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
+    talonIntake.set(-outtakeSpeed.get());
   }
 
   public void talonSpinIntakeMotor() {
