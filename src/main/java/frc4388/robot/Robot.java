@@ -43,7 +43,7 @@ public class Robot extends TimedRobot {
   /**
    * This function is called every robot packet, no matter the mode. Use
    * this for items like diagnostics that you want ran during disabled,
-   * autonomous, teleoperated and test.
+   * autonomous, teleoperated and test.doubl
    *
    * <p>This runs after the mode specific periodic functions, but before
    * LiveWindow and SmartDashboard integrated updating.
@@ -51,6 +51,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {   
     m_robotTime.updateTimes();
+    System.out.println(m_robotContainer.limelight.isNearSpeaker());
     //mled.updateLED();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,

@@ -171,8 +171,8 @@ public final class Constants {
         public static final int LEFT_SHOOTER_ID = 15; // final
         public static final int RIGHT_SHOOTER_ID = 16; // final
         public static final double SHOOTER_SPEED = 0.50; // final
-        public static final double SHOOTER_IDLE = 0.35; // final
-        public static final double SHOOTER_IDLE_LIMELIGHT = 0.8;
+        public static final double SHOOTER_IDLE = 0.15; // final
+        public static final double SHOOTER_IDLE_LIMELIGHT = 0.20;
     }
 
     public static final class IntakeConstants {
@@ -187,6 +187,12 @@ public final class Constants {
         public static final class ArmPID {
             public static final Gains INTAKE_GAINS = new Gains(0.05, 0, 0, 0, 0, 1.0);
         }
+    }
+
+    public static final class ClimbConstants {
+        public static final int CLIMB_MOTOR_ID = 0;
+        public static final double CLIMB_OUT_SPEED = 1.0;
+        public static final double CLIMB_IN_SPEED = -1.0;
     }
 
     public static final class OIConstants {

@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc4388.robot.Constants.OIConstants;
 import frc4388.robot.commands.Autos.AutoAlign;
 import frc4388.robot.commands.Autos.PlaybackChooser;
@@ -32,8 +33,10 @@ import frc4388.robot.subsystems.LED;
 import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.robot.subsystems.Shooter;
+import frc4388.robot.subsystems.Climber;
 import frc4388.robot.subsystems.Intake;
 import frc4388.utility.DeferredBlock;
+import frc4388.utility.configurable.ConfigurableString;
 import frc4388.utility.controller.DeadbandedXboxController;
 import frc4388.utility.controller.VirtualController;
 import frc4388.utility.controller.XboxController;
@@ -59,11 +62,13 @@ public class RobotContainer {
                                               
                                                                   m_robotMap.gyro);
     /* Limelight */
-    private final Limelight limelight = new Limelight();
+    public final Limelight limelight = new Limelight();
 
-    private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter);
+    private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter, limelight);
 
     private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
+
+    private final Climber m_robotClimber = new Climber(m_robotMap.climbMotor);
 
     //private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
 
@@ -115,7 +120,8 @@ public class RobotContainer {
 
 
     private SequentialCommandGroup i = new SequentialCommandGroup(
-        intakeToShootStuff, intakeToShoot
+        intakeToShootStuff, intakeToShoot,
+        new InstantCommand(() -> m_robotShooter.idle())
     );
 
     private SequentialCommandGroup ejectToShoot = new SequentialCommandGroup(
@@ -145,6 +151,7 @@ public class RobotContainer {
     private Command startLeftMoveRight = new InstantCommand(); // new JoystickPlayback(m_robotSwerveDrive, "StartLeftMoveRight.txt");
     private Command startRightMoveLeft = new InstantCommand(); // new JoystickPlayback(m_robotSwerveDrive, "StartRightMoveLeft.txt");
     
+    private ConfigurableString autoplaybackName = new ConfigurableString("Auto Playback Name", "defualt.auto");
 
     //Help Simplify Shooting
     // private SequentialCommandGroup pullInArmtoShoot = new SequentialCommandGroup(
@@ -316,6 +323,14 @@ public class RobotContainer {
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroFlip(), m_robotSwerveDrive));
+
+        new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.RIGHT_TRIGGER_AXIS) > 0.5)
+            .onTrue(new InstantCommand(() -> m_robotClimber.climbOut()))
+            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
+
+        new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.LEFT_TRIGGER_AXIS) > 0.5)
+            .onTrue(new InstantCommand(() -> m_robotClimber.climbIn()))
+            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
         
         // ! /* Auto Recording */
         // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
@@ -334,29 +349,29 @@ public class RobotContainer {
         new JoystickButton(m_autoRecorderXbox, XboxController.LEFT_BUMPER_BUTTON)
            .whileTrue(new neoJoystickRecorder(m_robotSwerveDrive,
                         new DeadbandedXboxController[]{getDeadbandedDriverController(), getDeadbandedOperatorController()},
-                                           "Nuetral_Center_1note_taxi.auto"))
+                                           () -> autoplaybackName.get()))
            .onFalse(new InstantCommand());
         
         new JoystickButton(m_autoRecorderXbox, XboxController.RIGHT_BUMPER_BUTTON)
            .onTrue(new neoJoystickPlayback(m_robotSwerveDrive,
-           "Nuetral_Center_1note_taxi.auto",
+           autoplaybackName.get(),
            new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
            true, false))
            .onFalse(new InstantCommand());
 
         // ! /* Speed */
-    //    new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
-    //          .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+    //     new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+    //         .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
     //       // .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
         
     //     new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
     //         .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
         
-        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
-            .whileTrue(new InstantCommand(() -> 
-            m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
-                                              new Translation2d(0, 0),
-                                true), m_robotSwerveDrive));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+        //     .whileTrue(new InstantCommand(() -> 
+        //     m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
+        //                                       new Translation2d(0, 0),
+        //                         true), m_robotSwerveDrive));
 
         
        //?  /* Operator Buttons */
@@ -406,6 +421,10 @@ public class RobotContainer {
 
         new JoystickButton(getDeadbandedOperatorController(), XboxController.RIGHT_JOYSTICK_BUTTON)
             .onTrue(emergencyRetract);
+
+        new Trigger(() -> getDeadbandedOperatorController().getRawAxis(XboxController.RIGHT_TRIGGER_AXIS) > 0.5)
+            .onTrue(new InstantCommand(() -> m_robotShooter.idle()))
+            .onFalse(new InstantCommand(() -> m_robotShooter.stop()));
 
 
     }

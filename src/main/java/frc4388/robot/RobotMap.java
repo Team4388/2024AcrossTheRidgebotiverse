@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import frc4388.robot.Constants.LEDConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.robot.Constants.ShooterConstants;
+import frc4388.robot.Constants.ClimbConstants;
 import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.subsystems.SwerveModule;
 import frc4388.utility.RobotGyro;
@@ -73,6 +74,9 @@ public class RobotMap {
     /* Intake Subsystem */
     public final TalonFX intakeMotor = new TalonFX(IntakeConstants.INTAKE_MOTOR_ID);
     public final TalonFX pivotMotor = new TalonFX(IntakeConstants.PIVOT_MOTOR_ID);
+
+    /* Climber Subsystem */
+    public final TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_MOTOR_ID);
 
     void configureLEDMotorControllers() {    
     }
