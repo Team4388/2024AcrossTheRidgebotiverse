@@ -2,6 +2,7 @@ package frc4388.robot.commands.Swerve;
 
 import java.io.FileOutputStream;
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.XboxController;
@@ -15,16 +16,22 @@ import frc4388.utility.controller.DeadbandedXboxController;
 public class neoJoystickRecorder extends Command {
     private final SwerveDrive swerve;
     private final XboxController[] controllers;
-    private final String filename;
-    private long startTime = -1;
+    private       String filename;
+    private final Supplier<String> filenameGetter;
+    private       long startTime = -1;
     private final ArrayList<AutoRecordingFrame> frames = new ArrayList<>();
 
-    public neoJoystickRecorder(SwerveDrive swerve, DeadbandedXboxController[] controllers, String filename) {
+    public neoJoystickRecorder(SwerveDrive swerve, DeadbandedXboxController[] controllers, Supplier<String> filenameGetter) {
         this.swerve = swerve;
         this.controllers = controllers;
-        this.filename = filename;
+        this.filenameGetter = filenameGetter;
+        this.filename = "";
 
         addRequirements(this.swerve);
+    }
+
+    public neoJoystickRecorder(SwerveDrive swerve, DeadbandedXboxController[] controllers, String filename) {
+        this(swerve, controllers, () -> filename);
     }
 
     @Override
@@ -35,6 +42,7 @@ public class neoJoystickRecorder extends Command {
         AutoRecordingFrame frame = new AutoRecordingFrame();
         frame.controllerFrames = new AutoRecordingControllerFrame[] {new AutoRecordingControllerFrame(), new AutoRecordingControllerFrame()};
         frames.add(frame);
+        this.filename = this.filenameGetter.get();
     }
 
 

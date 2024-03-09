@@ -2,6 +2,7 @@ package frc4388.robot.commands.Swerve;
 
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -13,15 +14,16 @@ import frc4388.utility.controller.VirtualController;
 
 public class neoJoystickPlayback extends Command {
     private final SwerveDrive                   swerve;
-    private final String                        filename;
     private final VirtualController[]           controllers;
     private final ArrayList<AutoRecordingFrame> frames         = new ArrayList<>();
+    //private final Supplier<String>              filenameGetter;
+    private final String                        filename;
     private       int                           frame_index    = 0;
     private       long                          startTime      = 0;
     private       long                          playbackTime   = 0;
     private       boolean                       m_finished     = false; // ! There is no better way.
     private       boolean                       m_shouldfree   = false; // should free memory on ending
-
+    
     private byte  m_numAxes = 0;
     private byte  m_numPOVs = 0;
     private byte  m_numControllers = 0;
