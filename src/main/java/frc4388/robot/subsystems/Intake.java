@@ -137,6 +137,11 @@ public class Intake extends SubsystemBase {
     talonPivot.setControl(request.withPosition(-59)); 
   }
 
+  public void talonPIDPosition(double out2) {
+    PositionVoltage request = new PositionVoltage(out2);
+    talonPivot.setControl(request);
+  }
+
   public void talonHandoff() {
     talonIntake.set(-outtakeSpeed.get());
   }
