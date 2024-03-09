@@ -125,13 +125,20 @@ public class  SwerveDrive extends SubsystemBase {
 
   public void driveWithInputOrientation(Translation2d leftStick, double rightX, double rightY, boolean fieldRelative) {
 
-    Translation2d rightStick = new Translation2d(rightX, rightY);
+    Translation2d rightStick = new Translation2d(-rightX, rightY);
 
     if(fieldRelative) {
       double rot = 0;
       if(rightStick.getNorm() > 0.5) {
         orientRotTarget = new Rotation2d(rightX, -rightY).minus(new Rotation2d(0,1));
-        rot = orientRotTarget.minus(gyro.getRotation2d()).getRadians();
+        
+        Rotation2d tmp =  orientRotTarget.minus(gyro.getRotation2d().minus(new Rotation2d(Math.PI)).interpolate(orientRotTarget, 0.5));
+        double min = tmp.getDegrees();
+        min = Math.max(Math.abs(min), 2);
+        if(tmp.getDegrees() < 0)
+          min*=-1;
+        tmp = new Rotation2d(min * Math.PI / 180);
+        rot = tmp.getRadians(); // x   x - y/x
       }
     
     Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);

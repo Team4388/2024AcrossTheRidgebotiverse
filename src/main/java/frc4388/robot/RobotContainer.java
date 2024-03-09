@@ -275,7 +275,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureButtonBindings();        
         configureVirtualButtonBindings();
-        new DeferredBlock(() -> m_robotSwerveDrive.resetGyroFlip());
+        new DeferredBlock(() -> m_robotSwerveDrive.resetGyro());
 
 
             DriverStation.silenceJoystickConnectionWarning(true);
@@ -334,12 +334,12 @@ public class RobotContainer {
         new JoystickButton(m_autoRecorderXbox, XboxController.LEFT_BUMPER_BUTTON)
            .whileTrue(new neoJoystickRecorder(m_robotSwerveDrive,
                         new DeadbandedXboxController[]{getDeadbandedDriverController(), getDeadbandedOperatorController()},
-                                           "blue_center_1Note.auto"))
+                                           "Nuetral_Center_1note_taxi.auto"))
            .onFalse(new InstantCommand());
         
         new JoystickButton(m_autoRecorderXbox, XboxController.RIGHT_BUMPER_BUTTON)
            .onTrue(new neoJoystickPlayback(m_robotSwerveDrive,
-           "blue_center_1Note.auto",
+           "Nuetral_Center_1note_taxi.auto",
            new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
            true, false))
            .onFalse(new InstantCommand());
@@ -352,11 +352,11 @@ public class RobotContainer {
     //     new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
     //         .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
         
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
-        //     .whileTrue(new InstantCommand(() -> 
-        //     m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
-        //                                       new Translation2d(0, 0),
-        //                         true), m_robotSwerveDrive));
+        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+            .whileTrue(new InstantCommand(() -> 
+            m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
+                                              new Translation2d(0, 0),
+                                true), m_robotSwerveDrive));
 
         
        //?  /* Operator Buttons */
