@@ -75,7 +75,7 @@ public class RobotContainer {
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);    
     private final DeadbandedXboxController m_autoRecorderXbox = new DeadbandedXboxController(2);
     
-    private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor, m_driverXbox, m_operatorXbox);
+    private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
 
     /* Virtual Controllers */
     private final VirtualController m_virtualDriver = new VirtualController(0);
