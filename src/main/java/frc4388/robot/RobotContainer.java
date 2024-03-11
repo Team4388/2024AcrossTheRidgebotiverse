@@ -354,7 +354,7 @@ public class RobotContainer {
         
         new JoystickButton(m_autoRecorderXbox, XboxController.RIGHT_BUMPER_BUTTON)
            .onTrue(new neoJoystickPlayback(m_robotSwerveDrive,
-           autoplaybackName.get(),
+           () -> autoplaybackName.get(),
            new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
            true, false))
            .onFalse(new InstantCommand());
