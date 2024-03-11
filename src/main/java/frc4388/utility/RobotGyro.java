@@ -139,6 +139,28 @@ public class RobotGyro implements Gyro {
 
     }
 
+    public void resetRightSideBlue() {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(60);
+        } else {
+            m_navX.reset();
+        }   
+
+    }
+
+    public void resetAmpSide() {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(-60);
+        } else {
+            m_navX.reset();
+        }   
+
+    }
+
     /**
 	 * Get Yaw, Pitch, and Roll data.
 	 *

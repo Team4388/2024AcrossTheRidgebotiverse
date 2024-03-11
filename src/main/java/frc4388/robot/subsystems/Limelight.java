@@ -30,6 +30,7 @@ public class Limelight extends SubsystemBase {
   }
 
   private void update() {
+    SmartDashboard.putBoolean("Apriltag", isTag);
     if(!isTag){
       return;
     }
@@ -55,7 +56,6 @@ public class Limelight extends SubsystemBase {
     isNearSpeaker = distance <= VisionConstants.SpeakerBubbleDistance;
 
     SmartDashboard.putBoolean("nearSpeaker", isNearSpeaker);
-    SmartDashboard.putBoolean("Apriltag", isTag);
     SmartDashboard.putNumber("speakerDistance", distance);
   }
 

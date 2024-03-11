@@ -51,7 +51,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {   
     m_robotTime.updateTimes();
-    System.out.println(m_robotContainer.limelight.isNearSpeaker());
+    //System.out.println(m_robotContainer.limelight.isNearSpeaker());
     //mled.updateLED();
     // Runs the Scheduler.  This is responsible for polling buttons, adding newly-scheduled
     // commands, running already-scheduled commands, removing finished or interrupted commands,

@@ -26,6 +26,7 @@ import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.CAN;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,6 +36,7 @@ import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.commands.PID;
 import frc4388.utility.Gains;
 import frc4388.utility.configurable.ConfigurableDouble;
+import frc4388.utility.controller.DeadbandedXboxController;
 
 public class Intake extends SubsystemBase {
   
@@ -51,6 +53,9 @@ public class Intake extends SubsystemBase {
   private TalonFX talonIntake;
   private TalonFX talonPivot;
   private CANcoder encoder;
+
+  private DeadbandedXboxController m_driverXbox;
+  private DeadbandedXboxController m_operatorXbox;
 
   private boolean r;
 
@@ -96,14 +101,17 @@ public class Intake extends SubsystemBase {
   // }
 
   //For Talon
-  public Intake(TalonFX talonIntake, TalonFX talonPivot) {
+  public Intake(TalonFX talonIntake, TalonFX talonPivot, DeadbandedXboxController driverXbox, DeadbandedXboxController operatorXbox) {
     this.talonIntake = talonIntake;
     this.talonPivot = talonPivot;
+
+    this.m_driverXbox = driverXbox;
+    this.m_operatorXbox = operatorXbox;
 
     talonIntake.getConfigurator().apply(new TalonFXConfiguration());
     talonPivot.getConfigurator().apply(new TalonFXConfiguration());
 
-    talonIntake.setNeutralMode(NeutralModeValue.Brake);
+    talonIntake.setNeutralMode(NeutralModeValue.Coast);
     talonPivot.setNeutralMode(NeutralModeValue.Brake);
 
     // talonPivot.getConfigurator().apply(new HardwareLimitSwitchConfigs());
@@ -323,6 +331,8 @@ public class Intake extends SubsystemBase {
   //   }
   // }
 
+  private int rumbleTime = 0;
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -336,5 +346,26 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("Pivot Position", getArmPos());
 
     smartDashboardOuttakeValue = SmartDashboard.getNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
+
+    // if(getTalonIntakeLimitSwitchState()){
+    //   rumbleTime = 1000;
+    //   m_driverXbox.setRumble(RumbleType.kLeftRumble, 1.0);
+    //   m_driverXbox.setRumble(RumbleType.kRightRumble, 1.0);
+    //   m_operatorXbox.setRumble(RumbleType.kLeftRumble, 1.0);
+    //   m_operatorXbox.setRumble(RumbleType.kRightRumble, 1.0);
+    //   // m_hid.setRumble(RumbleType.kLeftRumble, 0.0);
+    //   // m_hid.setRumble(RumbleType.kRightRumble, 0.0);
+    // }
+    // if(rumbleTime > 0){
+    //   rumbleTime--;
+    //   if(rumbleTime <= 0){
+    //     rumbleTime = 0;
+    //     m_driverXbox.setRumble(RumbleType.kLeftRumble, 0);
+    //     m_driverXbox.setRumble(RumbleType.kRightRumble, 0);
+    //     m_operatorXbox.setRumble(RumbleType.kLeftRumble, 0);
+    //     m_operatorXbox.setRumble(RumbleType.kRightRumble, 0);
+    //   }
+
+    // }
   }
 }
