@@ -35,7 +35,7 @@ public final class Constants {
         public static final double CORRECTION_MIN = 10;
         public static final double CORRECTION_MAX = 50;
     
-        public static final double SLOW_SPEED = 0.2;
+        public static final double SLOW_SPEED = 0.5;
         public static final double FAST_SPEED = 1.0;
         public static final double TURBO_SPEED = 4.0;
     
@@ -190,9 +190,9 @@ public final class Constants {
     }
 
     public static final class ClimbConstants {
-        public static final int CLIMB_MOTOR_ID = 0;
-        public static final double CLIMB_OUT_SPEED = 1.0;
-        public static final double CLIMB_IN_SPEED = -1.0;
+        public static final int CLIMB_MOTOR_ID = 19;
+        public static final double CLIMB_OUT_SPEED = 0.3;
+        public static final double CLIMB_IN_SPEED = -0.3;
     }
 
     public static final class OIConstants {

@@ -62,11 +62,9 @@ public class RobotContainer {
                                               
                                                                   m_robotMap.gyro);
     /* Limelight */
-    public final Limelight limelight = new Limelight();
+    private final Limelight limelight = new Limelight();
 
     private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter, limelight);
-
-    private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor);
 
     private final Climber m_robotClimber = new Climber(m_robotMap.climbMotor);
 
@@ -76,7 +74,8 @@ public class RobotContainer {
     private final DeadbandedXboxController m_driverXbox = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);    
     private final DeadbandedXboxController m_autoRecorderXbox = new DeadbandedXboxController(2);
-
+    
+    private final Intake m_robotIntake = new Intake(m_robotMap.intakeMotor, m_robotMap.pivotMotor, m_driverXbox, m_operatorXbox);
 
     /* Virtual Controllers */
     private final VirtualController m_virtualDriver = new VirtualController(0);
@@ -297,6 +296,7 @@ public class RobotContainer {
                                     true);
             }, m_robotSwerveDrive)
             .withName("SwerveDrive DefaultCommand"));
+           m_robotSwerveDrive.setToSlow();
 
         // ! Swerve Drive Default Command (Orientation Rotation)
         // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
@@ -331,6 +331,12 @@ public class RobotContainer {
         new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.LEFT_TRIGGER_AXIS) > 0.5)
             .onTrue(new InstantCommand(() -> m_robotClimber.climbIn()))
             .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
+
+        new Trigger(() -> getDeadbandedDriverController().getPOV() == 0)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightBlue()));
+
+        new Trigger(() -> getDeadbandedDriverController().getPOV() == 180)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightAmp()));
         
         // ! /* Auto Recording */
         // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
@@ -400,8 +406,6 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedOperatorController(), XboxController.START_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotIntake.talonSetPivotEncoderPosition(0), m_robotIntake));
 
-        
-
         new JoystickButton(getDeadbandedOperatorController(), XboxController.LEFT_BUMPER_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter))
             .onFalse(turnOffShoot);
@@ -426,6 +430,13 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> m_robotShooter.idle()))
             .onFalse(new InstantCommand(() -> m_robotShooter.stop()));
 
+        new Trigger(() -> getDeadbandedOperatorController().getPOV() == 0)
+            .onTrue(new InstantCommand(() -> m_robotClimber.climbOut()))
+            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
+
+        new Trigger(() -> getDeadbandedOperatorController().getPOV() == 180)
+            .onTrue(new InstantCommand(() -> m_robotClimber.climbIn()))
+            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
 
     }
 
@@ -442,6 +453,8 @@ public class RobotContainer {
         // new JoystickButton(getVirtualDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
         //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
         
+        new Trigger(() -> getDeadbandedDriverController().getPOV() == 0)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightBlue()));
         
         
         // /* Operator Buttons */
