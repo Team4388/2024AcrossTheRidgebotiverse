@@ -16,8 +16,8 @@ public class neoJoystickPlayback extends Command {
     private final SwerveDrive                   swerve;
     private final VirtualController[]           controllers;
     private final ArrayList<AutoRecordingFrame> frames         = new ArrayList<>();
-    //private final Supplier<String>              filenameGetter;
-    private final String                        filename;
+    private final Supplier<String>              filenameGetter;
+    private       String                        filename;
     private       int                           frame_index    = 0;
     private       long                          startTime      = 0;
     private       long                          playbackTime   = 0;
@@ -29,21 +29,29 @@ public class neoJoystickPlayback extends Command {
     private byte  m_numControllers = 0;
     private short m_numFrames = -1;
 
-    public neoJoystickPlayback(SwerveDrive swerve, String filename, VirtualController[] controllers, boolean shouldfree, boolean instantload) {
+    public neoJoystickPlayback(SwerveDrive swerve, Supplier<String> filenameGetter, VirtualController[] controllers, boolean shouldfree, boolean instantload) {
         this.swerve = swerve;
-        this.filename = filename;
+        this.filenameGetter = filenameGetter;
         this.controllers = controllers;
         this.m_shouldfree = shouldfree;
 
         if (instantload) loadAuto();
         addRequirements(this.swerve);
     }
+    public neoJoystickPlayback(SwerveDrive swerve, String filename, VirtualController[] controllers, boolean shouldfree, boolean instantload) {
+        this(swerve, () -> filename, controllers, shouldfree, instantload);
+    }
+
+    public neoJoystickPlayback(SwerveDrive swerve, Supplier<String> filenameGetter, VirtualController[] controllers) {
+        this(swerve, filenameGetter, controllers, true, false);
+    }
 
     public neoJoystickPlayback(SwerveDrive swerve, String filename, VirtualController[] controllers) {
-        this(swerve, filename, controllers, true, false);
+        this(swerve, () -> filename, controllers, true, false);
     }
     
     public boolean loadAuto() {
+        filename = filenameGetter.get();
         try (FileInputStream stream = new FileInputStream("/home/lvuser/autos/" + filename)) {
             if (m_numFrames != -1 && m_numFrames == frames.size()) {
                 System.out.println("AUTOPLAYBACK: Auto Already loaded.");
@@ -137,7 +145,7 @@ public class neoJoystickPlayback extends Command {
     public void end(boolean interrupted) {
         for (VirtualController controller : controllers) controller.zeroControls();
         swerve.stopModules();
-        if (m_shouldfree) frames.clear();
+        if (m_shouldfree) unloadAuto();
     }
     
     @Override
