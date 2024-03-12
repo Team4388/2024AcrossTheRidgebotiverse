@@ -35,6 +35,7 @@ import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.commands.PID;
 import frc4388.utility.Gains;
 import frc4388.utility.configurable.ConfigurableDouble;
+import frc4388.utility.controller.DeadbandedXboxController;
 
 public class Intake extends SubsystemBase {
   
@@ -51,6 +52,9 @@ public class Intake extends SubsystemBase {
   private TalonFX talonIntake;
   private TalonFX talonPivot;
   private CANcoder encoder;
+
+  private DeadbandedXboxController m_driverXbox;
+  private DeadbandedXboxController m_operatorXbox;
 
   private boolean r;
 
@@ -96,9 +100,12 @@ public class Intake extends SubsystemBase {
   // }
 
   //For Talon
-  public Intake(TalonFX talonIntake, TalonFX talonPivot) {
+  public Intake(TalonFX talonIntake, TalonFX talonPivot, DeadbandedXboxController driverXbox, DeadbandedXboxController operatorXbox) {
     this.talonIntake = talonIntake;
     this.talonPivot = talonPivot;
+    
+    this.m_driverXbox = driverXbox;
+    this.m_operatorXbox = operatorXbox;
 
     talonIntake.getConfigurator().apply(new TalonFXConfiguration());
     talonPivot.getConfigurator().apply(new TalonFXConfiguration());
@@ -323,6 +330,8 @@ public class Intake extends SubsystemBase {
   //   }
   // }
 
+  private boolean isRumble = false;
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -336,5 +345,15 @@ public class Intake extends SubsystemBase {
     SmartDashboard.putNumber("Pivot Position", getArmPos());
 
     smartDashboardOuttakeValue = SmartDashboard.getNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
+
+    // System.out.println(getTalonIntakeLimitSwitchState());
+
+    if(getTalonIntakeLimitSwitchState() && !isRumble){
+      m_driverXbox.rumble(1);
+      m_operatorXbox.rumble(1);
+      isRumble = true;
+    }else if(!getTalonIntakeLimitSwitchState() && isRumble){
+      isRumble = false;
+    }
   }
 }
