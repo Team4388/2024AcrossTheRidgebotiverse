@@ -24,4 +24,30 @@ public class DeadbandedXboxController extends XboxController {
 
     return translation2d;
   }
+
+  /*
+		Rumble for a select amount of time
+
+    For some reason, you cannot rumble an xbox controller while simulating the robot.
+    This took me a very long time to find out.
+	 */
+	public void rumble(int seconds){
+		//Default value
+
+		new Thread(() -> {
+			// System.out.println("Start rumble");
+			setRumble(RumbleType.kLeftRumble, 1.0);
+			setRumble(RumbleType.kRightRumble, 1.0);
+
+			try {
+				Thread.sleep(seconds*1000);
+			} catch (InterruptedException e) {}
+
+			// System.out.println("Stop rumble");
+      setRumble(RumbleType.kLeftRumble, 0.0);
+			setRumble(RumbleType.kRightRumble, 0.0);
+      
+		}).start();
+
+	}
 }
