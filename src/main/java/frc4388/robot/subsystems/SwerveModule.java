@@ -18,12 +18,14 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.Gains;
+import frc4388.utility.configurable.ConfigurableDouble;
 
 public class SwerveModule extends SubsystemBase {
     private WPI_TalonFX driveMotor;
     private WPI_TalonFX angleMotor;
     private CANCoder encoder;
-
+    //private ConfigurableDouble offsetGetter;
+    private static int swerveId = 0;
     public static Gains swerveGains = SwerveDriveConstants.PIDConstants.SWERVE_GAINS;
   
     /** Creates a new SwerveModule. */
@@ -31,7 +33,8 @@ public class SwerveModule extends SubsystemBase {
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.encoder = encoder;
-
+        // this.offsetGetter = new ConfigurableDouble("Swerve id " + swerveId, offset);
+         swerveId++;
         TalonFXConfiguration angleConfig = new TalonFXConfiguration();
         angleConfig.slot0.kP = swerveGains.kP;
         angleConfig.slot0.kI = swerveGains.kI;
@@ -48,7 +51,11 @@ public class SwerveModule extends SubsystemBase {
         driveMotor.setSelectedSensorPosition(0);
         driveMotor.config_kP(0, 0.2);
     }
-
+    
+    //@Override
+    // public void periodic() {
+    //     encoder.configMagnetOffset(offsetGetter.get());
+    // }
     /**
      * Get the drive motor of the SwerveModule
      * @return the drive motor of the SwerveModule

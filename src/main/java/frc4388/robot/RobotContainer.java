@@ -87,9 +87,9 @@ public class RobotContainer {
 
     private ParallelCommandGroup intakeToShoot = new ParallelCommandGroup(
         new InstantCommand(() -> m_robotIntake.talonPIDIn()),
-        new InstantCommand(() -> m_robotShooter.idle()),
-        new InstantCommand(() -> m_driverXbox.setRumble(null, 1.0)).andThen(new WaitCommand(1)).andThen(new InstantCommand(() -> m_driverXbox.setRumble(null, 0.0)))
-        //new InstantCommand(() -> m_robotShooter.spin())
+        new InstantCommand(() -> m_robotShooter.idle())
+        // new InstantCommand(() -> m_driverXbox.setRumble(RumbleType.kRightRumble, 1.0)).andThen(new WaitCommand(0.2)).andThen(new InstantCommand(() -> m_driverXbox.setRumble(RumbleType.kRightRumble, 0.0))),
+        // new InstantCommand(() -> m_robotShooter.spin())
     );
 
     // private SequentialCommandGroup outtakeToShootFull = new SequentialCommandGroup(
@@ -376,11 +376,11 @@ public class RobotContainer {
     //     new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
     //         .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
         
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
-        //     .whileTrue(new InstantCommand(() -> 
-        //     m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
-        //                                       new Translation2d(0, 0),
-        //                         true), m_robotSwerveDrive));
+        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+            .whileTrue(new InstantCommand(() -> 
+            m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
+                                              new Translation2d(0, 0),
+                                true), m_robotSwerveDrive));
 
         
        //?  /* Operator Buttons */
