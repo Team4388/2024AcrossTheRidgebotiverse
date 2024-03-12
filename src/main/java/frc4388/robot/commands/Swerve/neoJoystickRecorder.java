@@ -55,8 +55,8 @@ public class neoJoystickRecorder extends Command {
             XboxController controller = controllers[i];
             AutoRecordingControllerFrame controllerFrame = new AutoRecordingControllerFrame();
             double[] axes = {controller.getLeftX(), controller.getLeftY(), 
-                            controller.getLeftTriggerAxis(), controller.getRightTriggerAxis(),
-                            controller.getRightX(), controller.getRightY()};
+			     controller.getLeftTriggerAxis(), controller.getRightTriggerAxis(),
+			     controller.getRightX(), controller.getRightY()};
             short button = 0;
             for (int j = 0; j < 10; j++)
                 if (controller.getRawButton(j+1))
@@ -71,8 +71,8 @@ public class neoJoystickRecorder extends Command {
         frames.add(frame);
 
         swerve.driveWithInput(new Translation2d(frame.controllerFrames[0].axes[0], frame.controllerFrames[0].axes[1]),
-                            new Translation2d(frame.controllerFrames[0].axes[4], frame.controllerFrames[0].axes[5]), 
-                            true); // Really jank way of doing this.
+			      new Translation2d(frame.controllerFrames[0].axes[4], frame.controllerFrames[0].axes[5]), 
+			      true); // Really jank way of doing this.
         
     }
     @Override
@@ -105,7 +105,7 @@ public class neoJoystickRecorder extends Command {
                 }
                 stream.write(DataUtils.intToByteArray(frame.timeStamp));
             }
-        System.out.println("AUTORECORD: Wrote auto `" + filename + "` that is " + frames.size() + " frames long.");
+	    System.out.println("AUTORECORD: Wrote auto `" + filename + "` that is " + frames.size() + " frames long.");
         } catch (Exception e) {
             e.printStackTrace();
         } 

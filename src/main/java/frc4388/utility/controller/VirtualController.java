@@ -87,7 +87,7 @@ public class VirtualController extends GenericHID {
     @Override
     public int getAxisType(int axis) {
         return 1; /* ! Warning, does not return accurate data.
-                  Hopefully this isn't a problem            */
+		     Hopefully this isn't a problem            */
     }
 
     @Override

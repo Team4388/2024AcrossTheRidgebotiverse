@@ -17,33 +17,33 @@ import frc4388.utility.RobotGyro;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class AutoBalance extends PID {
-  RobotGyro gyro;
-  Intake intake;
-  /** Creates a new AutoBalance. */
-  public AutoBalance(RobotGyro gyro, Intake intake) {
-    super(0.6, 0, 0, 0, 0);
+    RobotGyro gyro;
+    Intake intake;
+    /** Creates a new AutoBalance. */
+    public AutoBalance(RobotGyro gyro, Intake intake) {
+	super(0.6, 0, 0, 0, 0);
 
-    this.gyro = gyro;
-    this.intake = intake;
+	this.gyro = gyro;
+	this.intake = intake;
 
-    // Use addRequirements() here to declare subsystem dependencies.
-    // Configure additional PID options by calling `getController` here.
-    addRequirements(intake);
-  }
+	// Use addRequirements() here to declare subsystem dependencies.
+	// Configure additional PID options by calling `getController` here.
+	addRequirements(intake);
+    }
 
-  // Returns true when the command should end.
+    // Returns true when the command should end.
 
-  public double getError() {
-		var pitch = gyro.getRoll();
-		SmartDashboard.putNumber("pitch", pitch);
-		return pitch;
-	}
+    public double getError() {
+	var pitch = gyro.getRoll();
+	SmartDashboard.putNumber("pitch", pitch);
+	return pitch;
+    }
 
-	@Override
-	public void runWithOutput(double output) {
-		double out2 = MathUtil.clamp(output / 40, -59, 0);
-		if (Math.abs(getError()) < 3) out2 = 0;
-    intake.talonPIDPosition(out2);
-  }
+    @Override
+    public void runWithOutput(double output) {
+	double out2 = MathUtil.clamp(output / 40, -59, 0);
+	if (Math.abs(getError()) < 3) out2 = 0;
+	intake.talonPIDPosition(out2);
+    }
 
 }

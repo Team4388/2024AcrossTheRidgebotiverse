@@ -118,18 +118,18 @@ public class AutoAlign extends Command {
 
     private Translation2d calcRotStick(){
         double error = pose.getRotation().getDegrees() - targetRot.getDegrees();
-		cumError += error * .02; // 20 ms
-		double delta = error - prevError;
+	cumError += error * .02; // 20 ms
+	double delta = error - prevError;
 
         final double kP = 4;
         final double kI = 4;
         final double kD = 4;
         final double kF = 4;
 
-		double output = error * kP;
-		output += cumError * kI;
-		output += delta * kD;
-		output += kF;
+	double output = error * kP;
+	output += cumError * kI;
+	output += delta * kD;
+	output += kF;
 
         prevError = error;
         return clamp(output, 0);
@@ -140,8 +140,8 @@ public class AutoAlign extends Command {
     }
 
     // Called when the command is initially scheduled.
-	@Override 
-	public final void initialize() {
+    @Override 
+    public final void initialize() {
         isRed = alliance.get() == DriverStation.Alliance.Red;
         if(reverseAfterFinish){
             // isReverseFinished = false;
@@ -150,10 +150,10 @@ public class AutoAlign extends Command {
             moveStickReplayArr = new Translation2d[]{};
             rotStickReplayArr = new Translation2d[]{};
         }
-	}
+    }
 
     // Called every time the scheduler runs while the command is scheduled.
-	@Override
+    @Override
     public void execute() {
         // Update limelight pos
         pose = limelight.getPose();
@@ -179,7 +179,7 @@ public class AutoAlign extends Command {
             // }
             isFinished = limelight.isNearSpeaker();
 
-        // If reverseAfterFinish, then loop back over and replay in reverse
+	    // If reverseAfterFinish, then loop back over and replay in reverse
         }else if(reverseAfterFinish && !isReverseFinished){
             // Get reverse direction
             moveStick = moveStickReplayArr[replayIndex-moveStickReplayArr.length-1];
@@ -201,8 +201,8 @@ public class AutoAlign extends Command {
     }
 
     // Returns true when the command should end.
-	@Override
-	public final boolean isFinished() {
+    @Override
+    public final boolean isFinished() {
         return isFinished && (isReverseFinished || !reverseAfterFinish);
-	}
+    }
 }

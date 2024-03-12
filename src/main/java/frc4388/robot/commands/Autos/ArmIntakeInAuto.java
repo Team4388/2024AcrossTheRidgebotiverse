@@ -16,16 +16,16 @@ import frc4388.robot.subsystems.SwerveDrive;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ArmIntakeInAuto extends ParallelCommandGroup {
-  private final Intake intake;
-  private final Shooter shooter;
-  private final SwerveDrive swerve;
-  /** Creates a new ArmIntakeInAuto. */
-  public ArmIntakeInAuto(Intake intake, Shooter shooter, SwerveDrive swerve) {
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
-    this.intake = intake;
-    this.shooter = shooter;
-    this.swerve = swerve;
-    addCommands((new ArmIntakeInTimeout(intake, shooter).withTimeout(3)), new WaitCommand(0.5).andThen(new JoystickPlayback(swerve, "TwoNotePrt1.txt")));
-  }
+    private final Intake intake;
+    private final Shooter shooter;
+    private final SwerveDrive swerve;
+    /** Creates a new ArmIntakeInAuto. */
+    public ArmIntakeInAuto(Intake intake, Shooter shooter, SwerveDrive swerve) {
+	// Add your commands in the addCommands() call, e.g.
+	// addCommands(new FooCommand(), new BarCommand());
+	this.intake = intake;
+	this.shooter = shooter;
+	this.swerve = swerve;
+	addCommands((new ArmIntakeInTimeout(intake, shooter).withTimeout(3)), new WaitCommand(0.5).andThen(new JoystickPlayback(swerve, "TwoNotePrt1.txt")));
+    }
 }

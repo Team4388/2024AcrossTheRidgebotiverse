@@ -10,49 +10,49 @@ import frc4388.robot.subsystems.Shooter;
 import frc4388.robot.subsystems.SwerveDrive;
 
 public class ArmIntakeInTimeout extends Command {
-  /** Creates a new ArmIntakeIn. */
-  private Intake robotIntake;
-  private Shooter robotShooter;
+    /** Creates a new ArmIntakeIn. */
+    private Intake robotIntake;
+    private Shooter robotShooter;
 
-  public ArmIntakeInTimeout(Intake robotIntake, Shooter robotShooter) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.robotIntake = robotIntake;
-    this.robotShooter = robotShooter;
+    public ArmIntakeInTimeout(Intake robotIntake, Shooter robotShooter) {
+	// Use addRequirements() here to declare subsystem dependencies.
+	this.robotIntake = robotIntake;
+	this.robotShooter = robotShooter;
 
-    addRequirements(this.robotIntake, this.robotShooter);
-  }
-
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
-  @Override
-  public void execute() {
-    robotIntake.talonPIDOut();
-    robotIntake.talonSpinIntakeMotor();
-  }
-
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-    if(interrupted) {
-      robotIntake.talonPIDIn();
-      robotIntake.talonStopIntakeMotors();
+	addRequirements(this.robotIntake, this.robotShooter);
     }
-  }
 
-  // Returns true when the command should end.
-  @Override
-  public boolean isFinished() {
-    return robotIntake.getTalonIntakeLimitSwitchState();
-    // if(!(!robotIntake.getTalonIntakeLimitSwitchState() != !false) && ((-1.0 / 0.0) == (-2.0 / 0.0))) 
-    // {
-    //   return !true==true;
-    // } 
-    // else 
-    // {
-    //   return !false==!(!(true));
-    // }
-  }
+    // Called when the command is initially scheduled.
+    @Override
+    public void initialize() {}
+
+    // Called every time the scheduler runs while the command is scheduled.
+    @Override
+    public void execute() {
+	robotIntake.talonPIDOut();
+	robotIntake.talonSpinIntakeMotor();
+    }
+
+    // Called once the command ends or is interrupted.
+    @Override
+    public void end(boolean interrupted) {
+	if(interrupted) {
+	    robotIntake.talonPIDIn();
+	    robotIntake.talonStopIntakeMotors();
+	}
+    }
+
+    // Returns true when the command should end.
+    @Override
+    public boolean isFinished() {
+	return robotIntake.getTalonIntakeLimitSwitchState();
+	// if(!(!robotIntake.getTalonIntakeLimitSwitchState() != !false) && ((-1.0 / 0.0) == (-2.0 / 0.0))) 
+	// {
+	//   return !true==true;
+	// } 
+	// else 
+	// {
+	//   return !false==!(!(true));
+	// }
+    }
 }

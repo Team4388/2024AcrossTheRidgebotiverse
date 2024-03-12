@@ -38,303 +38,303 @@ import frc4388.utility.configurable.ConfigurableDouble;
 
 public class Intake extends SubsystemBase {
   
-  //NEO
-  private CANSparkMax intakeMotor;
-  private CANSparkMax pivot;
-  private SparkPIDController m_spedController;
-  private SparkLimitSwitch forwardLimit;
-  private SparkLimitSwitch reverseLimit;
-  private SparkLimitSwitch intakeforwardLimit;  
-  private SparkLimitSwitch intakereverseLimit;
+    //NEO
+    private CANSparkMax intakeMotor;
+    private CANSparkMax pivot;
+    private SparkPIDController m_spedController;
+    private SparkLimitSwitch forwardLimit;
+    private SparkLimitSwitch reverseLimit;
+    private SparkLimitSwitch intakeforwardLimit;  
+    private SparkLimitSwitch intakereverseLimit;
 
-  //Talon
-  private TalonFX talonIntake;
-  private TalonFX talonPivot;
-  private CANcoder encoder;
+    //Talon
+    private TalonFX talonIntake;
+    private TalonFX talonPivot;
+    private CANcoder encoder;
 
-  private boolean r;
+    private boolean r;
 
-  private HardwareLimitSwitchConfigs l;
+    private HardwareLimitSwitchConfigs l;
 
-  TalonFXConfiguration doodooController = new TalonFXConfiguration();
+    TalonFXConfiguration doodooController = new TalonFXConfiguration();
 
-  public static Gains armGains = IntakeConstants.ArmPID.INTAKE_GAINS;
-  private ConfigurableDouble outtakeSpeed = new ConfigurableDouble("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
-  private BooleanSupplier sup = () -> true;
-  private BooleanSupplier dup = () -> false;
+    public static Gains armGains = IntakeConstants.ArmPID.INTAKE_GAINS;
+    private ConfigurableDouble outtakeSpeed = new ConfigurableDouble("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
+    private BooleanSupplier sup = () -> true;
+    private BooleanSupplier dup = () -> false;
 
-  private double smartDashboardOuttakeValue;
+    private double smartDashboardOuttakeValue;
 
-  /** Creates a new Intake. */
-  //For NEO
-  // public Intake(CANSparkMax intakeMotor, CANSparkMax pivot) {
-  //   this.intakeMotor = intakeMotor;
-  //   this.pivot = pivot;
+    /** Creates a new Intake. */
+    //For NEO
+    // public Intake(CANSparkMax intakeMotor, CANSparkMax pivot) {
+    //   this.intakeMotor = intakeMotor;
+    //   this.pivot = pivot;
 
-  //   pivot.restoreFactoryDefaults();
-  //   //pivot.setInverted(true);
+    //   pivot.restoreFactoryDefaults();
+    //   //pivot.setInverted(true);
 
-  //   forwardLimit = pivot.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
-  //   reverseLimit = pivot.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
-  //   forwardLimit.enableLimitSwitch(true);
-  //   reverseLimit.enableLimitSwitch(true);
+    //   forwardLimit = pivot.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    //   reverseLimit = pivot.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    //   forwardLimit.enableLimitSwitch(true);
+    //   reverseLimit.enableLimitSwitch(true);
 
-  //   intakeMotor.restoreFactoryDefaults();
+    //   intakeMotor.restoreFactoryDefaults();
     
-  //   intakeforwardLimit = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
-  //   intakereverseLimit = intakeMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
-  //   intakeforwardLimit.enableLimitSwitch(true);
-  //   intakereverseLimit.enableLimitSwitch(false);
+    //   intakeforwardLimit = intakeMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    //   intakereverseLimit = intakeMotor.getReverseLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
+    //   intakeforwardLimit.enableLimitSwitch(true);
+    //   intakereverseLimit.enableLimitSwitch(false);
 
-  //   //Arm PID
-  //   m_spedController = pivot.getPIDController();
-  //   m_spedController.setP(armGains.kP);
-  //   m_spedController.setI(armGains.kI);
-  //   m_spedController.setD(armGains.kD);
+    //   //Arm PID
+    //   m_spedController = pivot.getPIDController();
+    //   m_spedController.setP(armGains.kP);
+    //   m_spedController.setI(armGains.kI);
+    //   m_spedController.setD(armGains.kD);
 
-  //   SmartDashboard.putNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
-  // }
+    //   SmartDashboard.putNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
+    // }
 
-  //For Talon
-  public Intake(TalonFX talonIntake, TalonFX talonPivot) {
-    this.talonIntake = talonIntake;
-    this.talonPivot = talonPivot;
+    //For Talon
+    public Intake(TalonFX talonIntake, TalonFX talonPivot) {
+	this.talonIntake = talonIntake;
+	this.talonPivot = talonPivot;
 
-    talonIntake.getConfigurator().apply(new TalonFXConfiguration());
-    talonPivot.getConfigurator().apply(new TalonFXConfiguration());
+	talonIntake.getConfigurator().apply(new TalonFXConfiguration());
+	talonPivot.getConfigurator().apply(new TalonFXConfiguration());
 
-    talonIntake.setNeutralMode(NeutralModeValue.Brake);
-    talonPivot.setNeutralMode(NeutralModeValue.Brake);
+	talonIntake.setNeutralMode(NeutralModeValue.Brake);
+	talonPivot.setNeutralMode(NeutralModeValue.Brake);
 
-    // talonPivot.getConfigurator().apply(new HardwareLimitSwitchConfigs());
-    // talonIntake.getConfigurator().apply(new HardwareLimitSwitchConfigs());
+	// talonPivot.getConfigurator().apply(new HardwareLimitSwitchConfigs());
+	// talonIntake.getConfigurator().apply(new HardwareLimitSwitchConfigs());
 
   
     
-    // doodooController.Slot0.kP = armGains.kP;
-    // doodooController.Slot1.kI = armGains.kI;
-    // doodooController.Slot2.kD = armGains.kD;
+	// doodooController.Slot0.kP = armGains.kP;
+	// doodooController.Slot1.kI = armGains.kI;
+	// doodooController.Slot2.kD = armGains.kD;
 
-    // in init function, set slot 0 gains
-    var slot0Configs = new Slot0Configs();
-    slot0Configs.kP = 0.7; // An error of 0.5 rotations results in 12 V output
-    slot0Configs.kI = 0.0; // no output for integrated error
-    slot0Configs.kD = 0.06; // A velocity of 1 rps results in 0.1 V output
+	// in init function, set slot 0 gains
+	var slot0Configs = new Slot0Configs();
+	slot0Configs.kP = 0.7; // An error of 0.5 rotations results in 12 V output
+	slot0Configs.kI = 0.0; // no output for integrated error
+	slot0Configs.kD = 0.06; // A velocity of 1 rps results in 0.1 V output
 
-    talonPivot.getConfigurator().apply(slot0Configs);
+	talonPivot.getConfigurator().apply(slot0Configs);
 
     
-  }
-
-  // ! Talon Methods
-  public void talonPIDIn() {
-    PositionVoltage request = new PositionVoltage(-59);
-    talonPivot.setControl(request.withPosition(0)); 
-  }
-
-  public void talonPIDOut() {
-    PositionVoltage request = new PositionVoltage(0);
-    talonPivot.setControl(request.withPosition(-59)); 
-  }
-
-  public void talonPIDPosition(double out2) {
-    PositionVoltage request = new PositionVoltage(out2);
-    talonPivot.setControl(request);
-  }
-
-  public void talonHandoff() {
-    talonIntake.set(-outtakeSpeed.get());
-  }
-
-  public void talonSpinIntakeMotor() {
-    talonIntake.set(IntakeConstants.INTAKE_SPEED);
-  }
-
-  public void talonSpinIntakeMotor(double speed) {
-    talonIntake.set(speed);
-  }
-
-  public boolean getTalonIntakeLimitSwitchState() {
-    if(r = talonIntake.getForwardLimit().getValue().value == 0) {
-      return true;
     }
-    return false;
-  }
 
-  public void talonSetPivotEncoderPosition(int val) {
-    talonPivot.setPosition(val);
-  }
-  
-  public void talonStopIntakeMotors() {
-    talonIntake.set(0);
-  }
-
-  public void talonStopArmMotor() {
-    talonPivot.set(0);
-  }
-
-  public double getArmPos() {
-    return talonPivot.getPosition().getValue();
-  }
-
-  public void resetArmPosition() {
-    if(getTalonIntakeLimitSwitchState()){
-     // talonPivot.setPosition(0);
+    // ! Talon Methods
+    public void talonPIDIn() {
+	PositionVoltage request = new PositionVoltage(-59);
+	talonPivot.setControl(request.withPosition(0)); 
     }
-  }
 
-  public void ampPosition() {
-    PositionVoltage request = new PositionVoltage(-0);
-    talonPivot.setControl(request.withPosition(-59)); //TODO: Find actual value
-  } 
+    public void talonPIDOut() {
+	PositionVoltage request = new PositionVoltage(0);
+	talonPivot.setControl(request.withPosition(-59)); 
+    }
 
-  public void ampShoot(double speed) {
-    talonSpinIntakeMotor(speed);
-  }
+    public void talonPIDPosition(double out2) {
+	PositionVoltage request = new PositionVoltage(out2);
+	talonPivot.setControl(request);
+    }
 
+    public void talonHandoff() {
+	talonIntake.set(-outtakeSpeed.get());
+    }
 
-  // ! NEO Methods
-  //hanoff
-  // public void spinIntakeMotor() {
-  //   intakeMotor.set(IntakeConstants.INTAKE_SPEED);
-  // }
+    public void talonSpinIntakeMotor() {
+	talonIntake.set(IntakeConstants.INTAKE_SPEED);
+    }
 
-  // //Rotate robot in for handoff
-  // public void rotateArmIn() {
-  //   pivot.set(IntakeConstants.PIVOT_SPEED);
-  // }
+    public void talonSpinIntakeMotor(double speed) {
+	talonIntake.set(speed);
+    }
 
-  // //Rotates robot out for intake
-  // public void rotateArmOut() {
-  //   pivot.set(-IntakeConstants.PIVOT_SPEED);
+    public boolean getTalonIntakeLimitSwitchState() {
+	if(r = talonIntake.getForwardLimit().getValue().value == 0) {
+	    return true;
+	}
+	return false;
+    }
 
-  // }
-
-  // public void pidIn() {
-  //   m_spedController.setReference(2.5, CANSparkMax.ControlType.kPosition);
-  //   //SmartDashboard.putNumber("Velocity Output", pivot.getEncoder().getVelocity());
-  // }
+    public void talonSetPivotEncoderPosition(int val) {
+	talonPivot.setPosition(val);
+    }
   
-  // public void pidOut() {
-  //   m_spedController.setReference(-53, CANSparkMax.ControlType.kPosition);
-  // }
+    public void talonStopIntakeMotors() {
+	talonIntake.set(0);
+    }
 
-  // public void limitNote() {
-  //   if (intakeforwardLimit.isPressed()) {
-  //     rotateArmIn2();
-  //   } else {
-  //     spinIntakeMotor();
-  //   }
-  // }
+    public void talonStopArmMotor() {
+	talonPivot.set(0);
+    }
 
-  // public void rotateArmOut2() {
-  //   if(reverseLimit.isPressed()){
-  //     stopArmMotor();
-  //   } else {
-  //     pidOut();
-  //   }
-  // }
+    public double getArmPos() {
+	return talonPivot.getPosition().getValue();
+    }
 
-  // public void rotateArmIn2() {
-  //   if(forwardLimit.isPressed()){
-  //     stopArmMotor();
-  //   } else {
-  //     pidIn();
-  //   }
-  // }
+    public void resetArmPosition() {
+	if(getTalonIntakeLimitSwitchState()){
+	    // talonPivot.setPosition(0);
+	}
+    }
+
+    public void ampPosition() {
+	PositionVoltage request = new PositionVoltage(-0);
+	talonPivot.setControl(request.withPosition(-59)); //TODO: Find actual value
+    } 
+
+    public void ampShoot(double speed) {
+	talonSpinIntakeMotor(speed);
+    }
+
+
+    // ! NEO Methods
+    //hanoff
+    // public void spinIntakeMotor() {
+    //   intakeMotor.set(IntakeConstants.INTAKE_SPEED);
+    // }
+
+    // //Rotate robot in for handoff
+    // public void rotateArmIn() {
+    //   pivot.set(IntakeConstants.PIVOT_SPEED);
+    // }
+
+    // //Rotates robot out for intake
+    // public void rotateArmOut() {
+    //   pivot.set(-IntakeConstants.PIVOT_SPEED);
+
+    // }
+
+    // public void pidIn() {
+    //   m_spedController.setReference(2.5, CANSparkMax.ControlType.kPosition);
+    //   //SmartDashboard.putNumber("Velocity Output", pivot.getEncoder().getVelocity());
+    // }
   
-  // public void handoff() {
-  //   intakeMotor.set(-IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
-  // }
+    // public void pidOut() {
+    //   m_spedController.setReference(-53, CANSparkMax.ControlType.kPosition);
+    // }
 
-  // public void handoff2() {
-  //   if(intakeforwardLimit.isPressed()) {
-  //     intakeMotor.set(-smartDashboardOuttakeValue);
-  //   } else {
-  //     intakeMotor.set(-smartDashboardOuttakeValue);
-  //   }
-  // }
+    // public void limitNote() {
+    //   if (intakeforwardLimit.isPressed()) {
+    //     rotateArmIn2();
+    //   } else {
+    //     spinIntakeMotor();
+    //   }
+    // }
 
-  // public void stopIntakeMotors() {
-  //   intakeMotor.set(0);
-  // }
+    // public void rotateArmOut2() {
+    //   if(reverseLimit.isPressed()){
+    //     stopArmMotor();
+    //   } else {
+    //     pidOut();
+    //   }
+    // }
 
-  // public void stopArmMotor() {
-  //   pivot.set(0);
-  // }
+    // public void rotateArmIn2() {
+    //   if(forwardLimit.isPressed()){
+    //     stopArmMotor();
+    //   } else {
+    //     pidIn();
+    //   }
+    // }
+  
+    // public void handoff() {
+    //   intakeMotor.set(-IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
+    // }
 
-  // public RelativeEncoder getEncoder() {
-  //   return pivot.getEncoder();
-  // }
+    // public void handoff2() {
+    //   if(intakeforwardLimit.isPressed()) {
+    //     intakeMotor.set(-smartDashboardOuttakeValue);
+    //   } else {
+    //     intakeMotor.set(-smartDashboardOuttakeValue);
+    //   }
+    // }
 
-  // public boolean getForwardLimitSwitchState() {
-  //   return forwardLimit.isPressed();
-  // }
+    // public void stopIntakeMotors() {
+    //   intakeMotor.set(0);
+    // }
 
-  // public boolean getReverseLimitSwitchState() {
-  //   return reverseLimit.isPressed();
-  // }
+    // public void stopArmMotor() {
+    //   pivot.set(0);
+    // }
 
-  // public boolean getIntakeLimitSwtichState() {
-  //   return intakeforwardLimit.isPressed();
-  // }
+    // public RelativeEncoder getEncoder() {
+    //   return pivot.getEncoder();
+    // }
 
-  // public void setVoltage(double voltage) {
-  //  pivot.setVoltage(voltage);
-  // }
+    // public boolean getForwardLimitSwitchState() {
+    //   return forwardLimit.isPressed();
+    // }
 
-  // public double getVelocity() {
-  //   return pivot.getEncoder().getVelocity();
-  // }
+    // public boolean getReverseLimitSwitchState() {
+    //   return reverseLimit.isPressed();
+    // }
 
-  // public void setPivotEncoderPosition(int val) {
-  //   pivot.getEncoder().setPosition(val);
-  // }
+    // public boolean getIntakeLimitSwtichState() {
+    //   return intakeforwardLimit.isPressed();
+    // }
 
-  // public void resetPosition() {
-  //   if(forwardLimit.isPressed()) {
-  //     setPivotEncoderPosition(0);
-  //   }
-  // }
+    // public void setVoltage(double voltage) {
+    //  pivot.setVoltage(voltage);
+    // }
 
-  // public double getPos() {
-  //   return pivot.getEncoder().getPosition();
-  // }
+    // public double getVelocity() {
+    //   return pivot.getEncoder().getVelocity();
+    // }
 
-  // public double getIntakeVelocity() {
-  //   return intakeMotor.getEncoder().getVelocity();
-  // }
+    // public void setPivotEncoderPosition(int val) {
+    //   pivot.getEncoder().setPosition(val);
+    // }
 
-  // public void rotateArm() {
+    // public void resetPosition() {
+    //   if(forwardLimit.isPressed()) {
+    //     setPivotEncoderPosition(0);
+    //   }
+    // }
 
-  // }
+    // public double getPos() {
+    //   return pivot.getEncoder().getPosition();
+    // }
 
-  // public BooleanSupplier getArmFowardLimitState() {
-  //   if(forwardLimit.isPressed()) {
-  //     return sup;
-  //   } else {
-  //     return dup;
-  //   }
-  // }
+    // public double getIntakeVelocity() {
+    //   return intakeMotor.getEncoder().getVelocity();
+    // }
 
-  // public void changeIntakeNeutralState() {
-  //   if(forwardLimit.isPressed()) {
-  //     intakeMotor.setIdleMode(CANSparkBase.IdleMode.kCoast);
-  //   }
-  // }
+    // public void rotateArm() {
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-    // SmartDashboard.putNumber("Vel Output", getVelocity());
-    // SmartDashboard.putNumber("Position", getPos());
-    // resetPosition();
-    // changeIntakeNeutralState();
+    // }
 
-    resetArmPosition();
+    // public BooleanSupplier getArmFowardLimitState() {
+    //   if(forwardLimit.isPressed()) {
+    //     return sup;
+    //   } else {
+    //     return dup;
+    //   }
+    // }
 
-    SmartDashboard.putNumber("Pivot Position", getArmPos());
+    // public void changeIntakeNeutralState() {
+    //   if(forwardLimit.isPressed()) {
+    //     intakeMotor.setIdleMode(CANSparkBase.IdleMode.kCoast);
+    //   }
+    // }
 
-    smartDashboardOuttakeValue = SmartDashboard.getNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
-  }
+    @Override
+    public void periodic() {
+	// This method will be called once per scheduler run
+	// SmartDashboard.putNumber("Vel Output", getVelocity());
+	// SmartDashboard.putNumber("Position", getPos());
+	// resetPosition();
+	// changeIntakeNeutralState();
+
+	resetArmPosition();
+
+	SmartDashboard.putNumber("Pivot Position", getArmPos());
+
+	smartDashboardOuttakeValue = SmartDashboard.getNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
+    }
 }

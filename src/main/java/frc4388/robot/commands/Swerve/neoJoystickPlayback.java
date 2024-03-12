@@ -65,7 +65,7 @@ public class neoJoystickPlayback extends Command {
 
             if (m_numControllers > controllers.length) {
                 System.out.println("AUTOPLAYBACK: The auto file `" + filename + "` wants " + m_numControllers 
-                + " virtual controllers but only " + controllers.length + " were given");
+				   + " virtual controllers but only " + controllers.length + " were given");
                 return false;
             }
 
@@ -133,9 +133,9 @@ public class neoJoystickPlayback extends Command {
             controllers[i].setFrame(controllerFrame.axes, controllerFrame.button, controllerFrame.POV);
             if (i == 0) {
                 this.swerve.driveWithInput(
-                    new Translation2d(controllers[i].getRawAxis(0), controllers[i].getRawAxis(1)),
-                    new Translation2d(controllers[i].getRawAxis(4), controllers[i].getRawAxis(5)),
-                    true);
+					   new Translation2d(controllers[i].getRawAxis(0), controllers[i].getRawAxis(1)),
+					   new Translation2d(controllers[i].getRawAxis(4), controllers[i].getRawAxis(5)),
+					   true);
             }
         }
         frame_index++;
