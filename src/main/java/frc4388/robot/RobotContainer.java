@@ -11,6 +11,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -84,8 +85,10 @@ public class RobotContainer {
     private Command intakeToShootStuff = new ArmIntakeIn(m_robotIntake, m_robotShooter);
     private Command interrupt = new InstantCommand(() -> {}, m_robotIntake, m_robotShooter);
 
-    private SequentialCommandGroup intakeToShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.talonPIDIn())
+    private ParallelCommandGroup intakeToShoot = new ParallelCommandGroup(
+        new InstantCommand(() -> m_robotIntake.talonPIDIn()),
+        new InstantCommand(() -> m_robotShooter.idle()),
+        new InstantCommand(() -> m_driverXbox.setRumble(null, 1.0)).andThen(new WaitCommand(1)).andThen(new InstantCommand(() -> m_driverXbox.setRumble(null, 0.0)))
         //new InstantCommand(() -> m_robotShooter.spin())
     );
 
@@ -119,7 +122,7 @@ public class RobotContainer {
 
 
     private SequentialCommandGroup i = new SequentialCommandGroup(
-        intakeToShootStuff, intakeToShoot,
+        intakeToShootStuff, intakeToShoot, 
         new InstantCommand(() -> m_robotShooter.idle())
     );
 
