@@ -13,6 +13,10 @@ import frc4388.utility.UtilityStructs.AutoRecordingControllerFrame;
 import frc4388.utility.UtilityStructs.AutoRecordingFrame;
 import frc4388.utility.controller.DeadbandedXboxController;
 
+/**
+ * The NEO autonomus recording system, designed based the old {@link JoystickRecorder} System but with {@link frc4388.utility.controller.VirtualController VirtualController}s 
+ * @author Zachary Wilke
+ */
 public class neoJoystickRecorder extends Command {
     private final SwerveDrive swerve;
     private final XboxController[] controllers;
@@ -21,6 +25,12 @@ public class neoJoystickRecorder extends Command {
     private       long startTime = -1;
     private final ArrayList<AutoRecordingFrame> frames = new ArrayList<>();
 
+    /**
+     * Creates an new NEO Joystick Playback with specifyed pramiters.
+     * @param swerve m_robotSwerveDrive
+     * @param controllers an <b>Order-Specific</b> Array of Virtual controllers, index 0 means driver, index 1 means operator, etc.
+     * @param filenameGetter a String Supplier, designed for quickly changing auto names in shuffle board.
+     */
     public neoJoystickRecorder(SwerveDrive swerve, DeadbandedXboxController[] controllers, Supplier<String> filenameGetter) {
         this.swerve = swerve;
         this.controllers = controllers;
@@ -30,6 +40,12 @@ public class neoJoystickRecorder extends Command {
         addRequirements(this.swerve);
     }
 
+    /**
+     * Creates an new NEO Joystick Playback with specifyed pramiters.
+     * @param swerve m_robotSwerveDrive
+     * @param controllers an <b>Order-Specific</b> Array of Virtual controllers, index 0 means driver, index 1 means operator, etc.
+     * @param filename a String containing the name of the auto file you wish to playback. 
+     */
     public neoJoystickRecorder(SwerveDrive swerve, DeadbandedXboxController[] controllers, String filename) {
         this(swerve, controllers, () -> filename);
     }

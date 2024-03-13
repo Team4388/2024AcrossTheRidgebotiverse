@@ -12,6 +12,11 @@ import frc4388.utility.UtilityStructs.AutoRecordingControllerFrame;
 import frc4388.utility.UtilityStructs.AutoRecordingFrame;
 import frc4388.utility.controller.VirtualController;
 
+
+/**
+ * The NEO autonomus playback system, designed based the old {@link JoystickPlayback} System but with {@link VirtualController}s 
+ * @author Zachary Wilke
+ */
 public class neoJoystickPlayback extends Command {
     private final SwerveDrive                   swerve;
     private final VirtualController[]           controllers;
@@ -29,6 +34,14 @@ public class neoJoystickPlayback extends Command {
     private byte  m_numControllers = 0;
     private short m_numFrames = -1;
 
+    /**
+     * Creates an new NEO Joystick Playback with specifyed pramiters.
+     * @param swerve m_robotSwerveDrive
+     * @param filenameGetter a String Supplier, designed for quickly changing auto names in shuffle board. 
+     * @param controllers an <b>Order-Specific</b> Array of Virtual controllers, index 0 means driver, index 1 means operator, etc.
+     * @param shouldfree Unloads the auto on compleation or intruption.
+     * @param instantload Load the auto on object instantiation
+     */
     public neoJoystickPlayback(SwerveDrive swerve, Supplier<String> filenameGetter, VirtualController[] controllers, boolean shouldfree, boolean instantload) {
         this.swerve = swerve;
         this.filenameGetter = filenameGetter;
@@ -38,18 +51,44 @@ public class neoJoystickPlayback extends Command {
         if (instantload) loadAuto();
         addRequirements(this.swerve);
     }
+
+    /**
+     * Creates an new NEO Joystick Playback with specifyed pramiters.
+     * @param swerve m_robotSwerveDrive
+     * @param filename a String containing the name of the auto file you wish to playback. 
+     * @param controllers an <b>Order-Specific</b> Array of Virtual controllers, index 0 means driver, index 1 means operator, etc.
+     * @param shouldfree unloads the auto on compleation or intruption.
+     * @param instantload load the auto on object instantiation
+     */
     public neoJoystickPlayback(SwerveDrive swerve, String filename, VirtualController[] controllers, boolean shouldfree, boolean instantload) {
         this(swerve, () -> filename, controllers, shouldfree, instantload);
     }
 
+    /**
+     * Creates an new NEO Joystick Playback with specifyed pramiters.
+     * @param swerve m_robotSwerveDrive
+     * @param filenameGetter a String Supplier, designed for quickly changing auto names in shuffle board.
+     * @param controllers an <b>Order-Specific</b> Array of Virtual controllers, index 0 means driver, index 1 means operator, etc.
+     */
     public neoJoystickPlayback(SwerveDrive swerve, Supplier<String> filenameGetter, VirtualController[] controllers) {
         this(swerve, filenameGetter, controllers, true, false);
     }
 
+    /**
+     * Creates an new NEO Joystick Playback with specifyed pramiters.
+     * @param swerve m_robotSwerveDrive
+     * @param filename a String containing the name of the auto file you wish to playback. 
+     * @param controllers an <b>Order-Specific</b> Array of Virtual controllers, index 0 means driver, index 1 means operator, etc.
+     */
     public neoJoystickPlayback(SwerveDrive swerve, String filename, VirtualController[] controllers) {
         this(swerve, () -> filename, controllers, true, false);
     }
     
+    /**
+     * Load the auto file from disk into memory
+     * @return Returns true if loading was successful, else wise; return false
+     * @implNote if the auto is already loaded, it will return true. 
+     */
     public boolean loadAuto() {
         filename = filenameGetter.get();
         try (FileInputStream stream = new FileInputStream("/home/lvuser/autos/" + filename)) {
@@ -101,6 +140,9 @@ public class neoJoystickPlayback extends Command {
         }
     }
     
+    /**
+     * Unloads the auto.
+     */
     public void unloadAuto() {
         System.out.println("AUTOPLAYBACK: Auto unloaded");
         frames.clear();
