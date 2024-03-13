@@ -7,10 +7,12 @@ package frc4388.robot.subsystems;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants;
 import frc4388.robot.Constants.ClimbConstants;
+import frc4388.robot.Constants.IntakeConstants;
 
 //! 6.5C Scoring Criteria for Stage
 
@@ -21,6 +23,7 @@ public class Climber extends SubsystemBase {
   public Climber(TalonFX climbMotor) {
     this.climbMotor = climbMotor;
     this.climbMotor.setInverted(true);
+    
     var slot0Configs = new Slot0Configs();
     slot0Configs.kP = 0.7; // An error of 0.5 rotations results in 12 V output
     slot0Configs.kI = 0.0; // no output for integrated error
@@ -30,15 +33,17 @@ public class Climber extends SubsystemBase {
   }
 
   public void climbOut() {
-    PositionVoltage request = new PositionVoltage(0);
-    climbMotor.setControl(request.withPosition(-520)); 
-    //climbMotor.set(Constants.ClimbConstants.CLIMB_IN_SPEED);
+    //PositionVoltage request = new PositionVoltage(0);
+    //climbMotor.setControl(request.withPosition(-520)); 
+    
+    climbMotor.set(Constants.ClimbConstants.CLIMB_OUT_SPEED);
   }
 
   public void climbIn() {
-    PositionVoltage request = new PositionVoltage(-520);
-    climbMotor.setControl(request.withPosition(0)); 
-    // climbMotor.set(Constants.ClimbConstants.CLIMB_IN_SPEED);
+    //PositionVoltage request = new PositionVoltage(-520);
+    //climbMotor.setControl(request.withPosition(0)); 
+    climbMotor.set(Constants.ClimbConstants.CLIMB_IN_SPEED);
+    ;
   }
 
   public void stopClimb() {
@@ -48,5 +53,6 @@ public class Climber extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    SmartDashboard.putNumber("climber pos", climbMotor.getPosition().getValue());
   }
 }

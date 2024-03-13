@@ -327,14 +327,6 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroFlip(), m_robotSwerveDrive));
 
-        new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.RIGHT_TRIGGER_AXIS) > 0.5)
-            .onTrue(new InstantCommand(() -> m_robotClimber.climbOut()))
-            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
-
-        new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.LEFT_TRIGGER_AXIS) > 0.5)
-            .onTrue(new InstantCommand(() -> m_robotClimber.climbIn()))
-            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
-
         new Trigger(() -> getDeadbandedDriverController().getPOV() == 0)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightBlue()));
 
@@ -430,8 +422,12 @@ public class RobotContainer {
             .onTrue(emergencyRetract);
 
         new Trigger(() -> getDeadbandedOperatorController().getRawAxis(XboxController.RIGHT_TRIGGER_AXIS) > 0.5)
-            .onTrue(new InstantCommand(() -> m_robotShooter.idle()))
-            .onFalse(new InstantCommand(() -> m_robotShooter.stop()));
+            .onTrue(new InstantCommand(() -> m_robotClimber.climbOut()))
+            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
+
+        new Trigger(() -> getDeadbandedOperatorController().getRawAxis(XboxController.LEFT_TRIGGER_AXIS) > 0.5)
+            .onTrue(new InstantCommand(() -> m_robotClimber.climbIn()))
+            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
 
         new Trigger(() -> getDeadbandedOperatorController().getPOV() == 0)
             .onTrue(new InstantCommand(() -> m_robotClimber.climbOut()))

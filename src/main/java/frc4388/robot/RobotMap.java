@@ -149,7 +149,7 @@ public class RobotMap {
         rightFrontSteer.setNeutralMode(NeutralMode.Brake);
         leftBackSteer.setNeutralMode(NeutralMode.Brake);
         rightBackSteer.setNeutralMode(NeutralMode.Brake);
-
+        
         // initialize SwerveModules
         this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.FRONT_LEFT_ROT_OFFSET);
         this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.FRONT_RIGHT_ROT_OFFSET);

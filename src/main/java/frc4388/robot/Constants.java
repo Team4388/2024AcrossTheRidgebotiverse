@@ -67,7 +67,7 @@ public final class Constants {
         public static final class PIDConstants {
             public static final int SWERVE_SLOT_IDX = 0;
             public static final int SWERVE_PID_LOOP_IDX = 1;
-            public static final Gains SWERVE_GAINS = new Gains(1.2, 0.0, 0.2, 0.0, 0, 0.0);
+            public static final Gains SWERVE_GAINS = new Gains(1.2, 0.0, 0.1, 0.2, 0, 0.0);
         }
     
         public static final class AutoConstants {
@@ -191,8 +191,8 @@ public final class Constants {
 
     public static final class ClimbConstants {
         public static final int CLIMB_MOTOR_ID = 19;
-        public static final double CLIMB_OUT_SPEED = 0.3;
-        public static final double CLIMB_IN_SPEED = -0.3;
+        public static final double CLIMB_IN_SPEED = -1.0;
+        public static final double CLIMB_OUT_SPEED = 0.87;
     }
 
     public static final class OIConstants {
