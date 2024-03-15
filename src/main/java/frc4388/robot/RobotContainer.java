@@ -332,21 +332,41 @@ public class RobotContainer {
 
         new Trigger(() -> getDeadbandedDriverController().getPOV() == 180)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightAmp()));
+
+       // *  /* D-Pad Stuff */
+       new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.TOP_BOTTOM_DPAD_AXIS) > 0.9)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
+                                                                               new Translation2d(0, 0),
+                                                                               true)))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
+                                                                                new Translation2d(0, 0), 
+                                                                                true)));
+
+       new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.TOP_BOTTOM_DPAD_AXIS) > -0.9)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, -1),
+                                                                               new Translation2d(0, 0),
+                                                                               true)))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
+                                                                                new Translation2d(0, 0), 
+                                                                                true)));
+
+       new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.LEFT_RIGHT_DPAD_AXIS) > 0.9)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(1, 0),
+                                                                               new Translation2d(0, 0),
+                                                                               true)))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
+                                                                                new Translation2d(0, 0), 
+                                                                                true)));
+
+       new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.LEFT_RIGHT_DPAD_AXIS) > -0.9)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(-1, 0),
+                                                                               new Translation2d(0, 0),
+                                                                               true)))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
+                                                                                new Translation2d(0, 0), 
+                                                                                true)));
         
         // ! /* Auto Recording */
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-        //    .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-        //                                    () -> getDeadbandedDriverController().getLeftX(),
-        //                                    () -> getDeadbandedDriverController().getLeftY(),
-        //                                    () -> getDeadbandedDriverController().getRightX(),
-        //                                    () -> getDeadbandedDriverController().getRightY(),
-        //                                    "Taxi.txt"))
-        //    .onFalse(new InstantCommand());
-
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-        //    .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
-        //    .onFalse(new InstantCommand()); 
-
         new JoystickButton(m_autoRecorderXbox, XboxController.LEFT_BUMPER_BUTTON)
            .whileTrue(new neoJoystickRecorder(m_robotSwerveDrive,
                         new DeadbandedXboxController[]{getDeadbandedDriverController(), getDeadbandedOperatorController()},
@@ -360,6 +380,18 @@ public class RobotContainer {
            true, false))
            .onFalse(new InstantCommand());
 
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+                //    .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+                //                                    () -> getDeadbandedDriverController().getLeftX(),
+                //                                    () -> getDeadbandedDriverController().getLeftY(),
+                //                                    () -> getDeadbandedDriverController().getRightX(),
+                //                                    () -> getDeadbandedDriverController().getRightY(),
+                //                                    "Taxi.txt"))
+                //    .onFalse(new InstantCommand());
+
+                // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+                //    .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
+                //    .onFalse(new InstantCommand()); 
         // ! /* Speed */
         // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
         //     .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
