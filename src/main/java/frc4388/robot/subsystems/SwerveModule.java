@@ -4,17 +4,22 @@
 
 package frc4388.robot.subsystems;
 
+import javax.swing.text.StyleContext.SmallAttributeSet;
+
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.Gains;
@@ -24,7 +29,8 @@ public class SwerveModule extends SubsystemBase {
     private WPI_TalonFX driveMotor;
     private WPI_TalonFX angleMotor;
     private CANCoder encoder;
-    //private ConfigurableDouble offsetGetter;
+    private int selfid;
+    private ConfigurableDouble offsetGetter;
     private static int swerveId = 0;
     public static Gains swerveGains = SwerveDriveConstants.PIDConstants.SWERVE_GAINS;
   
@@ -33,7 +39,8 @@ public class SwerveModule extends SubsystemBase {
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.encoder = encoder;
-        // this.offsetGetter = new ConfigurableDouble("Swerve id " + swerveId, offset);
+        this.offsetGetter = new ConfigurableDouble("Swerve id " + swerveId, offset);
+        this.selfid = swerveId;
          swerveId++;
         TalonFXConfiguration angleConfig = new TalonFXConfiguration();
         angleConfig.slot0.kP = swerveGains.kP;
@@ -45,17 +52,24 @@ public class SwerveModule extends SubsystemBase {
         angleConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
         angleConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
         angleMotor.configAllSettings(angleConfig);
-
+        
+        //encoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
+        reset(0);
         encoder.configMagnetOffset(offset);
         
         driveMotor.setSelectedSensorPosition(0);
         driveMotor.config_kP(0, 0.2);
     }
     
-    //@Override
-    // public void periodic() {
-    //     encoder.configMagnetOffset(offsetGetter.get());
-    // }
+    @Override
+    public void periodic() {
+        //encoder.configMagnetOffset(offsetGetter.get());
+        //SmartDashboard.putString("Error Code: " + selfid, getstuff());
+        // SmartDashboard.putNumber("Angular Position: " + selfid, getAngle().getDegrees());
+        // SmartDashboard.putNumber("Angular Velocity: " + selfid, getAngularVel());
+        // SmartDashboard.putNumber("Drive Position: " + selfid, getDrivePos());
+        // SmartDashboard.putNumber("Drive Velocity: " + selfid, getDriveVel());
+    }
     /**
      * Get the drive motor of the SwerveModule
      * @return the drive motor of the SwerveModule
@@ -165,4 +179,9 @@ public class SwerveModule extends SubsystemBase {
     public double getVoltage() {
         return (Math.abs(angleMotor.getMotorOutputVoltage()) + Math.abs(driveMotor.getMotorOutputVoltage()));
     }
+
+    // public String getstuff() {
+    //     encoder.getPosition();
+    //     return "" + encoder.getLastError().value;
+    // }
 }

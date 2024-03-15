@@ -133,8 +133,8 @@ public class RobotContainer {
     );
 
     private SequentialCommandGroup turnOffShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
-        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
+        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter)
+        // new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
     );
 
     private SequentialCommandGroup emergencyRetract = new SequentialCommandGroup(
@@ -361,12 +361,12 @@ public class RobotContainer {
            .onFalse(new InstantCommand());
 
         // ! /* Speed */
-    //     new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
-    //         .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
-    //       // .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+        //     .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+        //   // .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
         
-    //     new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
-    //         .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
             .whileTrue(new InstantCommand(() -> 
