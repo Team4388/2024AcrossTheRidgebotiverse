@@ -128,13 +128,13 @@ public class Intake extends SubsystemBase {
 
   // ! Talon Methods
   public void talonPIDIn() {
-    PositionVoltage request = new PositionVoltage(-59);
+    PositionVoltage request = new PositionVoltage(-53);
     talonPivot.setControl(request.withPosition(0)); 
   }
 
   public void talonPIDOut() {
     PositionVoltage request = new PositionVoltage(0);
-    talonPivot.setControl(request.withPosition(-59)); 
+    talonPivot.setControl(request.withPosition(-53)); 
   }
 
   public void talonPIDPosition(double out2) {
@@ -161,7 +161,7 @@ public class Intake extends SubsystemBase {
     return false;
   }
 
-  public void talonSetPivotEncoderPosition(int val) {
+  public void talonSetPivotEncoderPosition(double val) {
     talonPivot.setPosition(val);
   }
   
@@ -188,7 +188,7 @@ public class Intake extends SubsystemBase {
     talonPivot.setControl(request.withPosition(-59)); //TODO: Find actual value
   } 
 
-  public void ampShoot(double speed) {
+  public void ampOuttake(double speed) {
     talonSpinIntakeMotor(speed);
   }
 
@@ -333,8 +333,8 @@ public class Intake extends SubsystemBase {
 
     resetArmPosition();
 
-    //SmartDashboard.putNumber("Pivot Position", getArmPos());
+   // SmartDashboard.putNumber("Pivot Position", getArmPos());
 
-    smartDashboardOuttakeValue = SmartDashboard.getNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
+    //smartDashboardOuttakeValue = SmartDashboard.getNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
   }
 }

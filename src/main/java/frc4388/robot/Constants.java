@@ -25,7 +25,7 @@ public final class Constants {
 
         public static final double MAX_ROT_SPEED        = 3.5;
         public static final double AUTO_MAX_ROT_SPEED = 1.5;
-        public static final double MIN_ROT_SPEED        = 0.8;
+        public static final double MIN_ROT_SPEED        = 1.0;
         public static       double ROTATION_SPEED       = MAX_ROT_SPEED;
         public static       double PLAYBACK_ROTATION_SPEED = AUTO_MAX_ROT_SPEED;
         public static       double ROT_CORRECTION_SPEED = 10; // MIN_ROT_SPEED;
@@ -169,7 +169,7 @@ public final class Constants {
         public static final int LEFT_SHOOTER_ID = 15; // final
         public static final int RIGHT_SHOOTER_ID = 16; // final
         public static final double SHOOTER_SPEED = 0.50; // final
-        public static final double SHOOTER_IDLE = 0.15; // final
+        public static final double SHOOTER_IDLE = 0.20; // final
         public static final double SHOOTER_IDLE_LIMELIGHT = 0.20;
     }
 

@@ -71,12 +71,12 @@ public class Limelight extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    isTag = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0) == 1.0;
-    double[] newPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+    //isTag = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0) == 1.0;
+    //double[] newPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
 
-    if(newPose != cameraPose){
-      cameraPose = newPose;
-      update();
-    }
+    //if(newPose != cameraPose){
+    //  cameraPose = newPose;
+      //update();
+    //}
   }
 }

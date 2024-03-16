@@ -103,12 +103,12 @@ public class Shooter extends SubsystemBase {
 
     // If the robot is near the speaker, and is stopped, or idled, set to limelight idle speed.
     // Else if the robot is not near the speaker, then set the speed back to idle.
-    if(limelight.isNearSpeaker() && (spinMode == 0 || spinMode == 1)){
-      leftShooter.set(-ShooterConstants.SHOOTER_IDLE_LIMELIGHT);    
-      rightShooter.set(-ShooterConstants.SHOOTER_IDLE_LIMELIGHT);
-      spinMode = 2;
-    }else if(!limelight.isNearSpeaker() && spinMode == 2){
-      idle();
-    }
+    // if(limelight.isNearSpeaker() && (spinMode == 0 || spinMode == 1)){
+    //   leftShooter.set(-ShooterConstants.SHOOTER_IDLE_LIMELIGHT);    
+    //   rightShooter.set(-ShooterConstants.SHOOTER_IDLE_LIMELIGHT);
+    //   spinMode = 2;
+    // }else if(!limelight.isNearSpeaker() && spinMode == 2){
+    //   idle();
+    // }
   }
 }
