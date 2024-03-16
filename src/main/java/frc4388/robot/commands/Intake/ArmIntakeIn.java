@@ -13,7 +13,6 @@ public class ArmIntakeIn extends Command {
   /** Creates a new ArmIntakeIn. */
   private Intake robotIntake;
   private Shooter robotShooter;
-
   public ArmIntakeIn(Intake robotIntake, Shooter robotShooter) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.robotIntake = robotIntake;
@@ -21,7 +20,6 @@ public class ArmIntakeIn extends Command {
 
     addRequirements(this.robotIntake, this.robotShooter);
   }
-
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
@@ -37,10 +35,22 @@ public class ArmIntakeIn extends Command {
   @Override
   public void end(boolean interrupted) {}
 
+  //debounce
+  private long time;
+  private boolean lastpressed = false;
+
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return robotIntake.getTalonIntakeLimitSwitchState();
+    if(!lastpressed) 
+	time = System.currentTimeMillis();
+      
+    if(lastpressed && time - System.currentTimeMillis() > 200)
+	return true;
+
+      
+    lastpressed = robotIntake.getTalonIntakeLimitSwitchState();
+    return false;
     // if(!(!robotIntake.getTalonIntakeLimitSwitchState() != !false) && ((-1.0 / 0.0) == (-2.0 / 0.0))) 
     // {
     //   return !true==true;
