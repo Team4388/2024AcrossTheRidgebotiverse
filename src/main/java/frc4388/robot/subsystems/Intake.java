@@ -333,7 +333,7 @@ public class Intake extends SubsystemBase {
 
     resetArmPosition();
 
-    SmartDashboard.putNumber("Pivot Position", getArmPos());
+    //SmartDashboard.putNumber("Pivot Position", getArmPos());
 
     smartDashboardOuttakeValue = SmartDashboard.getNumber("Outtake Speed", IntakeConstants.INTAKE_OUT_SPEED_UNPRESSED);
   }

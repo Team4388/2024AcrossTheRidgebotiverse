@@ -87,9 +87,9 @@ public class RobotContainer {
 
     private ParallelCommandGroup intakeToShoot = new ParallelCommandGroup(
         new InstantCommand(() -> m_robotIntake.talonPIDIn()),
-        new InstantCommand(() -> m_robotShooter.idle()),
-        new InstantCommand(() -> m_driverXbox.setRumble(null, 1.0)).andThen(new WaitCommand(1)).andThen(new InstantCommand(() -> m_driverXbox.setRumble(null, 0.0)))
-        //new InstantCommand(() -> m_robotShooter.spin())
+        new InstantCommand(() -> m_robotShooter.idle())
+        // new InstantCommand(() -> m_driverXbox.setRumble(RumbleType.kRightRumble, 1.0)).andThen(new WaitCommand(0.2)).andThen(new InstantCommand(() -> m_driverXbox.setRumble(RumbleType.kRightRumble, 0.0))),
+        // new InstantCommand(() -> m_robotShooter.spin())
     );
 
     // private SequentialCommandGroup outtakeToShootFull = new SequentialCommandGroup(
@@ -133,8 +133,8 @@ public class RobotContainer {
     );
 
     private SequentialCommandGroup turnOffShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter),
-        new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
+        new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter)
+        // new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake)
     );
 
     private SequentialCommandGroup emergencyRetract = new SequentialCommandGroup(
@@ -327,34 +327,46 @@ public class RobotContainer {
         new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroFlip(), m_robotSwerveDrive));
 
-        new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.RIGHT_TRIGGER_AXIS) > 0.5)
-            .onTrue(new InstantCommand(() -> m_robotClimber.climbOut()))
-            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
-
-        new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.LEFT_TRIGGER_AXIS) > 0.5)
-            .onTrue(new InstantCommand(() -> m_robotClimber.climbIn()))
-            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
-
         new Trigger(() -> getDeadbandedDriverController().getPOV() == 0)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightBlue()));
 
         new Trigger(() -> getDeadbandedDriverController().getPOV() == 180)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightAmp()));
+
+       // *  /* D-Pad Stuff */
+       new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.TOP_BOTTOM_DPAD_AXIS) > 0.9)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
+                                                                               new Translation2d(0, 0),
+                                                                               true)))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
+                                                                                new Translation2d(0, 0), 
+                                                                                true)));
+
+       new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.TOP_BOTTOM_DPAD_AXIS) > -0.9)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, -1),
+                                                                               new Translation2d(0, 0),
+                                                                               true)))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
+                                                                                new Translation2d(0, 0), 
+                                                                                true)));
+
+       new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.LEFT_RIGHT_DPAD_AXIS) > 0.9)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(1, 0),
+                                                                               new Translation2d(0, 0),
+                                                                               true)))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
+                                                                                new Translation2d(0, 0), 
+                                                                                true)));
+
+       new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.LEFT_RIGHT_DPAD_AXIS) > -0.9)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(-1, 0),
+                                                                               new Translation2d(0, 0),
+                                                                               true)))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
+                                                                                new Translation2d(0, 0), 
+                                                                                true)));
         
         // ! /* Auto Recording */
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-        //    .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-        //                                    () -> getDeadbandedDriverController().getLeftX(),
-        //                                    () -> getDeadbandedDriverController().getLeftY(),
-        //                                    () -> getDeadbandedDriverController().getRightX(),
-        //                                    () -> getDeadbandedDriverController().getRightY(),
-        //                                    "Taxi.txt"))
-        //    .onFalse(new InstantCommand());
-
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-        //    .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
-        //    .onFalse(new InstantCommand()); 
-
         new JoystickButton(m_autoRecorderXbox, XboxController.LEFT_BUMPER_BUTTON)
            .whileTrue(new neoJoystickRecorder(m_robotSwerveDrive,
                         new DeadbandedXboxController[]{getDeadbandedDriverController(), getDeadbandedOperatorController()},
@@ -368,19 +380,31 @@ public class RobotContainer {
            true, false))
            .onFalse(new InstantCommand());
 
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
+                //    .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
+                //                                    () -> getDeadbandedDriverController().getLeftX(),
+                //                                    () -> getDeadbandedDriverController().getLeftY(),
+                //                                    () -> getDeadbandedDriverController().getRightX(),
+                //                                    () -> getDeadbandedDriverController().getRightY(),
+                //                                    "Taxi.txt"))
+                //    .onFalse(new InstantCommand());
+
+                // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
+                //    .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
+                //    .onFalse(new InstantCommand()); 
         // ! /* Speed */
-    //     new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
-    //         .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
-    //       // .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
+        //     .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+        //   // .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
         
-    //     new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
-    //         .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+        // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
         
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
-        //     .whileTrue(new InstantCommand(() -> 
-        //     m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
-        //                                       new Translation2d(0, 0),
-        //                         true), m_robotSwerveDrive));
+        new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
+            .whileTrue(new InstantCommand(() -> 
+            m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
+                                              new Translation2d(0, 0),
+                                true), m_robotSwerveDrive));
 
         
        //?  /* Operator Buttons */
@@ -430,8 +454,12 @@ public class RobotContainer {
             .onTrue(emergencyRetract);
 
         new Trigger(() -> getDeadbandedOperatorController().getRawAxis(XboxController.RIGHT_TRIGGER_AXIS) > 0.5)
-            .onTrue(new InstantCommand(() -> m_robotShooter.idle()))
-            .onFalse(new InstantCommand(() -> m_robotShooter.stop()));
+            .onTrue(new InstantCommand(() -> m_robotClimber.climbOut()))
+            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
+
+        new Trigger(() -> getDeadbandedOperatorController().getRawAxis(XboxController.LEFT_TRIGGER_AXIS) > 0.5)
+            .onTrue(new InstantCommand(() -> m_robotClimber.climbIn()))
+            .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
 
         new Trigger(() -> getDeadbandedOperatorController().getPOV() == 0)
             .onTrue(new InstantCommand(() -> m_robotClimber.climbOut()))

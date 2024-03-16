@@ -99,7 +99,7 @@ public class Shooter extends SubsystemBase {
     // This method will be called once per scheduler run
   //  SmartDashboard.putNumber("Left Shooter RPM", leftShooter.getRotorVelocity().getValue());
     //SmartDashboard.putNumber("Right Shooter RPM", rightShooter.getRotorVelocity().getValue());
-    smartDashboardShooterSpeed = SmartDashboard.getNumber("Shooter Speed", ShooterConstants.SHOOTER_SPEED);
+    //smartDashboardShooterSpeed = SmartDashboard.getNumber("Shooter Speed", ShooterConstants.SHOOTER_SPEED);
 
     // If the robot is near the speaker, and is stopped, or idled, set to limelight idle speed.
     // Else if the robot is not near the speaker, then set the speed back to idle.
