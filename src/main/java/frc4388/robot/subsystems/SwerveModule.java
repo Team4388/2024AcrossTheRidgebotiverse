@@ -30,7 +30,7 @@ public class SwerveModule extends SubsystemBase {
     private WPI_TalonFX angleMotor;
     private CANCoder encoder;
     private int selfid;
-    private ConfigurableDouble offsetGetter;
+    // private ConfigurableDouble offsetGetter;
     private static int swerveId = 0;
     public static Gains swerveGains = SwerveDriveConstants.PIDConstants.SWERVE_GAINS;
   
@@ -39,7 +39,7 @@ public class SwerveModule extends SubsystemBase {
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.encoder = encoder;
-        this.offsetGetter = new ConfigurableDouble("Swerve id " + swerveId, offset);
+        // this.offsetGetter = new ConfigurableDouble("Swerve id " + swerveId, offset);
         this.selfid = swerveId;
          swerveId++;
         TalonFXConfiguration angleConfig = new TalonFXConfiguration();

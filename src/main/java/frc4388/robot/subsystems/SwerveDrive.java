@@ -62,7 +62,7 @@ public class  SwerveDrive extends SubsystemBase {
       // ! drift correction
       if (rightStick.getNorm() > 0.05) {
         rotTarget = gyro.getAngle();
-        rot = rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED;
+        rot = rightStick.getX();
       //  SmartDashboard.putBoolean("drift correction", false);
         stopped = false;
       } else if(leftStick.getNorm() > 0.05) {
@@ -144,7 +144,7 @@ public class  SwerveDrive extends SubsystemBase {
     
     Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
 
-    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), -1 * speed.getY(), -1 * rot * SwerveDriveConstants.ROTATION_SPEED, gyro.getRotation2d()).times(1);
+    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), -1 * speed.getY(), -1 * rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED, gyro.getRotation2d()).times(1);
     } else {      // Create robot-relative speeds.
       chassisSpeeds = new ChassisSpeeds(-1 * leftStick.getX(), -1 * leftStick.getY(), -1 * rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
     }
@@ -183,22 +183,22 @@ public class  SwerveDrive extends SubsystemBase {
 
   public void resetGyro() {
     gyro.reset();
-    rotTarget = 0.0;
+    rotTarget = gyro.getAngle();
   }
 
   public void resetGyroFlip() {
     gyro.resetFlip();
-    rotTarget = 0.0;
+    rotTarget = gyro.getAngle();
   }
 
   public void resetGyroRightBlue() {
     gyro.resetRightSideBlue();
-    rotTarget = 0.0;
+    rotTarget = gyro.getAngle();
   }
 
   public void resetGyroRightAmp() {
     gyro.resetAmpSide();
-    rotTarget = 0.0;
+    rotTarget = gyro.getAngle();
   }
   
   public void stopModules() {

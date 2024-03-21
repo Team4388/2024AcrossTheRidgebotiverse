@@ -68,7 +68,7 @@ public class JoystickRecorder extends CommandBase {
                           new Translation2d(inputs.rightX, inputs.rightY),
                           true);
     
-    System.out.println("RECORDING");
+    //System.out.println("RECORDING");
   }
 
   // Called once the command ends or is interrupted.

@@ -18,65 +18,65 @@ import frc4388.robot.Constants.VisionConstants;
 
 public class Limelight extends SubsystemBase {
 
-  // [X, Y, Z, Roll, Pitch, Yaw]
-  private double[] cameraPose;
-  private boolean isTag;
+  // // [X, Y, Z, Roll, Pitch, Yaw]
+  // private double[] cameraPose;
+  // private boolean isTag;
 
-  private Pose2d pose;
-  private boolean isNearSpeaker;
+  // private Pose2d pose;
+  // private boolean isNearSpeaker;
 
-  public boolean getIsTag() {
-    return isTag;
-  }
+  // public boolean getIsTag() {
+  //   return isTag;
+  // }
 
-  private void update() {
-    SmartDashboard.putBoolean("Apriltag", isTag);
-    if(!isTag){
-      return;
-    }
+  // private void update() {
+  //   SmartDashboard.putBoolean("Apriltag", isTag);
+  //   if(!isTag){
+  //     return;
+  //   }
 
-    double x = cameraPose[0];
-    double y = cameraPose[1];
-    double yaw = cameraPose[5];
+  //   double x = cameraPose[0];
+  //   double y = cameraPose[1];
+  //   double yaw = cameraPose[5];
 
-    Rotation2d rot = Rotation2d.fromDegrees(yaw);
+  //   Rotation2d rot = Rotation2d.fromDegrees(yaw);
 
-    pose = new Pose2d(x, y, rot);
+  //   pose = new Pose2d(x, y, rot);
 
-    boolean isRed = DriverStation.getAlliance().get() == Alliance.Red;
+  //   boolean isRed = DriverStation.getAlliance().get() == Alliance.Red;
     
-    double distance;
+  //   double distance;
 
-    if(isRed){
-      distance = pose.getTranslation().getDistance(VisionConstants.RedSpeakerCenter);
-    }else{
-      distance = pose.getTranslation().getDistance(VisionConstants.BlueSpeakerCenter);
-    }
+  //   if(isRed){
+  //     distance = pose.getTranslation().getDistance(VisionConstants.RedSpeakerCenter);
+  //   }else{
+  //     distance = pose.getTranslation().getDistance(VisionConstants.BlueSpeakerCenter);
+  //   }
     
-    isNearSpeaker = distance <= VisionConstants.SpeakerBubbleDistance;
+  //   isNearSpeaker = distance <= VisionConstants.SpeakerBubbleDistance;
 
-    //SmartDashboard.putBoolean("nearSpeaker", isNearSpeaker);
-    //SmartDashboard.putNumber("speakerDistance", distance);
-  }
+  //   //SmartDashboard.putBoolean("nearSpeaker", isNearSpeaker);
+  //   //SmartDashboard.putNumber("speakerDistance", distance);
+  // }
 
-  public Pose2d getPose() {
-    return pose;
-  }
+  // public Pose2d getPose() {
+  //   return pose;
+  // }
 
-  public boolean isNearSpeaker() {
-    return isNearSpeaker;
-  }
+  // public boolean isNearSpeaker() {
+  //   return isNearSpeaker;
+  // }
 
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
+  // @Override
+  // public void periodic() {
+  //   // This method will be called once per scheduler run
 
-    //isTag = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0) == 1.0;
-    //double[] newPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+  //   //isTag = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0.0) == 1.0;
+  //   //double[] newPose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
 
-    //if(newPose != cameraPose){
-    //  cameraPose = newPose;
-      //update();
-    //}
-  }
+  //   //if(newPose != cameraPose){
+  //   //  cameraPose = newPose;
+  //     //update();
+  //   //}
+  // }
 }
