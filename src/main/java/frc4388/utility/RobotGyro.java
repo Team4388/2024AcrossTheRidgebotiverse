@@ -106,6 +106,17 @@ public class RobotGyro implements Gyro {
 
     }
 
+    public void reset(double val) {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(val);
+        } else {
+            m_navX.reset();
+        }
+
+    }
+
     public void resetFlip() {
         resetZeroValues();
 

@@ -181,6 +181,12 @@ public class  SwerveDrive extends SubsystemBase {
     return gyro.getAngle();
   }
 
+  public void add180() {
+    gyro.reset(gyro.getAngle()+180);
+    rotTarget = gyro.getAngle();
+
+  }
+
   public void resetGyro() {
     gyro.reset();
     rotTarget = gyro.getAngle();
