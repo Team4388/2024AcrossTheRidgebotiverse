@@ -162,7 +162,7 @@ public class RobotContainer {
     private neoJoystickPlayback autoPlayback = new neoJoystickPlayback(m_robotSwerveDrive, 
     () -> autoplaybackName.get(), // lastAutoName, // () -> autoplaybackName.get(),
            new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
-           true, true);
+           true, false);
 
 
     //Help Simplify Shooting
