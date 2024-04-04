@@ -29,6 +29,7 @@ import frc4388.utility.Gains;
 import frc4388.utility.configurable.ConfigurableDouble;
 
 public class SwerveModule extends SubsystemBase {
+    private WPI_TalonFX tal;
     private TalonFX driveMotor;
     private TalonFX angleMotor;
     private CANcoder encoder;
@@ -80,7 +81,7 @@ public class SwerveModule extends SubsystemBase {
      * Get the drive motor of the SwerveModule
      * @return the drive motor of the SwerveModule
      */
-    public WPI_TalonFX getDriveMotor() {
+    public TalonFX getDriveMotor() {
         return this.driveMotor;
     }
 
@@ -88,7 +89,7 @@ public class SwerveModule extends SubsystemBase {
      * Get the angle motor of the SwerveModule
      * @return the angle motor of the SwerveModule
      */
-    public WPI_TalonFX getAngleMotor() {
+    public TalonFX getAngleMotor() {
         return this.angleMotor;
     }
 
@@ -96,7 +97,7 @@ public class SwerveModule extends SubsystemBase {
      * Get the CANcoder of the SwerveModule
      * @return the CANcoder of the SwerveModule
      */
-    public CANCoder getEncoder() {
+    public CANcoder getEncoder() {
         return this.encoder;
     }
 
@@ -106,19 +107,24 @@ public class SwerveModule extends SubsystemBase {
      */
     public Rotation2d getAngle() {
         // * Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees.
-        return Rotation2d.fromDegrees(encoder.getAbsolutePosition());
+        return Rotation2d.fromDegrees(encoder.getAbsolutePosition().getValue());
+        // return Rotation2d.fromDegrees(tal.get());
     }
     
     public double getAngularVel() {
-        return this.angleMotor.getSelectedSensorVelocity();
+        return this.angleMotor.getVelocity().getValue() * 360;
+        // return this.tal.getSelectedSensorVelocity();
+        // return this.angleMotor.getSelectedSensorVelocity();
     }
 
     public double getDrivePos() {
-        return this.driveMotor.getSelectedSensorPosition() / SwerveDriveConstants.Conversions.TICKS_PER_MOTOR_REV;
+        return this.driveMotor.getPosition().getValue(); // TODO: with drive test, might have to multiply or divide by 2
+        // return this.tal.getSelectedSensorPosition() / SwerveDriveConstants.Conversions.TICKS_PER_MOTOR_REV;
     }
 
     public double getDriveVel() {
-        return this.driveMotor.getSelectedSensorVelocity(0);
+        return this.driveMotor.getVelocity().getValue() * 360;
+        // return this.driveMotor.getSelectedSensorVelocity(0);
     }
 
     public void stop() {
