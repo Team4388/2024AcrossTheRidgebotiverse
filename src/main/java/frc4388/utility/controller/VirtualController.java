@@ -39,7 +39,7 @@ public class VirtualController extends GenericHID {
         m_axes = new double[6];
         m_buttonStates = 0;
         m_buttonStatesLastFrame = 0;
-        m_pov = new short[1];
+        m_pov = new short[] {-1};
     }
 
     /**
