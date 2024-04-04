@@ -9,12 +9,13 @@ import javax.swing.text.StyleContext.SmallAttributeSet;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+// import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+// import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
+// import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+// import com.ctre.phoenix.sensors.CANCoder;
+// import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -29,7 +30,7 @@ import frc4388.utility.Gains;
 import frc4388.utility.configurable.ConfigurableDouble;
 
 public class SwerveModule extends SubsystemBase {
-    private WPI_TalonFX tal;
+    // private WPI_TalonFX tal;
     private TalonFX driveMotor;
     private TalonFX angleMotor;
     private CANcoder encoder;
@@ -46,7 +47,13 @@ public class SwerveModule extends SubsystemBase {
         // this.offsetGetter = new ConfigurableDouble("Swerve id " + swerveId, offset);
         this.selfid = swerveId;
          swerveId++;
-        TalonFXConfiguration angleConfig = new TalonFXConfiguration();
+        // TalonFXConfiguration angleConfig = new TalonFXConfiguration();
+        TalonFXConfiguration cfg = new TalonFXConfiguration()
+            .withSlot0(new Slot0Configs()
+                .withKP(swerveGains.kP)
+                .withKI(swerveGains.kI)
+                .withKD(swerveGains.kD)
+                )
         angleConfig.slot0.kP = swerveGains.kP;
         angleConfig.slot0.kI = swerveGains.kI;
         angleConfig.slot0.kD = swerveGains.kD;
