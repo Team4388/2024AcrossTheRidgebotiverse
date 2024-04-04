@@ -9,6 +9,11 @@ import javax.swing.text.StyleContext.SmallAttributeSet;
 import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
+import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 // import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
 // import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 // import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
@@ -18,6 +23,7 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -52,24 +58,31 @@ public class SwerveModule extends SubsystemBase {
             .withSlot0(new Slot0Configs()
                 .withKP(swerveGains.kP)
                 .withKI(swerveGains.kI)
-                .withKD(swerveGains.kD)
-                )
-        angleConfig.slot0.kP = swerveGains.kP;
-        angleConfig.slot0.kI = swerveGains.kI;
-        angleConfig.slot0.kD = swerveGains.kD;
+                .withKD(swerveGains.kD))
+            .withFeedback(new FeedbackConfigs()
+                .withFeedbackRemoteSensorID(encoder.getDeviceID())
+                .withFeedbackSensorSource(FeedbackSensorSourceValue.RemoteCANcoder));
+        // angleConfig.slot0.kP = swerveGains.kP;
+        // angleConfig.slot0.kI = swerveGains.kI;
+        // angleConfig.slot0.kD = swerveGains.kD;
 
-        // use the CANcoder as the remote sensor for the primary TalonFX PID
+        // // use the CANcoder as the remote sensor for the primary TalonFX PID
 
-        new Slot0Configs().
+        // new Slot0Configs().
         
-        angleConfig.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
-        angleConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
-        angleConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
-        angleMotor.configAllSettings(angleConfig);
+        // angleConfig.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
+        // angleConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
+        // angleConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+        angleMotor.getConfigurator().apply(cfg);
+        // angleMotor.configAllSettings(angleConfig);
         
         //encoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
+        CANcoderConfiguration coder_cfg = new CANcoderConfiguration()
+            .withMagnetSensor(new MagnetSensorConfigs()
+                .withMagnetOffset(offset));
+        encoder.getConfigurator().apply(coder_cfg);
         reset(0);
-        encoder.configMagnetOffset(offset);
+        // encoder.configMagnetOffset(offset);
         driveMotor.
         driveMotor.setSelectedSensorPosition(0);
         driveMotor.config_kP(0, 0.2);
