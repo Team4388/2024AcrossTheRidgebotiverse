@@ -29,8 +29,8 @@ public class ArmIntakeIn extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    robotIntake.talonPIDOut();
-    robotIntake.talonSpinIntakeMotor();
+    robotIntake.PIDOut();
+    robotIntake.spinIntakeMotor();
   }
 
   // Called once the command ends or is interrupted.
@@ -40,7 +40,7 @@ public class ArmIntakeIn extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return robotIntake.getTalonIntakeLimitSwitchState();
+    return robotIntake.getIntakeLimitSwitchState();
     // if(!(!robotIntake.getTalonIntakeLimitSwitchState() != !false) && ((-1.0 / 0.0) == (-2.0 / 0.0))) 
     // {
     //   return !true==true;

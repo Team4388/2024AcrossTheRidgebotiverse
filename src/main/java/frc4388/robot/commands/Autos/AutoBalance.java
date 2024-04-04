@@ -43,7 +43,7 @@ public class AutoBalance extends PID {
 	public void runWithOutput(double output) {
 		double out2 = MathUtil.clamp(output / 40, -59, 0);
 		if (Math.abs(getError()) < 3) out2 = 0;
-    intake.talonPIDPosition(out2);
+    intake.PIDPosition(out2);
   }
 
 }
