@@ -160,7 +160,7 @@ public class RobotContainer {
     private String lastAutoName = "final_red_center_4note_taxi.auto";
     private ConfigurableString autoplaybackName = new ConfigurableString("Auto Playback Name", lastAutoName);
     private neoJoystickPlayback autoPlayback = new neoJoystickPlayback(m_robotSwerveDrive, 
-    lastAutoName, // () -> autoplaybackName.get(),
+    () -> autoplaybackName.get(), // lastAutoName, // () -> autoplaybackName.get(),
            new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
            true, true);
 
