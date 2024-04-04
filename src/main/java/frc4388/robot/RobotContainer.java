@@ -371,8 +371,8 @@ public class RobotContainer {
     }
     
     /**
-     * This method is used to replcate {@link Trigger Triggers} for {@link VirtualController Virtual Controllers}.
-     * Please use {@link RobotContainer#DualJoystickButton} for standard buttons.
+     * This method is used to replcate {@link Trigger Triggers} for {@link VirtualController Virtual Controllers}. <p/>
+     * Please use {@link RobotContainer#DualJoystickButton} in {@link RobotContainer#configureButtonBindings} for standard buttons.
      */
     private void configureVirtualButtonBindings() {
 
