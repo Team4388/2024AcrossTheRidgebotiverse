@@ -14,6 +14,9 @@ import com.ctre.phoenix.motorcontrol.can.TalonFXConfiguration;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
@@ -26,16 +29,16 @@ import frc4388.utility.Gains;
 import frc4388.utility.configurable.ConfigurableDouble;
 
 public class SwerveModule extends SubsystemBase {
-    private WPI_TalonFX driveMotor;
-    private WPI_TalonFX angleMotor;
-    private CANCoder encoder;
+    private TalonFX driveMotor;
+    private TalonFX angleMotor;
+    private CANcoder encoder;
     private int selfid;
     // private ConfigurableDouble offsetGetter;
     private static int swerveId = 0;
     public static Gains swerveGains = SwerveDriveConstants.PIDConstants.SWERVE_GAINS;
   
     /** Creates a new SwerveModule. */
-    public SwerveModule(WPI_TalonFX driveMotor, WPI_TalonFX angleMotor, CANCoder encoder, double offset) {
+    public SwerveModule(TalonFX driveMotor, TalonFX angleMotor, CANcoder encoder, double offset) {
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.encoder = encoder;
@@ -48,6 +51,9 @@ public class SwerveModule extends SubsystemBase {
         angleConfig.slot0.kD = swerveGains.kD;
 
         // use the CANcoder as the remote sensor for the primary TalonFX PID
+
+        new Slot0Configs().
+        
         angleConfig.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
         angleConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
         angleConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
@@ -56,7 +62,7 @@ public class SwerveModule extends SubsystemBase {
         //encoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
         reset(0);
         encoder.configMagnetOffset(offset);
-        
+        driveMotor.
         driveMotor.setSelectedSensorPosition(0);
         driveMotor.config_kP(0, 0.2);
     }
