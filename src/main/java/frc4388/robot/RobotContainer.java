@@ -178,7 +178,7 @@ public class RobotContainer {
 
 
             DriverStation.silenceJoystickConnectionWarning(true);
-            CameraServer.startAutomaticCapture();
+            // CameraServer.startAutomaticCapture();
 
             /* Default Commands */
             // drives the robot with a two-axis input from the driver controller

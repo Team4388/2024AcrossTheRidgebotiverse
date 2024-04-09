@@ -10,6 +10,8 @@ import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
@@ -21,6 +23,7 @@ import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 // import com.ctre.phoenix.sensors.SensorInitializationStrategy;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -83,9 +86,11 @@ public class SwerveModule extends SubsystemBase {
         encoder.getConfigurator().apply(coder_cfg);
         reset(0);
         // encoder.configMagnetOffset(offset);
-        driveMotor.
-        driveMotor.setSelectedSensorPosition(0);
-        driveMotor.config_kP(0, 0.2);
+        // driveMotor.
+        driveMotor.setPosition(0);
+        driveMotor.getConfigurator().apply(new Slot0Configs().withKP(0.2));
+        // driveMotor.setSelectedSensorPosition(0);
+        // driveMotor.config_kP(0, 0.2);
     }
     
     @Override
@@ -153,7 +158,8 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public void rotateToAngle(double angle) {
-        angleMotor.set(TalonFXControlMode.Position, angle);
+        angleMotor.setControl(new PositionVoltage(angle));
+        // angleMotor.set(TalonFXControlMode.Position, angle);
     }
 
     /**
@@ -162,7 +168,8 @@ public class SwerveModule extends SubsystemBase {
      */
     public SwerveModuleState getState() {
         return new SwerveModuleState(
-            Units.inchesToMeters(driveMotor.getSelectedSensorVelocity() * SwerveDriveConstants.Conversions.INCHES_PER_TICK) * SwerveDriveConstants.Conversions.TICK_TIME_TO_SECONDS, 
+            Units.inchesToMeters(driveMotor.getVelocity().getValue() * SwerveDriveConstants.Conversions.INCHES_PER_TICK) * SwerveDriveConstants.Conversions.TICK_TIME_TO_SECONDS,
+            // Units.inchesToMeters(driveMotor.getSelectedSensorVelocity() * SwerveDriveConstants.Conversions.INCHES_PER_TICK) * SwerveDriveConstants.Conversions.TICK_TIME_TO_SECONDS, 
             getAngle()
         );
     }
@@ -172,7 +179,7 @@ public class SwerveModule extends SubsystemBase {
      * @return The current position of the SwerveModule in meters traveled by the driveMotor and the angle of the angleMotor.
      */
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(Units.inchesToMeters(driveMotor.getSelectedSensorPosition() * SwerveDriveConstants.Conversions.INCHES_PER_TICK), getAngle());
+        return new SwerveModulePosition(Units.inchesToMeters(driveMotor.getPosition().getValue() * SwerveDriveConstants.Conversions.INCHES_PER_TICK), getAngle());
     }
 
     /**
@@ -181,19 +188,29 @@ public class SwerveModule extends SubsystemBase {
      */
     public void setDesiredState(SwerveModuleState desiredState) {
         Rotation2d currentRotation = this.getAngle();
-
         SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
 
         // calculate the difference between our current rotational position and our new rotational position
-        Rotation2d rotationDelta = state.angle.minus(currentRotation);
+        // Rotation2d rotationDelta = state.angle.minus(currentRotation);
+
+        // rotationDelta.getDegrees();
 
         // calculate the new absolute position of the SwerveModule based on the difference in rotation
-        double deltaTicks = (rotationDelta.getDegrees() / 360.) * SwerveDriveConstants.Conversions.CANCODER_TICKS_PER_ROTATION;
+        // double deltaTicks = (rotationDelta.getDegrees() / 360.) * SwerveDriveConstants.Conversions.CANCODER_TICKS_PER_ROTATION;
 
         // convert the CANCoder from its position reading to ticks
-        double currentTicks = encoder.getPosition() / encoder.configGetFeedbackCoefficient();
+        // (new CANCoder(13)).getPosition()
 
-        angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
+        // double currentTicks = encoder.getPosition().getValue() / encoder.configGetFeedbackCoefficient();
+        
+        // double currentTicks = encoder.getPosition().getValue() / 0.087890625;
+
+        // angleMotor.setControl(new PositionVoltage(currentTicks + deltaTicks));
+
+        System.out.println(state.angle.getDegrees());
+        angleMotor.setControl(new PositionVoltage(state.angle.getDegrees()));
+        // angleMotor.setControl(new PositionVoltage(0));
+        // angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
 
@@ -201,15 +218,19 @@ public class SwerveModule extends SubsystemBase {
     }
 
     public void reset(double position) {
-        encoder.setPositionToAbsolute();
+        encoder.setPosition(encoder.getAbsolutePosition().getValue());
+        // (new CANCoder(13)).setPositionToAbsolute();
     }
 
     public double getCurrent() {
-        return angleMotor.getSupplyCurrent() + driveMotor.getSupplyCurrent();
+        // angleMotor.getSupplyVoltage()
+        // return angleMotor.getMotorVoltage().getValue() + driveMotor.getMotorVoltage().getValue();
+        return angleMotor.getSupplyCurrent().getValue() + driveMotor.getSupplyCurrent().getValue();
     }
 
     public double getVoltage() {
-        return (Math.abs(angleMotor.getMotorOutputVoltage()) + Math.abs(driveMotor.getMotorOutputVoltage()));
+        return Math.abs(angleMotor.getMotorVoltage().getValue()) + Math.abs(driveMotor.getMotorVoltage().getValue());
+        // return (Math.abs((new WPI_TalonFX(1).getMotorOutputVoltage()) + Math.abs(driveMotor.getMotorOutputVoltage()));
     }
 
     // public String getstuff() {
