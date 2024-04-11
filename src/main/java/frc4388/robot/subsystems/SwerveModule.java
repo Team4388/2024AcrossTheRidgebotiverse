@@ -132,7 +132,7 @@ public class SwerveModule extends SubsystemBase {
      */
     public Rotation2d getAngle() {
         // * Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees.
-        return Rotation2d.fromDegrees(encoder.getAbsolutePosition().getValue());
+        return Rotation2d.fromDegrees(encoder.getPosition().getValue() * 360);
         // return Rotation2d.fromDegrees(tal.get());
     }
     
@@ -207,8 +207,8 @@ public class SwerveModule extends SubsystemBase {
 
         // angleMotor.setControl(new PositionVoltage(currentTicks + deltaTicks));
 
-        System.out.println(state.angle.getDegrees());
-        angleMotor.setControl(new PositionVoltage(state.angle.getDegrees()));
+        System.out.println(desiredState.angle.getDegrees());
+        angleMotor.setControl(new PositionVoltage(desiredState.angle.getDegrees()/360));
         // angleMotor.setControl(new PositionVoltage(0));
         // angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
 
