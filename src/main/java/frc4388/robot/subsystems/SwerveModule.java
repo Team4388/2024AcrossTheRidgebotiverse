@@ -206,7 +206,6 @@ public class SwerveModule extends SubsystemBase {
         // double currentTicks = encoder.getPosition().getValue() / 0.087890625;
 
         // angleMotor.setControl(new PositionVoltage(currentTicks + deltaTicks));
-
         System.out.println(desiredState.angle.getDegrees());
         angleMotor.setControl(new PositionVoltage(desiredState.angle.getDegrees()/360));
         // angleMotor.setControl(new PositionVoltage(0));
@@ -214,7 +213,7 @@ public class SwerveModule extends SubsystemBase {
 
         double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
 
-        driveMotor.set((feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
+        // driveMotor.set((feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
     }
 
     public void reset(double position) {
