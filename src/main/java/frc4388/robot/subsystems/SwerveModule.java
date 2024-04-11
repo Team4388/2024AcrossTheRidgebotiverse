@@ -218,7 +218,7 @@ public class SwerveModule extends SubsystemBase {
 
         // angleMotor.setControl(new PositionVoltage(currentTicks + deltaTicks));
         System.out.println(targetAngle.getDegrees());
-        angleMotor.setControl(new PositionVoltage(targetAngle.getDegrees()/360.d));
+        // angleMotor.setControl(new PositionVoltage(targetAngle.getDegrees()/360.d));
         // angleMotor.setControl(new PositionVoltage(0));
         // angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
 
