@@ -16,6 +16,7 @@ import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -96,23 +97,24 @@ public class RobotMap {
             .withMotorOutput(new MotorOutputConfigs()
                             .withDutyCycleNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND)
                             .withNeutralMode(NeutralModeValue.Brake)
+                            // .withInverted(InvertedValue.Clockwise_Positive)
             );
         
         for (TalonFX motor : new TalonFX[]{leftFrontWheel, leftFrontSteer, rightFrontWheel, rightFrontSteer, leftBackWheel, leftBackSteer, rightBackWheel, rightBackSteer}) {
             motor.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
         }
         // config factory default
-        leftFrontWheel.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
-        leftFrontSteer.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
+        // leftFrontWheel.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
+        // leftFrontSteer.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
         
-        rightFrontWheel.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
-        rightFrontSteer.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
+        // rightFrontWheel.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
+        // rightFrontSteer.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
         
-        leftBackWheel.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
-        leftBackSteer.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
+        // leftBackWheel.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
+        // leftBackSteer.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
         
-        rightBackWheel.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
-        rightBackSteer.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
+        // rightBackWheel.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
+        // rightBackSteer.getConfigurator().apply(cfg, SwerveDriveConstants.TIMEOUT_MS);
 
         // // config open loop ramp
         // leftFrontWheel.configOpenloopRamp(SwerveDriveConstants.Configurations.OPEN_LOOP_RAMP_RATE, SwerveDriveConstants.TIMEOUT_MS);
