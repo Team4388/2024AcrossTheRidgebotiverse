@@ -92,13 +92,10 @@ public class  SwerveDrive extends SubsystemBase {
   public void playbackDriveWithInput(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
     if (fieldRelative) {
 
-      double rot = 0;
-      
       // ! drift correction
       if (rightStick.getNorm() > 0.05) {
         rotTarget = gyro.getAngle();
-        rot = rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED;
-      //  SmartDashboard.putBoolean("drift correction", false);
+        //  SmartDashboard.putBoolean("drift correction", false);
         stopped = false;
       } else if(leftStick.getNorm() > 0.05) {
         if (!stopped) {
@@ -107,8 +104,7 @@ public class  SwerveDrive extends SubsystemBase {
         }
 
      //   SmartDashboard.putBoolean("drift correction", true);
-        
-        rot = ((rotTarget - gyro.getAngle()) / 360) * SwerveDriveConstants.ROT_CORRECTION_SPEED;
+
 
       }
 
@@ -129,7 +125,6 @@ public class  SwerveDrive extends SubsystemBase {
     Translation2d rightStick = new Translation2d(-rightX, rightY);
 
     if(fieldRelative) {
-      double rot = 0;
       if(rightStick.getNorm() > 0.5) {
         orientRotTarget = new Rotation2d(rightX, -rightY).minus(new Rotation2d(0,1));
         
@@ -139,7 +134,6 @@ public class  SwerveDrive extends SubsystemBase {
         if(tmp.getDegrees() < 0)
           min*=-1;
         tmp = new Rotation2d(min * Math.PI / 180);
-        rot = tmp.getRadians(); // x   x - y/x
       }
     
     Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
@@ -228,61 +222,18 @@ public class  SwerveDrive extends SubsystemBase {
     // SmartDashboard.putNumber("Gyro", getGyroAngle());
   }
 
+  private int GEAR = SwerveDriveConstants.SPEEDS.length /2;
   public void shiftDown() {
-    if (Math.abs(this.speedAdjust - SwerveDriveConstants.SLOW_SPEED) < .01) {
-      
-    } else if (Math.abs(this.speedAdjust - SwerveDriveConstants.FAST_SPEED) < .01) {
-      this.speedAdjust = SwerveDriveConstants.SLOW_SPEED;
-    } else {
-      this.speedAdjust = SwerveDriveConstants.FAST_SPEED;
-
+    if(GEAR > 0){
+      GEAR--;
+      this.speedAdjust = SwerveDriveConstants.SPEEDS[GEAR];
     }
-  }
-
-  public void setToSlow() {
-    this.speedAdjust = SwerveDriveConstants.SLOW_SPEED;
-    System.out.println("SLOW");
-    System.out.println("SLOW");
-    System.out.println("SLOW");
-    System.out.println("SLOW");
-    System.out.println("SLOW");
-  }
-
-  public void setToFast() {
-    this.speedAdjust = SwerveDriveConstants.FAST_SPEED;
-    System.out.println("FAST");
-    System.out.println("FAST");
-    System.out.println("FAST");
-    System.out.println("FAST");
-    System.out.println("FAST");
-  }
-
-  public void setToTurbo() {
-    this.speedAdjust = SwerveDriveConstants.TURBO_SPEED;
-    System.out.println("TURBO");
-    System.out.println("TURBO");
-    System.out.println("TURBO");
-    System.out.println("TURBO");
-    System.out.println("TURBO");
   }
 
   public void shiftUp() {
-    if (Math.abs(this.speedAdjust - SwerveDriveConstants.SLOW_SPEED) < .01) {
-      this.speedAdjust = SwerveDriveConstants.FAST_SPEED;
-    } else if (Math.abs(this.speedAdjust - SwerveDriveConstants.FAST_SPEED) < .01) {
-      this.speedAdjust = SwerveDriveConstants.TURBO_SPEED;
-    } else {
-      
-    }
-  }
-
-  public void toggleGear(double angle) {
-    if (Math.abs(this.speedAdjust - SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW) < .01 && Math.abs(angle) < 10) {
-      this.speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
-      SwerveDriveConstants.ROT_CORRECTION_SPEED = SwerveDriveConstants.CORRECTION_MIN;
-    } else {
-      this.speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW;
-      SwerveDriveConstants.ROT_CORRECTION_SPEED = SwerveDriveConstants.CORRECTION_MIN;
+    if(GEAR < SwerveDriveConstants.SPEEDS.length){
+      GEAR++;
+      this.speedAdjust = SwerveDriveConstants.SPEEDS[GEAR];
     }
   }
 

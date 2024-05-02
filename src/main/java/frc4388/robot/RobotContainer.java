@@ -310,7 +310,6 @@ public class RobotContainer {
                                     true);
             }, m_robotSwerveDrive)
             .withName("SwerveDrive DefaultCommand"));
-           m_robotSwerveDrive.setToSlow();
 
         // ! Swerve Drive Default Command (Orientation Rotation)
         // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
@@ -505,40 +504,6 @@ public class RobotContainer {
         new JoystickButton(getVirtualDriverController(), XboxController.START_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightAmp()))
             .onFalse(new InstantCommand(() -> m_robotSwerveDrive.add180()));
-
-
-       // *  /* D-Pad Stuff */
-    //    new Trigger(() -> getVirtualDriverController().getRawAxis(XboxController.TOP_BOTTOM_DPAD_AXIS) > 0.9)
-    //         .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
-    //                                                                            new Translation2d(0, 0),
-    //                                                                            true)))
-    //         .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
-    //                                                                             new Translation2d(0, 0), 
-    //                                                                             true)));
-
-    //    new Trigger(() -> getVirtualDriverController().getRawAxis(XboxController.TOP_BOTTOM_DPAD_AXIS) > -0.9)
-    //         .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, -1),
-    //                                                                            new Translation2d(0, 0),
-    //                                                                            true)))
-    //         .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
-    //                                                                             new Translation2d(0, 0), 
-    //                                                                             true)));
-
-    //    new Trigger(() -> getVirtualDriverController().getRawAxis(XboxController.LEFT_RIGHT_DPAD_AXIS) > 0.9)
-    //         .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(1, 0),
-    //                                                                            new Translation2d(0, 0),
-    //                                                                            true)))
-    //         .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
-    //                                                                             new Translation2d(0, 0), 
-    //                                                                             true)));
-
-    //    new Trigger(() -> getVirtualDriverController().getRawAxis(XboxController.LEFT_RIGHT_DPAD_AXIS) > -0.9)
-    //         .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(-1, 0),
-    //                                                                            new Translation2d(0, 0),
-    //                                                                            true)))
-    //         .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
-    //                                                                             new Translation2d(0, 0), 
-    //                                                                             true)));
         
         // ! /* Auto Recording */
         new JoystickButton(m_autoRecorderXbox, XboxController.LEFT_BUMPER_BUTTON)

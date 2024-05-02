@@ -33,9 +33,12 @@ public final class Constants {
         public static final double CORRECTION_MIN = 10;
         public static final double CORRECTION_MAX = 50;
     
-        public static final double SLOW_SPEED = 0.5;
-        public static final double FAST_SPEED = 1.0;
-        public static final double TURBO_SPEED = 4.0;
+        public static final double[] SPEEDS = {0.25, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2, 2.5, 3, 3.5, 4};
+        // public static final double[] SPEEDS = {0.5, 1.0, 4.0};
+
+        // public static final double SLOW_SPEED = 0.5;
+        // public static final double FAST_SPEED = 1.0;
+        // public static final double TURBO_SPEED = 4.0;
     
         public static final class DefaultSwerveRotOffsets {
           public static final double FRONT_LEFT_ROT_OFFSET = 220;
