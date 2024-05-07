@@ -154,7 +154,6 @@ public class RobotContainer {
            new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
            true, false);
 
-
     // private PlaybackChooser playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
     //         .addOption("Taxi Auto", taxi.asProxy())
     //         .addOption("One Note Auto Starting in Front of Speaker", oneNoteStartingSpeaker.asProxy())
@@ -163,9 +162,7 @@ public class RobotContainer {
     //         // .addOption("One Note Auto Starting from Right Position", oneNoteStartingFromRight.asProxy())
     //         .addOption("Two Note Starting in Front of Speaker", twoNoteStartingFromSpeaker.asProxy())
     //         .addOption("Stay Two Note Starting in Front of Speaker", stayTwoNoteStartingFromSpeaker.asProxy())
-    //         .buildDisplay();
-    
-    
+    //         .buildDisplay();    
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -189,7 +186,6 @@ public class RobotContainer {
                                     true);
             }, m_robotSwerveDrive)
             .withName("SwerveDrive DefaultCommand"));
-           m_robotSwerveDrive.setToSlow();
 
         // ! Swerve Drive Default Command (Orientation Rotation)
         // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
