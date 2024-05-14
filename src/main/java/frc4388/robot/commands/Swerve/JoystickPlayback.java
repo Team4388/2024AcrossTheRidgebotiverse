@@ -119,7 +119,11 @@ public class JoystickPlayback extends CommandBase {
     //                              new Translation2d(out.rightX, out.rightY),
     //                              true);
     
-    this.swerve.driveWithInput( new Translation2d(lerpLX, lerpLY),
+    // this.swerve.driveWithInput( new Translation2d(lerpLX, lerpLY),
+    //                             new Translation2d(lerpRX, lerpRY),
+    //                             true);
+
+    this.swerve.playbackDriveWithInput( new Translation2d(lerpLX, lerpLY),
                                 new Translation2d(lerpRX, lerpRY),
                                 true);
                              

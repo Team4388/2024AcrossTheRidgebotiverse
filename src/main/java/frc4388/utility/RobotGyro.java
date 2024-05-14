@@ -86,11 +86,12 @@ public class RobotGyro implements Gyro {
      */
     @Override
     public void calibrate() {
-        if (m_isGyroAPigeon) {
-            m_pigeon.calibrate();
-        } else {
-            m_navX.calibrate();
-        }
+        return;
+        // if (m_isGyroAPigeon) {
+        //     m_pigeon.calibrate();
+        // } else {
+        //     m_navX.calibrate();
+        // }
     }
 
     @Override
@@ -102,6 +103,73 @@ public class RobotGyro implements Gyro {
         } else {
             m_navX.reset();
         }
+
+    }
+
+    public void reset(double val) {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(val);
+        } else {
+            m_navX.reset();
+        }
+
+    }
+
+    public void resetFlip() {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(180);
+        } else {
+            m_navX.reset();
+        }
+
+    }
+
+    public void resetNinety() {
+        resetZeroValues();
+        
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(90);
+        } else {
+            m_navX.reset();
+        }
+        
+    }
+
+    public void resetTwoSeventy() {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(270);
+        } else {
+            m_navX.reset();
+        }
+
+    }
+
+    public void resetRightSideBlue() {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(60);
+        } else {
+            m_navX.reset();
+        }   
+
+    }
+
+    public void resetAmpSide() {
+        resetZeroValues();
+
+        if (m_isGyroAPigeon) {
+            m_pigeon.setYaw(-60);
+        } else {
+            m_navX.reset();
+        }   
+
     }
 
     /**

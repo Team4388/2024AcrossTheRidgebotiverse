@@ -64,11 +64,11 @@ public class JoystickRecorder extends CommandBase {
 
     outputs.add(inputs);
 
-    swerve.driveWithInput(new Translation2d(inputs.leftX,  inputs.leftY),
+    swerve.playbackDriveWithInput(new Translation2d(inputs.leftX,  inputs.leftY),
                           new Translation2d(inputs.rightX, inputs.rightY),
                           true);
     
-    System.out.println("RECORDING");
+    //System.out.println("RECORDING");
   }
 
   // Called once the command ends or is interrupted.
