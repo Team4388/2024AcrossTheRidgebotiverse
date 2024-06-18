@@ -47,8 +47,8 @@ public final class Constants {
         }
 
         public static final class IDs {
-          public static final int RIGHT_FRONT_WHEEL_ID = 0;
-          public static final int RIGHT_FRONT_STEER_ID = 1;
+          public static final int RIGHT_FRONT_WHEEL_ID = 3;
+          public static final int RIGHT_FRONT_STEER_ID = 2;
           public static final int RIGHT_FRONT_ENCODER_ID = 12;
           
         //   public static final int LEFT_FRONT_WHEEL_ID = 4;
@@ -68,6 +68,9 @@ public final class Constants {
             public static final int SWERVE_SLOT_IDX = 0;
             public static final int SWERVE_PID_LOOP_IDX = 1;
             public static final Gains SWERVE_GAINS = new Gains(1.2, 0.0, 0.0, 0.0, 0, 0.0);
+
+            public static final Gains TEST_SWERVE_GAINS = new Gains(1.2, 0.0, 0.0, 0.0, 0, 0.0);
+
         }
     
         public static final class AutoConstants {

@@ -14,12 +14,16 @@ import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 // import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 // import com.ctre.phoenix.sensors.CANCoder;
 // import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-
+import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.hardware.CANcoder;
 
@@ -38,6 +42,8 @@ public class SwerveModule extends SubsystemBase {
     private TalonFX driveMotor;
     private TalonFX angleMotor;
     private CANcoder encoder;
+    // private final StatusSignal<Double> cc_pos;
+    // private final StatusSignal<Double> cc_vel;
     // private int selfid;
     // private ConfigurableDouble offsetGetter;
     private static int swerveId = 0;
@@ -49,19 +55,42 @@ public class SwerveModule extends SubsystemBase {
         this.driveMotor = driveMotor;
         this.angleMotor = angleMotor;
         this.encoder = encoder;
+
+        // TalonFXConfiguration pidConfigs = new TalonFXConfiguration();
+        // pidConfigs.Slot0.kP = 2.4; // An error of 1 rotation results in 2.4 V output
+        // pidConfigs.Slot0.kI = 0; // no output for integrated error
+        // pidConfigs.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
+
+        // angleMotor.getConfigurator().apply(slot0Configs);
+
+        // var fx_cfg = new FeedbackConfigs();
+        // fx_cfg.FeedbackRemoteSensorID = encoder.getDeviceID();
+        // fx_cfg.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
+        // angleMotor.getConfigurator().apply(fx_cfg);
     //     // this.offsetGetter = new ConfigurableDouble("Swerve id " + swerveId, offset);
     //     this.selfid = swerveId;
     //      swerveId++;
-    //     TalonFXConfiguration angleConfig = new TalonFXConfiguration();
-    //     angleConfig.slot0.kP = swerveGains.kP;
-    //     angleConfig.slot0.kI = swerveGains.kI;
-    //     angleConfig.slot0.kD = swerveGains.kD;
+        TalonFXConfiguration angleConfig = new TalonFXConfiguration();
+        // angleConfig.Slot0.kP = swerveGains.kP;
+        // angleConfig.Slot0.kI = swerveGains.kI;   
+        // angleConfig.Slot0.kD = swerveGains.kD;
+        angleConfig.Slot0.kP = 2.4; // An error of 1 rotation results in 2.4 V output
+        angleConfig.Slot0.kI = 0; // no output for integrated error
+        angleConfig.Slot0.kD = 0.1; // A velocity of 1 rps results in 0.1 V output
 
-    //     // use the CANcoder as the remote sensor for the primary TalonFX PID
-    //     angleConfig.remoteFilter0.remoteSensorDeviceID = encoder.getDeviceID();
-    //     angleConfig.remoteFilter0.remoteSensorSource = RemoteSensorSource.CANCoder;
-    //     angleConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
-    //     angleMotor.configAllSettings(angleConfig);
+        // var fx_cfg = new FeedbackConfigs();
+        angleConfig.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
+        angleConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.RemoteCANcoder;
+        // angleConfig.Feedback. = FeedbackDevice.RemoteSensor0;
+        // angleConfig.Feedback = fx_cfg;
+
+        angleMotor.getConfigurator().apply(angleConfig);
+
+        // use the CANcoder as the remote sensor for the primary TalonFX PID
+        // angleConfig.Fee = encoder.getDeviceID();
+        // angleConfig.FeedbackSensorSource = RemoteSensorSource.CANCoder;
+        // angleConfig.primaryPID.selectedFeedbackSensor = FeedbackDevice.RemoteSensor0;
+        // angleMotor.getConfigurator().apply(angleConfig);
         
     //     //encoder.configSensorInitializationStrategy(SensorInitializationStrategy.BootToAbsolutePosition);
     //     reset(0);
@@ -71,9 +100,16 @@ public class SwerveModule extends SubsystemBase {
     //     driveMotor.config_kP(0, 0.2);
     }
 
-    public void go(Translation2d leftStick){
-        System.out.println(leftStick.getY());
-        driveMotor.set(leftStick.getY());
+    public void go(double ang){
+        double curang = this.encoder.getAbsolutePosition().getValue();
+        System.out.println(ang-curang);
+
+        final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
+
+        // set position to 10 rotations
+        angleMotor.setControl(m_request.withPosition(ang));
+
+        // System.out.println(this.cc_pos.getValue());
     }
     
     @Override
@@ -166,26 +202,26 @@ public class SwerveModule extends SubsystemBase {
      * Set the speed and rotation of the SwerveModule from a SwerveModuleState object
      * @param desiredState a SwerveModuleState representing the desired new state of the module
     //  */
-    // public void setDesiredState(SwerveModuleState desiredState) {
-    //     Rotation2d currentRotation = this.getAngle();
+    public void setDesiredState(SwerveModuleState desiredState) {
+        // Rotation2d currentRotation = this.getAngle();
 
-    //     SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
+        // SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
 
-    //     // calculate the difference between our current rotational position and our new rotational position
-    //     Rotation2d rotationDelta = state.angle.minus(currentRotation);
+        // // calculate the difference between our current rotational position and our new rotational position
+        // Rotation2d rotationDelta = state.angle.minus(currentRotation);
 
-    //     // calculate the new absolute position of the SwerveModule based on the difference in rotation
-    //     double deltaTicks = (rotationDelta.getDegrees() / 360.) * SwerveDriveConstants.Conversions.CANCODER_TICKS_PER_ROTATION;
+        // // calculate the new absolute position of the SwerveModule based on the difference in rotation
+        // double deltaTicks = (rotationDelta.getDegrees() / 360.) * SwerveDriveConstants.Conversions.CANCODER_TICKS_PER_ROTATION;
 
-    //     // convert the CANCoder from its position reading to ticks
-    //     double currentTicks = encoder.getPosition() / encoder.configGetFeedbackCoefficient();
+        // // convert the CANCoder from its position reading to ticks
+        // double currentTicks = encoder.getPosition() / encoder.configGetFeedbackCoefficient();
 
-    //     angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
+        // angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
 
-    //     double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
+        // double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
 
-    //     driveMotor.set((feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
-    // }
+        // driveMotor.set((feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
+    }
 
     // public void reset(double position) {
     //     encoder.setPositionToAbsolute();

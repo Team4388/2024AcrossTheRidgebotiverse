@@ -53,9 +53,15 @@ public class  SwerveDrive extends SubsystemBase {
     this.modules = new SwerveModule[] {this.leftFront, this.rightFront, this.leftBack, this.rightBack};
   }
 
+  public void oneModuleTest(SwerveModule module, Translation2d leftStick, Translation2d rightStick){
+    double ang = (Math.atan2(rightStick.getY(), rightStick.getX()) / (Math.PI*2));
+    System.out.println(ang);
+    module.go(ang);
+  }
+
   boolean stopped = false;
   public void driveWithInput(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
-    rightFront.go(leftStick);
+
     // if (fieldRelative) {
 
     //   double rot = 0;

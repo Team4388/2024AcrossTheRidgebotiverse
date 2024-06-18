@@ -31,6 +31,7 @@ import frc4388.utility.RobotGyro;
 public class RobotMap {
     // private WPI_Pigeon2 m_pigeon2 = new WPI_Pigeon2(14);
     // public RobotGyro gyro = new RobotGyro(m_pigeon2);
+    public RobotGyro gyro = null;
 
     public SwerveModule leftFront;
     public SwerveModule rightFront;
@@ -152,8 +153,14 @@ public class RobotMap {
     //     rightBackSteer.setNeutralMode(NeutralMode.Brake);
         
     //     // initialize SwerveModules
-    //     this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.FRONT_LEFT_ROT_OFFSET);
+    
         this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.FRONT_RIGHT_ROT_OFFSET);
+        this.leftFront = this.rightFront;
+        this.leftBack = this.rightFront;
+        this.rightBack = this.rightFront;
+
+    //     this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.FRONT_LEFT_ROT_OFFSET);
+        // this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.FRONT_RIGHT_ROT_OFFSET);
     //     this.leftBack = new SwerveModule(leftBackWheel, leftBackSteer, leftBackEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.BACK_LEFT_ROT_OFFSET);
     //     this.rightBack = new SwerveModule(rightBackWheel, rightBackSteer, rightBackEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.BACK_RIGHT_ROT_OFFSET);
     }
