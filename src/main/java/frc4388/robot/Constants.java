@@ -67,7 +67,7 @@ public final class Constants {
         public static final class PIDConstants {
             public static final int SWERVE_SLOT_IDX = 0;
             public static final int SWERVE_PID_LOOP_IDX = 1;
-            public static final Gains SWERVE_GAINS = new Gains(1.2, 0.0, 0.0, 0.0, 0, 0.0);
+            public static final Gains SWERVE_GAINS = new Gains(32, 0.0, 0.0, 0.0, 0, 0.0);
 
             public static final Gains TEST_SWERVE_GAINS = new Gains(1.2, 0.0, 0.0, 0.0, 0, 0.0);
 

@@ -55,7 +55,7 @@ public class  SwerveDrive extends SubsystemBase {
 
   public void oneModuleTest(SwerveModule module, Translation2d leftStick, Translation2d rightStick){
     double ang = (Math.atan2(rightStick.getY(), rightStick.getX()) / (Math.PI*2));
-    System.out.println(ang);
+    // System.out.println(ang);
     module.go(ang);
   }
 
