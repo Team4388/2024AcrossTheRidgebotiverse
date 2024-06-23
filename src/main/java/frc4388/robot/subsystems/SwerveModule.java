@@ -154,12 +154,14 @@ public class SwerveModule extends SubsystemBase {
      * Get state of swerve module
      * @return speed in m/s and angle in degrees
      */
-    // public SwerveModuleState getState() {
-    //     return new SwerveModuleState(
-    //         Units.inchesToMeters(driveMotor.getSelectedSensorVelocity() * SwerveDriveConstants.Conversions.INCHES_PER_TICK) * SwerveDriveConstants.Conversions.TICK_TIME_TO_SECONDS, 
-    //         getAngle()
-    //     );
-    // }
+    public SwerveModuleState getState() {
+        return new SwerveModuleState(
+            Units.inchesToMeters(driveMotor.getVelocity().getValue() * 
+            SwerveDriveConstants.Conversions.INCHES_PER_WHEEL_REV * 
+            SwerveDriveConstants.Conversions.WHEEL_REV_PER_MOTOR_REV), 
+            getAngle()
+        );
+    }
 
     /**
      * Returns the current position of the SwerveModule
@@ -174,29 +176,18 @@ public class SwerveModule extends SubsystemBase {
      * @param desiredState a SwerveModuleState representing the desired new state of the module
     //  */
     public void setDesiredState(SwerveModuleState desiredState) {
-        Rotation2d currentRotation = this.getAngle();
+        SwerveModuleState state = SwerveModuleState.optimize(desiredState, this.getAngle());
 
-        // SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
+        Rotation2d rot = state.angle;
+        double speed = Units.metersToFeet(state.speedMetersPerSecond) / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND;
 
-        // // calculate the difference between our current rotational position and our new rotational position
-        // Rotation2d rotationDelta = state.angle.minus(currentRotation);
-
-        // // calculate the new absolute position of the SwerveModule based on the difference in rotation
-        // double deltaTicks = (rotationDelta.getDegrees() / 360.) * SwerveDriveConstants.Conversions.CANCODER_TICKS_PER_ROTATION;
-
-        // // convert the CANCoder from its position reading to ticks
-        // double currentTicks = encoder.getPosition() / encoder.configGetFeedbackCoefficient();
-
-        // angleMotor.set(TalonFXControlMode.Position, currentTicks + deltaTicks);
-
-        // double feetPerSecond = Units.metersToFeet(state.speedMetersPerSecond);
-
-        // driveMotor.set((feetPerSecond / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND));
+        rotateToAngle(rot.getRotations());
+        driveMotor.set(Math.max(Math.min(speed, 1.), -1.));
     }
 
-    // public void reset(double position) {
-    //     encoder.setPositionToAbsolute();
-    // }
+    public void reset() {
+        // encoder.setPosition(0);
+    }
 
     // public double getCurrent() {
     //     return angleMotor.getSupplyCurrent() + driveMotor.getSupplyCurrent();
