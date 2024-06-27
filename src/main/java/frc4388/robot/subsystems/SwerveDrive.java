@@ -54,9 +54,15 @@ public class  SwerveDrive extends SubsystemBase {
   }
 
   public void oneModuleTest(SwerveModule module, Translation2d leftStick, Translation2d rightStick){
-    double ang = (Math.atan2(rightStick.getY(), rightStick.getX()) / (Math.PI*2));
+    // double ang = Math.atan2(rightStick.getY(), rightStick.getX());
+    // rightStick.getAngle()
+    double speed = Math.sqrt(Math.pow(leftStick.getX(), 2) + Math.pow(leftStick.getY(), 2));
     // System.out.println(ang);
-    module.go(ang);
+    // module.go(ang);
+    // Rotation2d rot = Rotation2d.fromRadians(ang);
+    Rotation2d rot = new Rotation2d(rightStick.getX(), rightStick.getY());
+    SwerveModuleState state = new SwerveModuleState(speed, rot);
+    module.setDesiredState(state);
   }
 
   boolean stopped = false;

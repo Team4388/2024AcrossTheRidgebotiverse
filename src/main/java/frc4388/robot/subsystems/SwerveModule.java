@@ -76,11 +76,11 @@ public class SwerveModule extends SubsystemBase {
         rotateToAngle(0);
     }
 
-    public void go(double ang){
-        // double curang = this.encoder.getAbsolutePosition().getValue();
-        System.out.println(getAngle().getDegrees());
-        rotateToAngle(ang);
-    }
+    // public void go(double ang){
+    //     // double curang = this.encoder.getAbsolutePosition().getValue();
+    //     System.out.println(getAngle().getDegrees());
+    //     rotateToAngle(ang);
+    // }
     
     @Override
     public void periodic() {
@@ -122,7 +122,7 @@ public class SwerveModule extends SubsystemBase {
     public Rotation2d getAngle() {
         // * Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees.
         // return Rotation2d.fromDegrees(encoder.getAbsolutePosition());
-        return Rotation2d.fromRotations(encoder.getAbsolutePosition().getValue());
+        return Rotation2d.fromRotations(encoder.getPosition().getValue());
     }
     
     public double getAngularVel() {
@@ -163,6 +163,11 @@ public class SwerveModule extends SubsystemBase {
         );
     }
 
+    // private SwerveModuleState optimizeState(SwerveModuleState desiredState) {
+    //     Rotation2d curRot = this.getAngle();
+        
+    // }
+
     /**
      * Returns the current position of the SwerveModule
      * @return The current position of the SwerveModule in meters traveled by the driveMotor and the angle of the angleMotor.
@@ -176,12 +181,17 @@ public class SwerveModule extends SubsystemBase {
      * @param desiredState a SwerveModuleState representing the desired new state of the module
     //  */
     public void setDesiredState(SwerveModuleState desiredState) {
-        SwerveModuleState state = SwerveModuleState.optimize(desiredState, this.getAngle());
+        Rotation2d currentRotation = this.getAngle();
 
-        Rotation2d rot = state.angle;
+        SwerveModuleState state = SwerveModuleState.optimize(desiredState, currentRotation);
+
+        // calculate the difference between our current rotational position and our new rotational position
+        Rotation2d rotationDelta = state.angle.minus(currentRotation);
+
         double speed = Units.metersToFeet(state.speedMetersPerSecond) / SwerveDriveConstants.MAX_SPEED_FEET_PER_SECOND;
 
-        rotateToAngle(rot.getRotations());
+        rotateToAngle(rotationDelta.getRotations() + currentRotation.getRotations());
+
         driveMotor.set(Math.max(Math.min(speed, 1.), -1.));
     }
 
