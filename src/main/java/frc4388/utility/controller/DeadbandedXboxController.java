@@ -15,7 +15,7 @@ public class DeadbandedXboxController extends XboxController {
 
   public Translation2d getLeft() { return skewToDeadzonedCircle(super.getLeftX(), super.getLeftY()); }
   public Translation2d getRight() { return skewToDeadzonedCircle(-super.getRightX(), super.getRightY()); }
-
+  public Translation2d getRightTrigger() {return skewToDeadzonedCircle(0, -getRightTriggerAxis() + getLeftTriggerAxis());}
   public static Translation2d skewToDeadzonedCircle(double x, double y) {
     Translation2d translation2d = new Translation2d(x, y);
     double magnitude = translation2d.getNorm();

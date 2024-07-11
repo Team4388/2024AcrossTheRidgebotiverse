@@ -219,7 +219,8 @@ public class  SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run\
-    // SmartDashboard.putNumber("Gyro", getGyroAngle());
+    SmartDashboard.putNumber("Gyro", getGyroAngle());
+    // SmartDashboard.putNumber("Volocity", gyro.getPigeon().)
   }
 
   private int GEAR = SwerveDriveConstants.SPEEDS.length /2;
@@ -228,6 +229,10 @@ public class  SwerveDrive extends SubsystemBase {
       GEAR--;
       this.speedAdjust = SwerveDriveConstants.SPEEDS[GEAR];
     }
+  }
+  
+  public void hellsHorses() {
+    speedAdjust = 20;
   }
 
   public void shiftUp() {

@@ -181,11 +181,12 @@ public class RobotContainer {
             // drives the robot with a two-axis input from the driver controller
             // ! Swerve Drive Default Command (Regular Rotation)
             m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
-                m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getLeft(),
+                m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getRightTrigger(),
                                                 getDeadbandedDriverController().getRight(),
                                     true);
             }, m_robotSwerveDrive)
             .withName("SwerveDrive DefaultCommand"));
+            m_robotSwerveDrive.hellsHorses();
 
         // ! Swerve Drive Default Command (Orientation Rotation)
         // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
@@ -222,10 +223,10 @@ public class RobotContainer {
             .onFalse(new InstantCommand(() -> m_robotSwerveDrive.add180()));
 
        // *  /* D-Pad Stuff */
-    //    new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.TOP_BOTTOM_DPAD_AXIS) > 0.9)
-    //         .onTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
+    //    new Trigger(() -> getDeadbandedDriverController().getPOV() == 0)
+    //         .whileTrue(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
     //                                                                            new Translation2d(0, 0),
-    //                                                                            true)))
+    //                                                                            true), m_robotSwerveDrive))
     //         .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
     //                                                                             new Translation2d(0, 0), 
     //                                                                             true)));
@@ -252,7 +253,7 @@ public class RobotContainer {
     //                                                                            true)))
     //         .onFalse(new InstantCommand(() -> m_robotSwerveDrive.driveWithInput(new Translation2d(0, 0), 
     //                                                                             new Translation2d(0, 0), 
-                                                                                // true)));
+    //                                                                             true)));
         
         // ! /* Auto Recording */
         new JoystickButton(m_autoRecorderXbox, XboxController.LEFT_BUMPER_BUTTON)

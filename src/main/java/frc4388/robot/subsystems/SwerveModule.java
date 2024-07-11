@@ -68,7 +68,11 @@ public class SwerveModule extends SubsystemBase {
         // SmartDashboard.putNumber("Angular Position: " + selfid, getAngle().getDegrees());
         // SmartDashboard.putNumber("Angular Velocity: " + selfid, getAngularVel());
         // SmartDashboard.putNumber("Drive Position: " + selfid, getDrivePos());
-        // SmartDashboard.putNumber("Drive Velocity: " + selfid, getDriveVel());
+        SmartDashboard.putNumber("Drive Velocity: " + selfid, getDriveVel());        
+        SmartDashboard.putNumber("Drive Powerdraw: " + selfid, driveMotor.getMotorOutputVoltage());
+        System.out.println("Drive Velocity: " + selfid + ", " + getDriveVel());        
+        System.out.println("Drive Powerdraw: " + selfid + ", " + driveMotor.getMotorOutputVoltage());
+
     }
     /**
      * Get the drive motor of the SwerveModule
