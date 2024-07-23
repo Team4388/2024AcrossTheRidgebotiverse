@@ -182,8 +182,8 @@ public class RobotContainer {
             // ! Swerve Drive Default Command (Regular Rotation)
             m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
                 m_robotSwerveDrive.driveWithInput(getDeadbandedDriverController().getRightTrigger(),
-                                                getDeadbandedDriverController().getRight(),
-                                    true);
+                                                getDeadbandedDriverController().getRight().times(-1),
+                                    false);
             }, m_robotSwerveDrive)
             .withName("SwerveDrive DefaultCommand"));
             m_robotSwerveDrive.hellsHorses();

@@ -19,6 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
@@ -63,15 +64,17 @@ public class SwerveModule extends SubsystemBase {
     
     @Override
     public void periodic() {
+        if (DriverStation.isEnabled()) {
+            System.out.println("Drive Velocity_60FT_NoRunup: " + selfid + ", " + getDriveVel());        
+            System.out.println("Drive Powerdraw_60FT_NoRunup: " + selfid + ", " + driveMotor.getMotorOutputVoltage());
+        }
         //encoder.configMagnetOffset(offsetGetter.get());
         //SmartDashboard.putString("Error Code: " + selfid, getstuff());
         // SmartDashboard.putNumber("Angular Position: " + selfid, getAngle().getDegrees());
         // SmartDashboard.putNumber("Angular Velocity: " + selfid, getAngularVel());
         // SmartDashboard.putNumber("Drive Position: " + selfid, getDrivePos());
-        SmartDashboard.putNumber("Drive Velocity: " + selfid, getDriveVel());        
-        SmartDashboard.putNumber("Drive Powerdraw: " + selfid, driveMotor.getMotorOutputVoltage());
-        System.out.println("Drive Velocity: " + selfid + ", " + getDriveVel());        
-        System.out.println("Drive Powerdraw: " + selfid + ", " + driveMotor.getMotorOutputVoltage());
+        // SmartDashboard.putNumber("Drive Velocity: " + selfid, getDriveVel());        
+        // SmartDashboard.putNumber("Drive Powerdraw: " + selfid, driveMotor.getMotorOutputVoltage());
 
     }
     /**

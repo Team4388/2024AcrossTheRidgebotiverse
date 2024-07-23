@@ -84,7 +84,9 @@ public class  SwerveDrive extends SubsystemBase {
       // Convert field-relative speeds to robot-relative speeds.
       chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), -1 * speed.getY(), rightStick.getX() * rotSpeedAdjust, gyro.getRotation2d());//.times(-1));
     } else {      // Create robot-relative speeds.
-      chassisSpeeds = new ChassisSpeeds(-1 * leftStick.getX(), -1 * leftStick.getY(), -1 * rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
+      Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
+
+      chassisSpeeds = new ChassisSpeeds(-1 * speed.getX(), -1 * speed.getY(), -1 * rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
     }
     setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds));
   }
