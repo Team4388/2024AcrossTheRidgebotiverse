@@ -152,10 +152,10 @@ public class RobotContainer {
         // }, m_robotSwerveDrive));
 
         m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
-            m_robotSwerveDrive.oneModuleTest(
-                                            m_robotMap.rightFront,                                
+            m_robotSwerveDrive.driveWithInput(
                                             getDeadbandedDriverController().getLeft(), 
-                                            getDeadbandedDriverController().getRight());
+                                            getDeadbandedDriverController().getRight(),
+                                            true);
         }, m_robotSwerveDrive));
 
 

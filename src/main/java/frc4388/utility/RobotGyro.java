@@ -8,11 +8,13 @@
 package frc4388.utility;
 
 import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
 // import edu.wpi.first.wpilibj.GyroBase;
 import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
  * Gyro class that allows for interchangeable use between a pigeon and a navX
@@ -20,7 +22,7 @@ import edu.wpi.first.math.MathUtil;
 public class RobotGyro implements Gyro {
     private RobotTime m_robotTime = RobotTime.getInstance();
 
-    private WPI_Pigeon2 m_pigeon = null;
+    private Pigeon2 m_pigeon = null;
     private AHRS m_navX = null;
     public boolean m_isGyroAPigeon; //true if pigeon, false if navX
 
@@ -34,7 +36,7 @@ public class RobotGyro implements Gyro {
      * Creates a Gyro based on a pigeon
      * @param gyro the gyroscope to use for Gyro
      */
-    public RobotGyro(WPI_Pigeon2 gyro) {
+    public RobotGyro(Pigeon2 gyro) {
         m_pigeon = gyro;
         m_isGyroAPigeon = true;
     }
@@ -54,8 +56,8 @@ public class RobotGyro implements Gyro {
     public void resetZeroValues() {
         if (!m_isGyroAPigeon) return;
 
-        pitchZero = m_pigeon.getPitch();
-        rollZero =  m_pigeon.getRoll();
+        // pitchZero = m_pigeon.getPitch();
+        // rollZero =  m_pigeon.getRoll();
     }
 
     /**
@@ -181,10 +183,15 @@ public class RobotGyro implements Gyro {
 	 *					Roll is within [-90,+90] degrees.
      */
     private double[] getPigeonAngles() {
-        double[] ypr = new double[3];
-        m_pigeon.getYawPitchRoll(ypr);
+        m_pigeon.getAngle();
+        var rotation = m_pigeon.getRotation3d();
 
-        return new double[] {ypr[0], (ypr[1] - pitchZero), (ypr[2] - rollZero)};
+        return new double[] {rotation.getX(), (rotation.getY() - pitchZero), (rotation.getZ() - rollZero)};
+    }
+
+    @Override
+    public Rotation2d getRotation2d() {
+        return m_pigeon.getRotation2d();
     }
 
     @Override
@@ -253,7 +260,7 @@ public class RobotGyro implements Gyro {
         }
     }
 
-    public WPI_Pigeon2 getPigeon(){
+    public Pigeon2 getPigeon(){
         return m_pigeon;
     }
 

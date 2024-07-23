@@ -14,6 +14,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import frc4388.robot.Constants.LEDConstants;
@@ -29,9 +30,9 @@ import frc4388.utility.RobotGyro;
  * testing and modularization.
  */
 public class RobotMap {
-    // private WPI_Pigeon2 m_pigeon2 = new WPI_Pigeon2(14);
-    // public RobotGyro gyro = new RobotGyro(m_pigeon2);
-    public RobotGyro gyro = null;
+    private Pigeon2 m_pigeon2 = new Pigeon2(14);
+    public RobotGyro gyro = new RobotGyro(m_pigeon2);
+    // public RobotGyro gyro = null;
 
     public SwerveModule leftFront;
     public SwerveModule rightFront;
