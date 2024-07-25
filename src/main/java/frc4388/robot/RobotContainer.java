@@ -179,7 +179,8 @@ public class RobotContainer {
      * passing it to a {@link edu.wpi.first.wpilibj2.command.button.JoystickButton}.
      */
     private void configureButtonBindings() {
-
+        new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroFlip(), m_robotSwerveDrive));
     }
 
     /**

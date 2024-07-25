@@ -10,10 +10,12 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
 import frc4388.utility.RobotGyro;
+import frc4388.utility.RobotUnits;
 
 public class  SwerveDrive extends SubsystemBase {
   
@@ -68,6 +70,9 @@ public class  SwerveDrive extends SubsystemBase {
   boolean stopped = false;
   public void driveWithInput(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
 
+    double rot_correction = RobotUnits.degreesToRadians(gyro.getRotation2d().getDegrees() - rotTarget) * 1.0;
+    SmartDashboard.putNumber("Rot_correct", RobotUnits.radiansToDegrees(rot_correction));
+
     if (fieldRelative) {
 
       double rot = 0;
@@ -75,7 +80,8 @@ public class  SwerveDrive extends SubsystemBase {
       // ! drift correction
       if (rightStick.getNorm() > 0.05) {
         rotTarget = gyro.getAngle();
-        rot = rightStick.getX();
+        rot_correction = 0;
+        // rot = rightStick.getX();
       //  SmartDashboard.putBoolean("drift correction", false);
         stopped = false;
       } else if(leftStick.getNorm() > 0.05) {
@@ -86,7 +92,7 @@ public class  SwerveDrive extends SubsystemBase {
 
      //   SmartDashboard.putBoolean("drift correction", true);
         
-        rot = ((rotTarget - gyro.getAngle()) / 360) * SwerveDriveConstants.ROT_CORRECTION_SPEED;
+        // rot = ((rotTarget - gyro.getAngle()) / 360) * SwerveDriveConstants.ROT_CORRECTION_SPEED;
 
       }
 
@@ -95,7 +101,8 @@ public class  SwerveDrive extends SubsystemBase {
       // Translation2d cubedSpeed = new Translation2d(Math.pow(speed.getX(), 3.00), Math.pow(speed.getY(), 3.00));
 
       // Convert field-relative speeds to robot-relative speeds.
-      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), -1 * speed.getY(), rightStick.getX() * rotSpeedAdjust, gyro.getRotation2d());//.times(-1));
+      // chassisSpeeds = chassisSpeeds.
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), -1 * speed.getY(), (rightStick.getX() * rotSpeedAdjust) - rot_correction, gyro.getRotation2d().times(-1));
     } else {      // Create robot-relative speeds.
       chassisSpeeds = new ChassisSpeeds(-1 * leftStick.getX(), -1 * leftStick.getY(), -1 * rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
     }
@@ -120,8 +127,8 @@ public class  SwerveDrive extends SubsystemBase {
         }
 
      //   SmartDashboard.putBoolean("drift correction", true);
+        // double rot_correction = ((rotTarget - gyro.getAngle()) / 360) * SwerveDriveConstants.ROT_CORRECTION_SPEED;
         
-        rot = ((rotTarget - gyro.getAngle()) / 360) * SwerveDriveConstants.ROT_CORRECTION_SPEED;
 
       }
 
@@ -137,9 +144,15 @@ public class  SwerveDrive extends SubsystemBase {
     // setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds));
   }
 
-  public void driveWithInputOrientation(Translation2d leftStick, double rightX, double rightY, boolean fieldRelative) {
+  public void driveWithInputOrientation(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
 
-    Translation2d rightStick = new Translation2d(-rightX, rightY);
+    // Translation2d rightStick = new Translation2d(-rightX, rightY);
+    double rightX = rightStick.getX();
+    double rightY = rightStick.getY();
+
+    double rot_correction = 0;
+
+    // double rot_correction = ((rightStick.getAngle().getDegrees() - gyro.getAngle()) / 360) * SwerveDriveConstants.ROT_CORRECTION_SPEED;
 
     if(fieldRelative) {
       double rot = 0;
@@ -157,7 +170,7 @@ public class  SwerveDrive extends SubsystemBase {
     
     Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
 
-    chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), -1 * speed.getY(), -1 * rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED, gyro.getRotation2d()).times(1);
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), -1 * speed.getY(), ((-1 * rightStick.getX()) * SwerveDriveConstants.ROTATION_SPEED) + rot_correction, gyro.getRotation2d()).times(1);
     } else {      // Create robot-relative speeds.
       chassisSpeeds = new ChassisSpeeds(-1 * leftStick.getX(), -1 * leftStick.getY(), -1 * rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
     }
@@ -191,7 +204,7 @@ public class  SwerveDrive extends SubsystemBase {
   }
 
   public double getGyroAngle() {
-    return gyro.getAngle();
+    return -gyro.getAngle();
   }
 
   public void add180() {
@@ -238,7 +251,8 @@ public class  SwerveDrive extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run\
-    // SmartDashboard.putNumber("Gyro", getGyroAngle());
+    SmartDashboard.putNumber("Gyro", getGyroAngle());
+    SmartDashboard.putNumber("RotTartget", rotTarget);
   }
 
   public void shiftDown() {

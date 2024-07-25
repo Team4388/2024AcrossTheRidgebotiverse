@@ -17,7 +17,10 @@ import com.ctre.phoenix.motorcontrol.RemoteSensorSource;
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
+import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.DutyCycleOut;
@@ -26,6 +29,7 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
 import com.ctre.phoenix6.hardware.CANcoder;
 
@@ -58,7 +62,34 @@ public class SwerveModule extends SubsystemBase {
         this.angleMotor = angleMotor;
         this.encoder = encoder;
 
-        TalonFXConfiguration angleConfig = new TalonFXConfiguration();
+        var motorCfg = new TalonFXConfiguration()
+            .withOpenLoopRamps(
+                new OpenLoopRampsConfigs()
+                    .withDutyCycleOpenLoopRampPeriod(SwerveDriveConstants.Configurations.OPEN_LOOP_RAMP_RATE)
+            ).withClosedLoopRamps(
+                new ClosedLoopRampsConfigs()
+                    .withDutyCycleClosedLoopRampPeriod(SwerveDriveConstants.Configurations.CLOSED_LOOP_RAMP_RATE)
+            ).withMotorOutput(
+                new MotorOutputConfigs()
+                    .withNeutralMode(NeutralModeValue.Brake)
+                    .withDutyCycleNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND)
+            );
+
+        driveMotor.getConfigurator().apply(motorCfg);
+        
+        TalonFXConfiguration angleConfig = new TalonFXConfiguration()
+            .withOpenLoopRamps(
+                new OpenLoopRampsConfigs()
+                    .withDutyCycleOpenLoopRampPeriod(SwerveDriveConstants.Configurations.OPEN_LOOP_RAMP_RATE)
+            ).withClosedLoopRamps(
+                new ClosedLoopRampsConfigs()
+                    .withDutyCycleClosedLoopRampPeriod(SwerveDriveConstants.Configurations.CLOSED_LOOP_RAMP_RATE)
+            ).withMotorOutput(
+                new MotorOutputConfigs()
+                    .withNeutralMode(NeutralModeValue.Brake)
+                    .withDutyCycleNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND)
+            );
+
         angleConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         angleConfig.Slot0.kP = swerveGains.kP;
@@ -71,6 +102,7 @@ public class SwerveModule extends SubsystemBase {
 
         CANcoderConfiguration canconfig = new CANcoderConfiguration();
         canconfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        canconfig.MagnetSensor.MagnetOffset = offset;
         encoder.getConfigurator().apply(canconfig);
 
         rotateToAngle(0);
@@ -127,17 +159,17 @@ public class SwerveModule extends SubsystemBase {
     
     public double getAngularVel() {
         // return this.angleMotor.getSelectedSensorVelocity();
-        return 0;
+        return angleMotor.getVelocity().getValueAsDouble();
     }
 
     public double getDrivePos() {
         // return this.driveMotor.getSelectedSensorPosition() / SwerveDriveConstants.Conversions.TICKS_PER_MOTOR_REV;
-        return 0;
+        return driveMotor.getPosition().getValueAsDouble();
     }
 
     public double getDriveVel() {
         // return this.driveMotor.getSelectedSensorVelocity(0);
-        return 0.0;
+        return driveMotor.getVelocity().getValueAsDouble();
     }
 
     public void stop() {

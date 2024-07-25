@@ -186,7 +186,7 @@ public class RobotGyro implements Gyro {
         m_pigeon.getAngle();
         var rotation = m_pigeon.getRotation3d();
 
-        return new double[] {rotation.getX(), (rotation.getY() - pitchZero), (rotation.getZ() - rollZero)};
+        return new double[] {RobotUnits.radiansToDegrees(rotation.getX() - rollZero), RobotUnits.radiansToDegrees(rotation.getY() - pitchZero), RobotUnits.radiansToDegrees(rotation.getZ())};
     }
 
     @Override
@@ -197,7 +197,7 @@ public class RobotGyro implements Gyro {
     @Override
     public double getAngle() {
         if (m_isGyroAPigeon) {
-            return getPigeonAngles()[0];
+            return getPigeonAngles()[2];
         } else {
             return m_navX.getAngle();
         }

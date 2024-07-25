@@ -40,28 +40,28 @@ public final class Constants {
         public static final double TURBO_SPEED = 4.0;
     
         public static final class DefaultSwerveRotOffsets {
-          public static final double FRONT_LEFT_ROT_OFFSET = 220;
-          public static final double FRONT_RIGHT_ROT_OFFSET = 136.365;//-212.695 + 90; //77.783 + 45 + 90 ;//-202.588;
-          public static final double BACK_LEFT_ROT_OFFSET = -279.08349884;
-          public static final double BACK_RIGHT_ROT_OFFSET = 140.8887656;
+          public static final double FRONT_LEFT_ROT_OFFSET = -0.130126953125 + 0.25 + 0.25;
+          public static final double FRONT_RIGHT_ROT_OFFSET = 0.364990234375 + 0.25;//-212.695 + 90; //77.783 + 45 + 90 ;//-202.588;
+          public static final double BACK_LEFT_ROT_OFFSET = -0.4775390625 + 0.25;
+          public static final double BACK_RIGHT_ROT_OFFSET = 0.356201171875 + 0.25;
         }
 
         public static final class IDs {
-          public static final int RIGHT_FRONT_WHEEL_ID = 3;
-          public static final int RIGHT_FRONT_STEER_ID = 2;
-          public static final int RIGHT_FRONT_ENCODER_ID = 12;
+          public static final int RIGHT_FRONT_WHEEL_ID = 2;
+          public static final int RIGHT_FRONT_STEER_ID = 3;
+          public static final int RIGHT_FRONT_ENCODER_ID = 10;
           
-        //   public static final int LEFT_FRONT_WHEEL_ID = 4;
-        //   public static final int LEFT_FRONT_STEER_ID = 5;
-        //   public static final int LEFT_FRONT_ENCODER_ID = 11;
+          public static final int LEFT_FRONT_WHEEL_ID = 4;
+          public static final int LEFT_FRONT_STEER_ID = 5;
+          public static final int LEFT_FRONT_ENCODER_ID = 11;
     
-        //   public static final int LEFT_BACK_WHEEL_ID = 6;
-        //   public static final int LEFT_BACK_STEER_ID = 7;
-        //   public static final int LEFT_BACK_ENCODER_ID = 12;
+          public static final int LEFT_BACK_WHEEL_ID = 6;
+          public static final int LEFT_BACK_STEER_ID = 7;
+          public static final int LEFT_BACK_ENCODER_ID = 12;
           
-        //   public static final int RIGHT_BACK_WHEEL_ID = 8;
-        //   public static final int RIGHT_BACK_STEER_ID = 9;
-        //   public static final int RIGHT_BACK_ENCODER_ID = 13;
+          public static final int RIGHT_BACK_WHEEL_ID = 8;
+          public static final int RIGHT_BACK_STEER_ID = 9;
+          public static final int RIGHT_BACK_ENCODER_ID = 13;
         }
     
         public static final class PIDConstants {
