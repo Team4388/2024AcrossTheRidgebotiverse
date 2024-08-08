@@ -7,19 +7,19 @@
 
 package frc4388.utility;
 
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
+// import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
 
 // import edu.wpi.first.wpilibj.GyroBase;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
+// import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 
 /**
  * Gyro class that allows for interchangeable use between a pigeon and a navX
  */
-public class RobotGyro implements Gyro {
+public class RobotGyro {
     private RobotTime m_robotTime = RobotTime.getInstance();
 
     private Pigeon2 m_pigeon = null;
@@ -86,7 +86,6 @@ public class RobotGyro implements Gyro {
      * is typically done when the robot is first turned on while it's sitting at rest before the
      * competition starts.
      */
-    @Override
     public void calibrate() {
         return;
         // if (m_isGyroAPigeon) {
@@ -96,7 +95,6 @@ public class RobotGyro implements Gyro {
         // }
     }
 
-    @Override
     public void reset() {
         resetZeroValues();
 
@@ -189,12 +187,10 @@ public class RobotGyro implements Gyro {
         return new double[] {RobotUnits.radiansToDegrees(rotation.getX() - rollZero), RobotUnits.radiansToDegrees(rotation.getY() - pitchZero), RobotUnits.radiansToDegrees(rotation.getZ())};
     }
 
-    @Override
     public Rotation2d getRotation2d() {
         return m_pigeon.getRotation2d();
     }
 
-    @Override
     public double getAngle() {
         if (m_isGyroAPigeon) {
             return getPigeonAngles()[2];
@@ -251,7 +247,6 @@ public class RobotGyro implements Gyro {
         }
     }
 
-    @Override
     public double getRate() {
         if (m_isGyroAPigeon) {
             return m_deltaPigeonAngle / m_robotTime.m_deltaTime * 1000;
@@ -268,7 +263,6 @@ public class RobotGyro implements Gyro {
         return m_navX;
     }
 
-    @Override
     public void close() throws Exception {
 
     }

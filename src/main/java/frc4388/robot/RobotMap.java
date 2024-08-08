@@ -71,15 +71,15 @@ public class RobotMap {
     public final CANcoder rightBackEncoder = new CANcoder(SwerveDriveConstants.IDs.RIGHT_BACK_ENCODER_ID);
 
     /* Shooter Subsystem */
-    // public final TalonFX leftShooter = new TalonFX(ShooterConstants.LEFT_SHOOTER_ID);
-    // public final TalonFX rightShooter = new TalonFX(ShooterConstants.RIGHT_SHOOTER_ID);
+    public final TalonFX leftShooter = new TalonFX(ShooterConstants.LEFT_SHOOTER_ID);
+    public final TalonFX rightShooter = new TalonFX(ShooterConstants.RIGHT_SHOOTER_ID);
 
     /* Intake Subsystem */
-    // public final TalonFX intakeMotor = new TalonFX(IntakeConstants.INTAKE_MOTOR_ID);
-    // public final TalonFX pivotMotor = new TalonFX(IntakeConstants.PIVOT_MOTOR_ID);
+    public final TalonFX intakeMotor = new TalonFX(IntakeConstants.INTAKE_MOTOR_ID);
+    public final TalonFX pivotMotor = new TalonFX(IntakeConstants.PIVOT_MOTOR_ID);
 
     /* Climber Subsystem */
-    // public final TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_MOTOR_ID);
+    public final TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_MOTOR_ID);
 
     void configureLEDMotorControllers() {    
     }
