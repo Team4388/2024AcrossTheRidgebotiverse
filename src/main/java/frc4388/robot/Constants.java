@@ -35,19 +35,20 @@ public final class Constants {
         public static final double CORRECTION_MIN = 10;
         public static final double CORRECTION_MAX = 50;
     
-        public static final double SLOW_SPEED = 0.5;
-        public static final double FAST_SPEED = 1.0;
-        public static final double TURBO_SPEED = 4.0;
+        public static final double SLOW_SPEED = 0.25;
+        public static final double FAST_SPEED = 0.5;
+        public static final double TURBO_SPEED = 1.0;
     
         public static final class DefaultSwerveRotOffsets {
-          public static final double FRONT_LEFT_ROT_OFFSET = -0.130126953125 + 0.25 + 0.25;
-          public static final double FRONT_RIGHT_ROT_OFFSET = 0.364990234375 + 0.25;//-212.695 + 90; //77.783 + 45 + 90 ;//-202.588;
-          public static final double BACK_LEFT_ROT_OFFSET = -0.4775390625 + 0.25;
-          public static final double BACK_RIGHT_ROT_OFFSET = 0.356201171875 + 0.25;
+          public static final double FRONT_LEFT_ROT_OFFSET   =  0.36962890625 +0.5  ;//+ 0.5;
+          public static final double FRONT_RIGHT_ROT_OFFSET  =  0.61474609375 +0.5 ;//+ 0.5;
+          public static final double BACK_LEFT_ROT_OFFSET    = -0.227294921875+0.5      ;
+          public static final double BACK_RIGHT_ROT_OFFSET   =  0.60595703125 +0.5     ;
         }
 
         public static final class IDs {
-          public static final int RIGHT_FRONT_WHEEL_ID = 2;
+
+        public static final int RIGHT_FRONT_WHEEL_ID = 2;
           public static final int RIGHT_FRONT_STEER_ID = 3;
           public static final int RIGHT_FRONT_ENCODER_ID = 10;
           
@@ -59,7 +60,7 @@ public final class Constants {
           public static final int LEFT_BACK_STEER_ID = 7;
           public static final int LEFT_BACK_ENCODER_ID = 12;
           
-          public static final int RIGHT_BACK_WHEEL_ID = 8;
+          public static final int RIGHT_BACK_WHEEL_ID = 8;  
           public static final int RIGHT_BACK_STEER_ID = 9;
           public static final int RIGHT_BACK_ENCODER_ID = 13;
         }
@@ -84,15 +85,15 @@ public final class Constants {
         }
     
         public static final class Conversions {
-            public static final int CANCODER_TICKS_PER_ROTATION = 4096;
+            public static final int CANCODER_TICKS_PER_ROTATION = 1;
         
-            public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 4.8;
-            public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = 0.8;
+            public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 6.22;
+            public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = JOYSTICK_TO_METERS_PER_SECOND_FAST * 0.3;
         
             public static final double MOTOR_REV_PER_WHEEL_REV = 5.12;
             public static final double MOTOR_REV_PER_STEER_REV = 12.8;
         
-            public static final double TICKS_PER_MOTOR_REV = 2048;
+            public static final double TICKS_PER_MOTOR_REV = 0.5;
             public static final double WHEEL_DIAMETER_INCHES = 3.9;
             public static final double INCHES_PER_WHEEL_REV = WHEEL_DIAMETER_INCHES * Math.PI;
         
@@ -111,7 +112,7 @@ public final class Constants {
             public static final double NEUTRAL_DEADBAND = 0.04; // TODO: find the actual value
         }
     
-        public static final double MAX_SPEED_FEET_PER_SECOND = 5; // TODO: find the actual value
+        public static final double MAX_SPEED_FEET_PER_SECOND = 20.4; // TODO: find the actual value
         public static final double MAX_ANGULAR_SPEED_FEET_PER_SECOND = 2 * 2 * Math.PI; // TODO: find the actual value
     
         // dimensions

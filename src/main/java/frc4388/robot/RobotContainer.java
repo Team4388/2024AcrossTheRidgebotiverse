@@ -251,13 +251,13 @@ public class RobotContainer {
         DualJoystickButton(getDeadbandedDriverController(), getVirtualDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroFlip(), m_robotSwerveDrive));
 
-        DualJoystickButton(getDeadbandedDriverController(), getVirtualDriverController(), XboxController.BACK_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightBlue()))
-            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.add180()));
+        // DualJoystickButton(getDeadbandedDriverController(), getVirtualDriverController(), XboxController.BACK_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightBlue()))
+        //     .onFalse(new InstantCommand(() -> m_robotSwerveDrive.add180()));
 
-        DualJoystickButton(getDeadbandedDriverController(), getVirtualDriverController(), XboxController.START_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightAmp()))
-            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.add180()));
+        // DualJoystickButton(getDeadbandedDriverController(), getVirtualDriverController(), XboxController.START_BUTTON)
+        //     .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroRightAmp()))
+        //     .onFalse(new InstantCommand(() -> m_robotSwerveDrive.add180()));
 
        // *  /* D-Pad Stuff */
     //    new Trigger(() -> getDeadbandedDriverController().getRawAxis(XboxController.TOP_BOTTOM_DPAD_AXIS) > 0.9)
@@ -308,11 +308,11 @@ public class RobotContainer {
 
         // ! /* Speed */
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
+            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.setToTurbo()));
           // .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
 
         new Trigger(() -> getDeadbandedDriverController().getPOV() == 270)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDownRot()));

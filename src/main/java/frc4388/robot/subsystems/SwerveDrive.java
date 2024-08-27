@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 // import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc4388.robot.Constants.SwerveDriveConstants;
+import frc4388.robot.Constants.SwerveDriveConstants.Conversions;
 import frc4388.utility.RobotGyro;
 import frc4388.utility.RobotUnits;
 
@@ -70,7 +71,7 @@ public class  SwerveDrive extends SubsystemBase {
   boolean stopped = false;
   public void driveWithInput(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
 
-    double rot_correction = RobotUnits.degreesToRadians(gyro.getRotation2d().getDegrees() - rotTarget) * 1.0;
+    double rot_correction = RobotUnits.degreesToRadians(gyro.getRotation2d().getDegrees() - rotTarget) * 0.0;
     SmartDashboard.putNumber("Rot_correct", RobotUnits.radiansToDegrees(rot_correction));
 
     if (fieldRelative) {
@@ -102,7 +103,7 @@ public class  SwerveDrive extends SubsystemBase {
 
       // Convert field-relative speeds to robot-relative speeds.
       // chassisSpeeds = chassisSpeeds.
-      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), -1 * speed.getY(), (rightStick.getX() * rotSpeedAdjust) - rot_correction, gyro.getRotation2d().times(-1));
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), -1 * speed.getY(), (-1 * rightStick.getX() * rotSpeedAdjust) - rot_correction, gyro.getRotation2d().times(-1));
     } else {      // Create robot-relative speeds.
       chassisSpeeds = new ChassisSpeeds(-1 * leftStick.getX(), -1 * leftStick.getY(), -1 * rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
     }
@@ -267,7 +268,7 @@ public class  SwerveDrive extends SubsystemBase {
   }
 
   public void setToSlow() {
-    this.speedAdjust = SwerveDriveConstants.SLOW_SPEED;
+    this.speedAdjust = Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST * SwerveDriveConstants.SLOW_SPEED;
     System.out.println("SLOW");
     System.out.println("SLOW");
     System.out.println("SLOW");
@@ -276,7 +277,7 @@ public class  SwerveDrive extends SubsystemBase {
   }
 
   public void setToFast() {
-    this.speedAdjust = SwerveDriveConstants.FAST_SPEED;
+    this.speedAdjust = Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST * SwerveDriveConstants.FAST_SPEED;
     System.out.println("FAST");
     System.out.println("FAST");
     System.out.println("FAST");
@@ -285,7 +286,7 @@ public class  SwerveDrive extends SubsystemBase {
   }
 
   public void setToTurbo() {
-    this.speedAdjust = SwerveDriveConstants.TURBO_SPEED;
+    this.speedAdjust = Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST * SwerveDriveConstants.TURBO_SPEED;
     System.out.println("TURBO");
     System.out.println("TURBO");
     System.out.println("TURBO");
