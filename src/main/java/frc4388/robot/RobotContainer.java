@@ -308,8 +308,8 @@ public class RobotContainer {
 
         // ! /* Speed */
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.setToTurbo()));
-          // .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
+            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.setToTurbo()))
+          .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));

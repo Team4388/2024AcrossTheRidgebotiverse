@@ -68,7 +68,7 @@ public final class Constants {
         public static final class PIDConstants {
             public static final int SWERVE_SLOT_IDX = 0;
             public static final int SWERVE_PID_LOOP_IDX = 1;
-            public static final Gains SWERVE_GAINS = new Gains(32, 0.0, 0.0, 0.0, 0, 0.0);
+            public static final Gains SWERVE_GAINS = new Gains(50, 0.0, 0.32, 0.0, 0, 0.0);
 
             public static final Gains TEST_SWERVE_GAINS = new Gains(1.2, 0.0, 0.0, 0.0, 0, 0.0);
 
@@ -88,7 +88,7 @@ public final class Constants {
             public static final int CANCODER_TICKS_PER_ROTATION = 1;
         
             public static final double JOYSTICK_TO_METERS_PER_SECOND_FAST = 6.22;
-            public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = JOYSTICK_TO_METERS_PER_SECOND_FAST * 0.3;
+            public static final double JOYSTICK_TO_METERS_PER_SECOND_SLOW = JOYSTICK_TO_METERS_PER_SECOND_FAST * 0.5;
         
             public static final double MOTOR_REV_PER_WHEEL_REV = 5.12;
             public static final double MOTOR_REV_PER_STEER_REV = 12.8;
