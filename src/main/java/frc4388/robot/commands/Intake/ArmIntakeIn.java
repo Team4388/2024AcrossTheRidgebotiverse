@@ -7,7 +7,6 @@ package frc4388.robot.commands.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.Shooter;
-import frc4388.robot.subsystems.SwerveDrive;
 
 public class ArmIntakeIn extends Command {
   /** Creates a new ArmIntakeIn. */

@@ -37,7 +37,7 @@ public class  SwerveDrive extends SubsystemBase {
   private RobotGyro gyro;
 
   public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST; // * slow by default
-  public double rotSpeedAdjust = SwerveDriveConstants.MIN_ROT_SPEED;
+  public double rotSpeedAdjust = SwerveDriveConstants.MAX_ROT_SPEED;
   public double autoSpeedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW;
   
   public double rotTarget = 0.0;
