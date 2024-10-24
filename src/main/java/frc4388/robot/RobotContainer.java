@@ -120,13 +120,16 @@ public class RobotContainer {
     );
 
     // ! /*  Autos */
-    private String lastAutoName = "final_red_center_4note_taxi.auto";
+    private String lastAutoName = "four_note_taxi_kracken.auto";
     private ConfigurableString autoplaybackName = new ConfigurableString("Auto Playback Name", lastAutoName);
     private neoJoystickPlayback autoPlayback = new neoJoystickPlayback(m_robotSwerveDrive, 
-    () -> autoplaybackName.get(), // lastAutoName
+    lastAutoName, // () -> autoplaybackName.get(), // lastAutoName
            new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
-           true, false);
- 
+           true, true);
+    
+    private neoJoystickPlayback amp_shoot = new neoJoystickPlayback(m_robotSwerveDrive, "Amp_shoot.auto",
+        new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
+        false, true);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -134,7 +137,7 @@ public class RobotContainer {
     public RobotContainer() {
         configureButtonBindings();        
         configureVirtualButtonBindings();
-        new DeferredBlock(() -> m_robotSwerveDrive.resetGyro());
+        new DeferredBlock(() -> m_robotSwerveDrive.resetGyroFlip());
         DriverStation.silenceJoystickConnectionWarning(true);
         // CameraServer.startAutomaticCapture();
 
@@ -147,6 +150,7 @@ public class RobotContainer {
                                 true);
         }, m_robotSwerveDrive)
         .withName("SwerveDrive DefaultCommand"));
+        m_robotSwerveDrive.setToSlow();
 
         // ! Swerve Drive One Module Test
         // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
@@ -164,12 +168,12 @@ public class RobotContainer {
         // continually sends updates to the Blinkin LED controller to keep the lights on
         // m_robotLED.setDefaultCommand(new RunCommand(() -> m_robotLED.updateLED(), m_robotLED));
 
-        m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
-            m_robotSwerveDrive.driveWithInput(
-                                            getDeadbandedDriverController().getLeft(), 
-                                            getDeadbandedDriverController().getRight(),
-                                            true);
-        }, m_robotSwerveDrive));
+        // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
+        //     m_robotSwerveDrive.driveWithInput(
+        //                                     getDeadbandedDriverController().getLeft(), 
+        //                                     getDeadbandedDriverController().getRight(),
+        //                                     true);
+        // }, m_robotSwerveDrive));
 
 
 
@@ -187,7 +191,7 @@ public class RobotContainer {
         // ? /* Driver Buttons */
 
         DualJoystickButton(getDeadbandedDriverController(), getVirtualDriverController(), XboxController.A_BUTTON)
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroFlip(), m_robotSwerveDrive));
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyroFlip()));
             
         // ! /* Speed */
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
@@ -254,8 +258,12 @@ public class RobotContainer {
             .onTrue(new InstantCommand(() -> m_robotClimber.climbIn()))
             .onFalse(new InstantCommand(() -> m_robotClimber.stopClimb()));
 
-        new Trigger(() -> getDeadbandedOperatorController().getPOV() == 0)
-            .onTrue(new InstantCommand(() -> m_robotIntake.ampOuttake(0.5)));
+        // new Trigger(() -> getDeadbandedOperatorController().getPOV() == 0)
+        //     .onTrue(new InstantCommand(() -> m_robotIntake.ampOuttake(0.5)));
+        
+        new Trigger(() -> getDeadbandedOperatorController().getPOV() != -1)
+            .onTrue(amp_shoot)
+            .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter, m_robotSwerveDrive));
         
         // ? /* Programer Buttons (Controller 3)*/
 

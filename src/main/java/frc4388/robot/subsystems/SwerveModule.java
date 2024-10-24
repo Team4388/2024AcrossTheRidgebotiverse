@@ -18,6 +18,7 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
@@ -73,6 +74,12 @@ public class SwerveModule extends SubsystemBase {
                 new MotorOutputConfigs()
                     .withNeutralMode(NeutralModeValue.Brake)
                     .withDutyCycleNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND)
+            ).withCurrentLimits(
+                new CurrentLimitsConfigs()
+                    .withStatorCurrentLimit(110)
+                    .withStatorCurrentLimitEnable(true)
+                    .withSupplyCurrentLimit(110)
+                    .withSupplyCurrentLimitEnable(true)
             );
 
         driveMotor.getConfigurator().apply(motorCfg);
