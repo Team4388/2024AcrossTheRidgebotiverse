@@ -154,7 +154,6 @@ public class RobotContainer {
            new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
            true, false);
 
-
     // private PlaybackChooser playbackChooser = new PlaybackChooser(m_robotSwerveDrive)
     //         .addOption("Taxi Auto", taxi.asProxy())
     //         .addOption("One Note Auto Starting in Front of Speaker", oneNoteStartingSpeaker.asProxy())
@@ -163,9 +162,7 @@ public class RobotContainer {
     //         // .addOption("One Note Auto Starting from Right Position", oneNoteStartingFromRight.asProxy())
     //         .addOption("Two Note Starting in Front of Speaker", twoNoteStartingFromSpeaker.asProxy())
     //         .addOption("Stay Two Note Starting in Front of Speaker", stayTwoNoteStartingFromSpeaker.asProxy())
-    //         .buildDisplay();
-    
-    
+    //         .buildDisplay();    
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -189,7 +186,6 @@ public class RobotContainer {
                                     false);
             }, m_robotSwerveDrive)
             .withName("SwerveDrive DefaultCommand"));
-           m_robotSwerveDrive.setToSlow();
 
         // ! Swerve Drive Default Command (Orientation Rotation)
         // m_robotSwerveDrive.setDefaultCommand(new RunCommand(() -> {
@@ -204,12 +200,6 @@ public class RobotContainer {
 
     }
 
-    // private void changeAuto() {
-    //     autoPlayback.unloadAuto();
-    //     autoPlayback.loadAuto();
-    //     lastAutoName = autoplaybackName.get();
-    //     System.out.println("AUTO: Changed auto to; `" + lastAutoName + "`");
-    // }
     /**
      * Use this method to define your button->command mappings. Buttons can be
      * created by instantiating a {@link GenericHID} or one of its subclasses
@@ -278,18 +268,6 @@ public class RobotContainer {
            true, false))
            .onFalse(new InstantCommand());
 
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON)
-                //    .whileTrue(new JoystickRecorder(m_robotSwerveDrive,
-                //                                    () -> getDeadbandedDriverController().getLeftX(),
-                //                                    () -> getDeadbandedDriverController().getLeftY(),
-                //                                    () -> getDeadbandedDriverController().getRightX(),
-                //                                    () -> getDeadbandedDriverController().getRightY(),
-                //                                    "Taxi.txt"))
-                //    .onFalse(new InstantCommand());
-
-                // new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON)
-                //    .onTrue(new JoystickPlayback(m_robotSwerveDrive, "Taxi.txt"))
-                //    .onFalse(new InstantCommand()); 
         // ! /* Speed */
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
@@ -304,12 +282,7 @@ public class RobotContainer {
         new Trigger(() -> getDeadbandedDriverController().getPOV() == 90)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftUpRot()));
         
-        // new JoystickButton(getDeadbandedDriverController(), XboxController.Y_BUTTON)
-        //     .whileTrue(new InstantCommand(() -> 
-        //     m_robotSwerveDrive.driveWithInput(new Translation2d(0, 1),
-        //                                       new Translation2d(0, 0),
-        //                         true), m_robotSwerveDrive));
-
+        
         
        //?  /* Operator Buttons */
 
@@ -349,10 +322,6 @@ public class RobotContainer {
         //spins up shooter, no wind down
         DualJoystickButton(getDeadbandedOperatorController(), getVirtualOperatorController(), XboxController.LEFT_JOYSTICK_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter));
-        
-        // DualJoystickButton(getDeadbandedOperatorController(), getVirtualOperatorController(), XboxController.RIGHT_JOYSTICK_BUTTON)
-        //     .onTrue(new InstantCommand(() -> m_robotIntake.talonSpinIntakeMotor(), m_robotIntake))
-        //     .onFalse(new InstantCommand(() -> m_robotIntake.talonStopIntakeMotors(), m_robotIntake));
 
         DualJoystickButton(getDeadbandedOperatorController(), getVirtualOperatorController(), XboxController.RIGHT_JOYSTICK_BUTTON)
             .onTrue(emergencyRetract);
