@@ -12,11 +12,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.Constants;
 import frc4388.robot.Constants.ClimbConstants;
-import frc4388.robot.Constants.IntakeConstants;
-
-//! 6.5C Scoring Criteria for Stage
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
@@ -40,14 +36,13 @@ public class Climber extends SubsystemBase {
     //PositionVoltage request = new PositionVoltage(0);
     //climbMotor.setControl(request.withPosition(-520)); 
     
-    climbMotor.set(Constants.ClimbConstants.CLIMB_OUT_SPEED);
+    climbMotor.set(ClimbConstants.CLIMB_OUT_SPEED);
   }
 
   public void climbIn() {
     //PositionVoltage request = new PositionVoltage(-520);
     //climbMotor.setControl(request.withPosition(0)); 
-    climbMotor.set(Constants.ClimbConstants.CLIMB_IN_SPEED);
-    ;
+    climbMotor.set(ClimbConstants.CLIMB_IN_SPEED);
   }
 
   public void stopClimb() {

@@ -22,7 +22,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 
 // Autos
 import frc4388.robot.commands.Intake.ArmIntakeIn;
@@ -36,7 +35,6 @@ import frc4388.robot.subsystems.Intake;
 import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.Shooter;
 // import frc4388.robot.subsystems.LED;
-// import frc4388.robot.subsystems.Limelight;
 import frc4388.robot.subsystems.SwerveDrive;
 
 // Utilites
@@ -91,15 +89,9 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotShooter.idle())
     );
     
-    private SequentialCommandGroup i = new SequentialCommandGroup(
+    private SequentialCommandGroup intakeNotePullInIdle = new SequentialCommandGroup(
         intakeToShootStuff, intakeToShoot, 
         new InstantCommand(() -> m_robotShooter.idle())
-    );
-
-    private SequentialCommandGroup ejectToShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotShooter.spin(), m_robotShooter),
-        new WaitCommand(0.75),
-        new InstantCommand(() -> m_robotIntake.handoff(), m_robotIntake)
     );
 
     private SequentialCommandGroup turnOffShoot = new SequentialCommandGroup(
@@ -113,11 +105,6 @@ public class RobotContainer {
         new InstantCommand(() -> m_robotIntake.stopIntakeMotors(), m_robotIntake)
     );
 
-    private SequentialCommandGroup ampShoot = new SequentialCommandGroup(
-        new InstantCommand(() -> m_robotIntake.ampPosition()),
-        new InstantCommand(() -> m_robotIntake.ampOuttake(0.1)) //TODO: Find Actual Speed
-    );
-
     // ! /*  Autos */
     private String lastAutoName = "four_note_taxi_kracken.auto";
     private ConfigurableString autoplaybackName = new ConfigurableString("Auto Playback Name", lastAutoName);
@@ -126,7 +113,7 @@ public class RobotContainer {
            new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
            true, false);
     
-    private neoJoystickPlayback amp_shoot = new neoJoystickPlayback(m_robotSwerveDrive, "Amp_shoot.auto",
+    private neoJoystickPlayback ampShoot = new neoJoystickPlayback(m_robotSwerveDrive, "Amp_shoot.auto",
         new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
         false, true);
 
@@ -237,7 +224,7 @@ public class RobotContainer {
             
 
         DualJoystickButton(getDeadbandedOperatorController(), getVirtualOperatorController(), XboxController.RIGHT_BUMPER_BUTTON)
-            .onTrue(i)
+            .onTrue(intakeNotePullInIdle)
             .onFalse(new InstantCommand(() -> m_robotIntake.PIDIn()));
             
         // Spins up shooter, no wind down
@@ -259,7 +246,7 @@ public class RobotContainer {
         //     .onTrue(new InstantCommand(() -> m_robotIntake.ampOuttake(0.5)));
         
         new Trigger(() -> getDeadbandedOperatorController().getPOV() != -1)
-            .onTrue(amp_shoot)
+            .onTrue(ampShoot)
             .onFalse(new InstantCommand(() -> m_robotShooter.stop(), m_robotShooter, m_robotSwerveDrive));
         
         // ? /* Programer Buttons (Controller 3)*/

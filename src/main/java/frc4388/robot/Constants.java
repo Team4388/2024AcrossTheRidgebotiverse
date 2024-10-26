@@ -49,7 +49,6 @@ public final class Constants {
         }
 
         public static final class IDs {
-
             public static final int RIGHT_FRONT_WHEEL_ID = 2;
             public static final int RIGHT_FRONT_STEER_ID = 3;
             public static final int RIGHT_FRONT_ENCODER_ID = 10;
@@ -65,6 +64,8 @@ public final class Constants {
             public static final int RIGHT_BACK_WHEEL_ID = 8;  
             public static final int RIGHT_BACK_STEER_ID = 9;
             public static final int RIGHT_BACK_ENCODER_ID = 13;
+
+            public static final int DRIVE_PIGEON_ID = 14;
         }
     
         public static final class PIDConstants {
@@ -138,7 +139,7 @@ public final class Constants {
     }
 
     public static final class DriveConstants {
-        public static final int DRIVE_PIGEON_ID = 14;
+        
 
         public static final int SMARTDASHBOARD_UPDATE_FRAME = 2;
     }

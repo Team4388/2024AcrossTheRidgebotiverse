@@ -9,11 +9,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc4388.robot.subsystems.SwerveDrive;
 import frc4388.utility.UtilityStructs.TimedOutput;
 
-public class JoystickPlayback extends CommandBase {
+public class JoystickPlayback extends Command {
   private final SwerveDrive            swerve;
   private       String                 filename;
   private       int                    mult       = 1;
