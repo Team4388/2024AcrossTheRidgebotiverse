@@ -7,16 +7,16 @@
 
 package frc4388.robot;
 
-import com.ctre.phoenix.motorcontrol.InvertType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
-import com.ctre.phoenix.sensors.CANCoder;
-import com.ctre.phoenix.sensors.PigeonIMU;
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
+import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.Pigeon2;
 
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import frc4388.robot.Constants.LEDConstants;
+// import edu.wpi.first.wpilibj.motorcontrol.Spark;
+// import frc4388.robot.Constants.LEDConstants;
 import frc4388.robot.Constants.SwerveDriveConstants;
+import frc4388.robot.Constants.ShooterConstants;
+import frc4388.robot.Constants.ClimbConstants;
+import frc4388.robot.Constants.IntakeConstants;
 import frc4388.robot.subsystems.SwerveModule;
 import frc4388.utility.RobotGyro;
 
@@ -25,9 +25,9 @@ import frc4388.utility.RobotGyro;
  * testing and modularization.
  */
 public class RobotMap {
-    private WPI_Pigeon2 m_pigeon2 = new WPI_Pigeon2(14);
+    private Pigeon2 m_pigeon2 = new Pigeon2(SwerveDriveConstants.IDs.DRIVE_PIGEON_ID);
     public RobotGyro gyro = new RobotGyro(m_pigeon2);
-
+    
     public SwerveModule leftFront;
     public SwerveModule rightFront;
     public SwerveModule leftBack;
@@ -39,58 +39,48 @@ public class RobotMap {
     }
 
     /* LED Subsystem */
-    public final Spark LEDController = new Spark(LEDConstants.LED_SPARK_ID);
-
+    // public final Spark LEDController = new Spark(LEDConstants.LED_SPARK_ID);
 
     /* Swreve Drive Subsystem */
-    public final WPI_TalonFX leftFrontWheel = new WPI_TalonFX(SwerveDriveConstants.IDs.LEFT_FRONT_WHEEL_ID);
-    public final WPI_TalonFX leftFrontSteer = new WPI_TalonFX(SwerveDriveConstants.IDs.LEFT_FRONT_STEER_ID);
-    public final CANCoder leftFrontEncoder = new CANCoder(SwerveDriveConstants.IDs.LEFT_FRONT_ENCODER_ID);
+    public final TalonFX leftFrontWheel = new TalonFX(SwerveDriveConstants.IDs.LEFT_FRONT_WHEEL_ID);
+    public final TalonFX leftFrontSteer = new TalonFX(SwerveDriveConstants.IDs.LEFT_FRONT_STEER_ID);
+    public final CANcoder leftFrontEncoder = new CANcoder(SwerveDriveConstants.IDs.LEFT_FRONT_ENCODER_ID);
 
-    public final WPI_TalonFX rightFrontWheel = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_FRONT_WHEEL_ID);
-    public final WPI_TalonFX rightFrontSteer = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_FRONT_STEER_ID);
-    public final CANCoder rightFrontEncoder = new CANCoder(SwerveDriveConstants.IDs.RIGHT_FRONT_ENCODER_ID);
-        
-    public final WPI_TalonFX leftBackWheel = new WPI_TalonFX(SwerveDriveConstants.IDs.LEFT_BACK_WHEEL_ID);
-    public final WPI_TalonFX leftBackSteer = new WPI_TalonFX(SwerveDriveConstants.IDs.LEFT_BACK_STEER_ID);
-    public final CANCoder leftBackEncoder = new CANCoder(SwerveDriveConstants.IDs.LEFT_BACK_ENCODER_ID);
 
-    public final WPI_TalonFX rightBackWheel = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_BACK_WHEEL_ID);
-    public final WPI_TalonFX rightBackSteer = new WPI_TalonFX(SwerveDriveConstants.IDs.RIGHT_BACK_STEER_ID);
-    public final CANCoder rightBackEncoder = new CANCoder(SwerveDriveConstants.IDs.RIGHT_BACK_ENCODER_ID);
+    public final TalonFX rightFrontWheel = new TalonFX(SwerveDriveConstants.IDs.RIGHT_FRONT_WHEEL_ID);
+    public final TalonFX rightFrontSteer = new TalonFX(SwerveDriveConstants.IDs.RIGHT_FRONT_STEER_ID);
+    public final CANcoder rightFrontEncoder = new CANcoder(SwerveDriveConstants.IDs.RIGHT_FRONT_ENCODER_ID);
+    
+    public final TalonFX leftBackWheel = new TalonFX(SwerveDriveConstants.IDs.LEFT_BACK_WHEEL_ID);
+    public final TalonFX leftBackSteer = new TalonFX(SwerveDriveConstants.IDs.LEFT_BACK_STEER_ID);
+    public final CANcoder leftBackEncoder = new CANcoder(SwerveDriveConstants.IDs.LEFT_BACK_ENCODER_ID);
+    
+    public final TalonFX rightBackWheel = new TalonFX(SwerveDriveConstants.IDs.RIGHT_BACK_WHEEL_ID);
+    public final TalonFX rightBackSteer = new TalonFX(SwerveDriveConstants.IDs.RIGHT_BACK_STEER_ID);
+    public final CANcoder rightBackEncoder = new CANcoder(SwerveDriveConstants.IDs.RIGHT_BACK_ENCODER_ID);
+
+    /* Shooter Subsystem */
+    public final TalonFX leftShooter = new TalonFX(ShooterConstants.LEFT_SHOOTER_ID);
+    public final TalonFX rightShooter = new TalonFX(ShooterConstants.RIGHT_SHOOTER_ID);
+
+    /* Intake Subsystem */
+    public final TalonFX intakeMotor = new TalonFX(IntakeConstants.INTAKE_MOTOR_ID);
+    public final TalonFX pivotMotor = new TalonFX(IntakeConstants.PIVOT_MOTOR_ID);
+
+    /* Climber Subsystem */
+    public final TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_MOTOR_ID);
 
     void configureLEDMotorControllers() {    
     }
 
+    void configureIntakeMotorControllers() {
+    }
+
     void configureDriveMotorControllers() {
-        // config factory default
-        leftFrontWheel.configFactoryDefault();
-        leftFrontSteer.configFactoryDefault();
-        
-        rightFrontWheel.configFactoryDefault();
-        rightFrontSteer.configFactoryDefault();
-        
-        leftBackWheel.configFactoryDefault();
-        leftBackSteer.configFactoryDefault();
-        
-        rightBackWheel.configFactoryDefault();
-        rightBackSteer.configFactoryDefault();
-
-        // set neutral mode
-        leftFrontWheel.setNeutralMode(NeutralMode.Brake);
-        rightFrontWheel.setNeutralMode(NeutralMode.Brake);
-        leftBackWheel.setNeutralMode(NeutralMode.Brake);
-        rightBackWheel.setNeutralMode(NeutralMode.Brake);
-
-        leftFrontSteer.setNeutralMode(NeutralMode.Brake);
-        rightFrontSteer.setNeutralMode(NeutralMode.Brake);
-        leftBackSteer.setNeutralMode(NeutralMode.Brake);
-        rightBackSteer.setNeutralMode(NeutralMode.Brake);
-
         // initialize SwerveModules
-        this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder, -181.230469);
-        this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder, -270.615234);
-        this.leftBack = new SwerveModule(leftBackWheel, leftBackSteer, leftBackEncoder, -240.029297);
-        this.rightBack = new SwerveModule(rightBackWheel, rightBackSteer, rightBackEncoder, -40.869142);
+        this.rightFront = new SwerveModule(rightFrontWheel, rightFrontSteer, rightFrontEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.FRONT_RIGHT_ROT_OFFSET);
+        this.leftFront = new SwerveModule(leftFrontWheel, leftFrontSteer, leftFrontEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.FRONT_LEFT_ROT_OFFSET);
+        this.leftBack = new SwerveModule(leftBackWheel, leftBackSteer, leftBackEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.BACK_LEFT_ROT_OFFSET);
+        this.rightBack = new SwerveModule(rightBackWheel, rightBackSteer, rightBackEncoder, SwerveDriveConstants.DefaultSwerveRotOffsets.BACK_RIGHT_ROT_OFFSET);
     }
 }
