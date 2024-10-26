@@ -69,14 +69,13 @@ public class RobotContainer {
     /* Controllers */
     private final DeadbandedXboxController m_driverXbox   = new DeadbandedXboxController(OIConstants.XBOX_DRIVER_ID);
     private final DeadbandedXboxController m_operatorXbox = new DeadbandedXboxController(OIConstants.XBOX_OPERATOR_ID);    
-    private final DeadbandedXboxController m_autoRecorderXbox = new DeadbandedXboxController(2);
+    private final DeadbandedXboxController m_autoRecorderXbox = new DeadbandedXboxController(OIConstants.XBOX_PROGRAMMER_ID);
     
     private final Limelight limelight = new Limelight();
 
     private final Shooter m_robotShooter = new Shooter(m_robotMap.leftShooter, m_robotMap.rightShooter, limelight);
 
     private final Climber m_robotClimber = new Climber(m_robotMap.climbMotor);
-
 
     /* Virtual Controllers */
     private final VirtualController m_virtualDriver = new VirtualController(0);
@@ -123,9 +122,9 @@ public class RobotContainer {
     private String lastAutoName = "four_note_taxi_kracken.auto";
     private ConfigurableString autoplaybackName = new ConfigurableString("Auto Playback Name", lastAutoName);
     private neoJoystickPlayback autoPlayback = new neoJoystickPlayback(m_robotSwerveDrive, 
-    lastAutoName, // () -> autoplaybackName.get(), // lastAutoName
+    () -> autoplaybackName.get(), // lastAutoName
            new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
-           true, true);
+           true, false);
     
     private neoJoystickPlayback amp_shoot = new neoJoystickPlayback(m_robotSwerveDrive, "Amp_shoot.auto",
         new VirtualController[]{getVirtualDriverController(), getVirtualOperatorController()},
@@ -195,11 +194,10 @@ public class RobotContainer {
             
         // ! /* Speed */
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
-            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.setToTurbo()))
-            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.setToFast()));
+            .onTrue(new InstantCommand(()  -> m_robotSwerveDrive.shiftUp()));
         
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
-            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.setToSlow()));
+            .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
 
         new Trigger(() -> getDeadbandedDriverController().getPOV() == 270)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDownRot()));
@@ -207,7 +205,6 @@ public class RobotContainer {
         new Trigger(() -> getDeadbandedDriverController().getPOV() == 90)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftUpRot()));
           
-            
         // ?  /* Operator Buttons */
             
         DualJoystickButton(getDeadbandedOperatorController(), getVirtualOperatorController(), XboxController.Y_BUTTON)

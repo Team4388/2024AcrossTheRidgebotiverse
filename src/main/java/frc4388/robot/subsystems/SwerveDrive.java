@@ -33,10 +33,13 @@ public class  SwerveDrive extends SubsystemBase {
   private Translation2d rightBackLocation = new Translation2d(-Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), -Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
   
   private SwerveDriveKinematics kinematics = new SwerveDriveKinematics(leftFrontLocation, rightFrontLocation, leftBackLocation, rightBackLocation);
-
+  
   private RobotGyro gyro;
+  
+  private int gear_index;
+  private boolean stopped = false;
 
-  public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST; // * slow by default
+  public double speedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST;
   public double rotSpeedAdjust = SwerveDriveConstants.MAX_ROT_SPEED;
   public double autoSpeedAdjust = SwerveDriveConstants.Conversions.JOYSTICK_TO_METERS_PER_SECOND_SLOW;
   
@@ -52,7 +55,7 @@ public class  SwerveDrive extends SubsystemBase {
     this.rightBack = rightBack;
     
     this.gyro = gyro;
-
+    reset_index();
     this.modules = new SwerveModule[] {this.leftFront, this.rightFront, this.leftBack, this.rightBack};
   }
 
@@ -68,7 +71,6 @@ public class  SwerveDrive extends SubsystemBase {
     module.setDesiredState(state);
   }
 
-  boolean stopped = false;
   public void driveWithInput(Translation2d leftStick, Translation2d rightStick, boolean fieldRelative) {
 
     double rot_correction = RobotUnits.degreesToRadians(gyro.getRotation2d().getDegrees() - rotTarget) * 0.0;
@@ -256,15 +258,29 @@ public class  SwerveDrive extends SubsystemBase {
     SmartDashboard.putNumber("RotTartget", rotTarget);
   }
 
-  public void shiftDown() {
-    if (Math.abs(this.speedAdjust - SwerveDriveConstants.SLOW_SPEED) < .01) {
-      
-    } else if (Math.abs(this.speedAdjust - SwerveDriveConstants.FAST_SPEED) < .01) {
-      this.speedAdjust = SwerveDriveConstants.SLOW_SPEED;
-    } else {
-      this.speedAdjust = SwerveDriveConstants.FAST_SPEED;
+  private void reset_index() {
+    gear_index = 0; // however we wish to initialize the gear (What gear does the robot start in?)
+  }
 
-    }
+  public void shiftDown() {
+    if (gear_index == -1 || gear_index >= SwerveDriveConstants.GEARS.length) reset_index(); // If outof bounds: reset index
+    int i = gear_index - 1;
+    if (i == -1) i = 0;
+    setPercentOutput(SwerveDriveConstants.GEARS[i]);
+    gear_index = i;
+  }
+
+  public void shiftUp() {
+    if (gear_index == -1 || gear_index >= SwerveDriveConstants.GEARS.length) reset_index(); // If outof bounds: reset index
+    int i = gear_index + 1;
+    if (i == SwerveDriveConstants.GEARS.length) i = SwerveDriveConstants.GEARS.length - 1;
+    setPercentOutput(SwerveDriveConstants.GEARS[i]);
+    gear_index = i;
+  }
+
+  public void setPercentOutput(double speed) {
+    speedAdjust = Conversions.JOYSTICK_TO_METERS_PER_SECOND_FAST * speed;
+    gear_index = -1;
   }
 
   public void setToSlow() {
@@ -292,16 +308,6 @@ public class  SwerveDrive extends SubsystemBase {
     System.out.println("TURBO");
     System.out.println("TURBO");
     System.out.println("TURBO");
-  }
-
-  public void shiftUp() {
-    if (Math.abs(this.speedAdjust - SwerveDriveConstants.SLOW_SPEED) < .01) {
-      this.speedAdjust = SwerveDriveConstants.FAST_SPEED;
-    } else if (Math.abs(this.speedAdjust - SwerveDriveConstants.FAST_SPEED) < .01) {
-      this.speedAdjust = SwerveDriveConstants.TURBO_SPEED;
-    } else {
-      
-    }
   }
 
   public void toggleGear(double angle) {
