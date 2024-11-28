@@ -45,6 +45,7 @@ public class packetLossCheckerInator extends Command {
     StatusCode e = pigeon.setYaw(lastAngle);
     if (statusMap.containsKey(e.value)) statusMap.put(e.value, statusMap.get(e.value) + 1);
     else statusMap.put(e.value, 1);   //statusMap.get(e.value)
+    iterations++;
   }
 
   // Called once the command ends or is interrupted.
