@@ -37,11 +37,16 @@ public class packetLossCheckerInator extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double angle = pigeon.getAngle();
-    if ((int) Math.round(angle) != lastAngle) errorCount++;
+    double angle = pigeon.getYaw().getValue();
+    if ((int) Math.round(angle) != lastAngle) {
+      errorCount++;
+      System.out.print(angle);    
+      System.out.print(", ");
+      System.out.println(lastAngle);    
+    } 
 
     angle += 1;
-    lastAngle = (int) angle;
+    lastAngle = (int) Math.round(angle);
     StatusCode e = pigeon.setYaw(lastAngle);
     if (statusMap.containsKey(e.value)) statusMap.put(e.value, statusMap.get(e.value) + 1);
     else statusMap.put(e.value, 1);   //statusMap.get(e.value)
