@@ -150,7 +150,7 @@ public class SwerveModule extends SubsystemBase {
     public Rotation2d getAngle() {
         // * Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees.
         // return Rotation2d.fromDegrees(encoder.getAbsolutePosition());
-        return Rotation2d.fromRotations(encoder.getPosition().getValue());
+        return Rotation2d.fromRotations(encoder.getPosition().getValue().baseUnitMagnitude());
     }
     
     public double getAngularVel() {
@@ -184,9 +184,7 @@ public class SwerveModule extends SubsystemBase {
      */
     public SwerveModuleState getState() {
         return new SwerveModuleState(
-            Units.inchesToMeters(driveMotor.getVelocity().getValue() * 
-            SwerveDriveConstants.Conversions.INCHES_PER_WHEEL_REV * 
-            SwerveDriveConstants.Conversions.WHEEL_REV_PER_MOTOR_REV), 
+            Units.inchesToMeters(driveMotor.getVelocity().getValue().baseUnitMagnitude() * SwerveDriveConstants.Conversions.INCHES_PER_WHEEL_REV * SwerveDriveConstants.Conversions.WHEEL_REV_PER_MOTOR_REV), 
             getAngle()
         );
     }
