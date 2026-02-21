@@ -85,7 +85,7 @@ public class Shooter extends SubsystemBase {
     spinMode = 0;
   }
 
-  public void idle() {
+  public void set_idle() {
     spin(ShooterConstants.SHOOTER_IDLE);
     spinMode = 1;
   }

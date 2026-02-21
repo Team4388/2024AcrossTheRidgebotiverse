@@ -7,6 +7,9 @@
 
 package frc4388.utility;
 
+import static edu.wpi.first.units.Units.Degrees;
+import static edu.wpi.first.units.Units.Radians;
+
 // import com.ctre.phoenix.sensors.WPI_Pigeon2;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.kauailabs.navx.frc.AHRS;
@@ -99,7 +102,7 @@ public class RobotGyro {
         resetZeroValues();
 
         if (m_isGyroAPigeon) {
-            m_pigeon.setYaw(0);
+            m_pigeon.setYaw(0.);
         } else {
             m_navX.reset();
         }
@@ -121,7 +124,7 @@ public class RobotGyro {
         resetZeroValues();
 
         if (m_isGyroAPigeon) {
-            m_pigeon.setYaw(180);
+            m_pigeon.setYaw(180.);
         } else {
             m_navX.reset();
         }
@@ -132,7 +135,7 @@ public class RobotGyro {
         resetZeroValues();
         
         if (m_isGyroAPigeon) {
-            m_pigeon.setYaw(90);
+            m_pigeon.setYaw(90.);
         } else {
             m_navX.reset();
         }
@@ -143,7 +146,7 @@ public class RobotGyro {
         resetZeroValues();
 
         if (m_isGyroAPigeon) {
-            m_pigeon.setYaw(270);
+            m_pigeon.setYaw(270.);
         } else {
             m_navX.reset();
         }
@@ -154,7 +157,7 @@ public class RobotGyro {
         resetZeroValues();
 
         if (m_isGyroAPigeon) {
-            m_pigeon.setYaw(60);
+            m_pigeon.setYaw(60.);
         } else {
             m_navX.reset();
         }   
@@ -165,7 +168,7 @@ public class RobotGyro {
         resetZeroValues();
 
         if (m_isGyroAPigeon) {
-            m_pigeon.setYaw(-60);
+            m_pigeon.setYaw(-60.);
         } else {
             m_navX.reset();
         }   
@@ -181,7 +184,7 @@ public class RobotGyro {
 	 *					Roll is within [-90,+90] degrees.
      */
     private double[] getPigeonAngles() {
-        m_pigeon.getAngle();
+        // m_pigeon.getYaw().getValue().in(Radians);
         var rotation = m_pigeon.getRotation3d();
 
         return new double[] {RobotUnits.radiansToDegrees(rotation.getX() - rollZero), RobotUnits.radiansToDegrees(rotation.getY() - pitchZero), RobotUnits.radiansToDegrees(rotation.getZ())};

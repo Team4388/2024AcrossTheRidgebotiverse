@@ -9,6 +9,7 @@ package frc4388.robot.subsystems;
 
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,8 +45,8 @@ public class DiffDrive extends SubsystemBase {
     m_rightFrontMotor = rightFrontMotor;
     m_leftBackMotor = leftBackMotor;
     m_rightBackMotor = rightBackMotor;
-    m_leftBackMotor .setControl(new Follower(m_leftFrontMotor.getDeviceID(), false));
-    m_rightBackMotor.setControl(new Follower(m_rightBackMotor.getDeviceID(), false));
+    m_leftBackMotor .setControl(new Follower(m_leftFrontMotor.getDeviceID(), MotorAlignmentValue.Aligned));
+    m_rightBackMotor.setControl(new Follower(m_rightBackMotor.getDeviceID(), MotorAlignmentValue.Aligned));
     m_driveTrain = driveTrain;
     m_gyro = gyro;
   }

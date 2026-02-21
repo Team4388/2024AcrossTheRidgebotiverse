@@ -27,8 +27,8 @@ public class  SwerveDrive extends SubsystemBase {
 
   private SwerveModule[] modules;
 
-  private Translation2d leftFrontLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
-  private Translation2d rightFrontLocation = new Translation2d(-Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
+  private Translation2d leftFrontLocation = new Translation2d(-Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
+  private Translation2d rightFrontLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
   private Translation2d leftBackLocation = new Translation2d(Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), -Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
   private Translation2d rightBackLocation = new Translation2d(-Units.inchesToMeters(SwerveDriveConstants.HALF_HEIGHT), -Units.inchesToMeters(SwerveDriveConstants.HALF_WIDTH));
   
@@ -136,7 +136,8 @@ public class  SwerveDrive extends SubsystemBase {
       }
 
       // Use the left joystick to set speed. Apply a cubic curve and the set max speed.
-      Translation2d speed = leftStick.times(leftStick.getNorm() * autoSpeedAdjust);
+      Translation2d speed = leftStick.times(leftStick.
+      getNorm() * autoSpeedAdjust);
       // Translation2d cubedSpeed = new Translation2d(Math.pow(speed.getX(), 3.00), Math.pow(speed.getY(), 3.00));
 
       // Convert field-relative speeds to robot-relative speeds.
@@ -173,9 +174,13 @@ public class  SwerveDrive extends SubsystemBase {
     
     Translation2d speed = leftStick.times(leftStick.getNorm() * speedAdjust);
 
-      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(-1 * speed.getX(), -1 * speed.getY(), ((-1 * rightStick.getX()) * SwerveDriveConstants.ROTATION_SPEED) + rot_correction, gyro.getRotation2d()).times(1);
+      chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
+        -1 * speed.getX(), -1 * speed.getY(), 
+        ((-1 * rightStick.getX()) * SwerveDriveConstants.ROTATION_SPEED) + rot_correction, gyro.getRotation2d()).times(1);
     } else {      // Create robot-relative speeds.
-      chassisSpeeds = new ChassisSpeeds(-1 * leftStick.getX(), -1 * leftStick.getY(), -1 * rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
+      chassisSpeeds = new ChassisSpeeds(
+        -1 * leftStick.getX(), -1 * leftStick.getY(), 
+        -1 * rightStick.getX() * SwerveDriveConstants.ROTATION_SPEED);
     }
     // setModuleStates(kinematics.toSwerveModuleStates(chassisSpeeds));  
     }

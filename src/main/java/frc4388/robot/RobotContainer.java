@@ -10,6 +10,8 @@ package frc4388.robot;
 // Drive Systems
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import frc4388.utility.controller.XboxController;
 import frc4388.utility.controller.DeadbandedXboxController;
@@ -192,6 +194,19 @@ public class RobotContainer {
         new Trigger(() -> getDeadbandedDriverController().getPOV() == 90)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftUpRot()));
           
+
+
+        // Fine Alignment
+        // new Trigger(() -> getDeadbandedDriverController().getPOV() != -1)
+        //     .whileTrue(new RunCommand(
+        //         () -> m_robotSwerveDrive.driveWithInput(
+        //                 new Translation2d(1., Rotation2d.fromDegrees(getDeadbandedDriverController().getPOV())),
+        //                 new Translation2d(),
+        //                 false
+        //             ), m_robotSwerveDrive
+        //         ))
+        //     .onFalse(new InstantCommand(() -> m_robotSwerveDrive.stopModules(), m_robotSwerveDrive));
+
         // ?  /* Operator Buttons */
             
         DualJoystickButton(getDeadbandedOperatorController(), getVirtualOperatorController(), XboxController.Y_BUTTON)

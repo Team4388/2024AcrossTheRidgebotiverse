@@ -23,9 +23,9 @@ import frc4388.utility.LEDPatterns;
 public final class Constants {
     public static final class SwerveDriveConstants {
 
-        public static final double MAX_ROT_SPEED        = 3.5;
+        public static final double MAX_ROT_SPEED        = 7.;
         public static final double AUTO_MAX_ROT_SPEED = 1.5;
-        public static final double MIN_ROT_SPEED        = 1.0;
+        public static final double MIN_ROT_SPEED        = 4.5;
         public static       double ROTATION_SPEED       = MAX_ROT_SPEED;
         public static       double PLAYBACK_ROTATION_SPEED = AUTO_MAX_ROT_SPEED;
         public static       double ROT_CORRECTION_SPEED = 10; // MIN_ROT_SPEED;
@@ -42,9 +42,9 @@ public final class Constants {
         public static final double TURBO_SPEED = 1.0;
     
         public static final class DefaultSwerveRotOffsets {
-          public static final double FRONT_LEFT_ROT_OFFSET  =  0.36962890625  + 0.5;
-          public static final double FRONT_RIGHT_ROT_OFFSET =  0.61474609375  + 0.5;
-          public static final double BACK_LEFT_ROT_OFFSET   = -0.227294921875 + 0.5;
+          public static final double FRONT_LEFT_ROT_OFFSET  =  0.36962890625  + 0.75 + 0.0103;
+          public static final double FRONT_RIGHT_ROT_OFFSET =  0.61474609375  + 0.25 + 0.013475;
+          public static final double BACK_LEFT_ROT_OFFSET   = -0.227294921875 + 0.5 ;
           public static final double BACK_RIGHT_ROT_OFFSET  =  0.60595703125  + 0.5;
         }
 

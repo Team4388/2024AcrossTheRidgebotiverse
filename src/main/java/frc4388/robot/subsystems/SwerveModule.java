@@ -4,6 +4,9 @@
 
 package frc4388.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Amps;
+import static edu.wpi.first.units.Units.Degrees;
+
 import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -52,7 +55,7 @@ public class SwerveModule extends SubsystemBase {
         this.angleMotor = angleMotor;
         this.encoder = encoder;
 
-        var motorCfg = new TalonFXConfiguration()
+        TalonFXConfiguration motorCfg = new TalonFXConfiguration()
             .withOpenLoopRamps(
                 new OpenLoopRampsConfigs()
                     .withDutyCycleOpenLoopRampPeriod(SwerveDriveConstants.Configurations.OPEN_LOOP_RAMP_RATE)
@@ -65,10 +68,10 @@ public class SwerveModule extends SubsystemBase {
                     .withDutyCycleNeutralDeadband(SwerveDriveConstants.Configurations.NEUTRAL_DEADBAND)
             ).withCurrentLimits(
                 new CurrentLimitsConfigs()
-                    .withStatorCurrentLimit(100)
+                    .withStatorCurrentLimit(70.)
                     .withStatorCurrentLimitEnable(true)
-                    .withSupplyCurrentLimit(100)
-                    .withSupplyCurrentLimitEnable(true)
+                    // .withSupplyCurrentLimit(100.)
+                    // .withSupplyCurrentLimitEnable(true)
             );
 
         driveMotor.getConfigurator().apply(motorCfg);
@@ -150,7 +153,7 @@ public class SwerveModule extends SubsystemBase {
     public Rotation2d getAngle() {
         // * Note: This assumes that the CANCoders are setup with the default feedback coefficient and the sensor value reports degrees.
         // return Rotation2d.fromDegrees(encoder.getAbsolutePosition());
-        return Rotation2d.fromRotations(encoder.getPosition().getValue().baseUnitMagnitude());
+        return Rotation2d.fromDegrees(encoder.getPosition().getValue().in(Degrees));
     }
     
     public double getAngularVel() {

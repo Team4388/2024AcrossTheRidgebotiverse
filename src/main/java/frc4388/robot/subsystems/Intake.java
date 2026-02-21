@@ -79,7 +79,7 @@ public class Intake extends SubsystemBase {
   public void stopArmMotor() {
     pivotMotor.set(0);
   }
-j
+
   public void stop() {
     intakeMotor.set(0);
     pivotMotor.set(0);
