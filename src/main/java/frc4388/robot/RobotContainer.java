@@ -199,7 +199,7 @@ public class RobotContainer {
         // Arm down
         new Trigger(() -> !lt_down() && getDeadbandedDriverController().getXButton())
             .onTrue(new InstantCommand(() -> {
-                m_robotMap.m_robotIntake.PIDIn();
+                m_robotMap.m_robotIntake.PIDOut();
                 m_robotMap.m_robotIntake.spinIntakeMotor();
             }, m_robotMap.m_robotIntake))
             .onFalse(new InstantCommand(() -> m_robotMap.m_robotIntake.stopArmMotor(), m_robotMap.m_robotIntake));
@@ -215,10 +215,10 @@ public class RobotContainer {
         // Handoff / spit out
         new Trigger(() -> !lt_down() && getDeadbandedDriverController().getAButton())
             .onTrue(new InstantCommand(() -> {
-                m_robotMap.m_robotIntake.PIDIn();
-                m_robotMap.m_robotIntake.stopIntakeMotors();
+                // m_robotMap.m_robotIntake.PIDIn();
+                m_robotMap.m_robotIntake.handoff();
             }, m_robotMap.m_robotIntake))
-            .onFalse(new InstantCommand(() -> m_robotMap.m_robotIntake.stopArmMotor(), m_robotMap.m_robotIntake));
+            .onFalse(new InstantCommand(() -> m_robotMap.m_robotIntake.stopIntakeMotors(), m_robotMap.m_robotIntake));
 
         // Shoot
         new Trigger(() -> !lt_down() && rt_down())

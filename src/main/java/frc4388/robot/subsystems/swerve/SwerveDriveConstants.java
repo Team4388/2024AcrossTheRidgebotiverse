@@ -82,7 +82,7 @@ public final class SwerveDriveConstants {
 
     private static final class ModuleSpecificConstants { //2025
         //Front Left
-        private static final Angle FRONT_LEFT_ENCODER_OFFSET = Rotations.of(0);
+        private static final Angle FRONT_LEFT_ENCODER_OFFSET = Rotations.of(-0.364746-0.25);
         private static final boolean FRONT_LEFT_DRIVE_MOTOR_INVERTED = false;
         private static final boolean FRONT_LEFT_STEER_MOTOR_INVERTED = true;
         private static final boolean FRONT_LEFT_ENCODER_INVERTED = false;
@@ -90,7 +90,7 @@ public final class SwerveDriveConstants {
         private static final Distance FRONT_LEFT_YPOS = Inches.of(HALF_HEIGHT);
         
         //Front Right
-        private static final Angle FRONT_RIGHT_ENCODER_OFFSET = Rotations.of(0);
+        private static final Angle FRONT_RIGHT_ENCODER_OFFSET = Rotations.of(-0.106446-0.25);
         private static final boolean FRONT_RIGHT_DRIVE_MOTOR_INVERTED = true;
         private static final boolean FRONT_RIGHT_STEER_MOTOR_INVERTED = true;
         private static final boolean FRONT_RIGHT_ENCODER_INVERTED = false;
@@ -98,7 +98,7 @@ public final class SwerveDriveConstants {
         private static final Distance FRONT_RIGHT_YPOS = Inches.of(-HALF_HEIGHT);
 
         //Back Left
-        private static final Angle BACK_LEFT_ENCODER_OFFSET = Rotations.of(0);
+        private static final Angle BACK_LEFT_ENCODER_OFFSET = Rotations.of(-0.019287);
         private static final boolean BACK_LEFT_DRIVE_MOTOR_INVERTED = false;
         private static final boolean BACK_LEFT_STEER_MOTOR_INVERTED = true;
         private static final boolean BACK_LEFT_ENCODER_INVERTED = false;
@@ -106,7 +106,7 @@ public final class SwerveDriveConstants {
         private static final Distance BACK_LEFT_YPOS = Inches.of(HALF_HEIGHT);
         
         //Back Right
-        private static final Angle BACK_RIGHT_ENCODER_OFFSET = Rotations.of(0);
+        private static final Angle BACK_RIGHT_ENCODER_OFFSET = Rotations.of(-0.603516-0.25);
         private static final boolean BACK_RIGHT_DRIVE_MOTOR_INVERTED = false;
         private static final boolean BACK_RIGHT_STEER_MOTOR_INVERTED = true;
         private static final boolean BACK_RIGHT_ENCODER_INVERTED = false;
@@ -212,7 +212,7 @@ public final class SwerveDriveConstants {
     }
 
     public static final SwerveDrivetrainConstants DrivetrainConstants = new SwerveDrivetrainConstants()
-        .withPigeon2Id(IDs.DRIVE_PIGEON.id).withCANBusName(Constants.CANIVORE_CANBUS.getName());
+        .withPigeon2Id(IDs.DRIVE_PIGEON.id).withCANBusName(Constants.RIO_CANBUS.getName());
 
     private static final SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> ConstantCreator =
         new SwerveModuleConstantsFactory<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration>() // holy verbosity batman.

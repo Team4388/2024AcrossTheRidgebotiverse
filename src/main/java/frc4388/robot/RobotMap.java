@@ -73,7 +73,7 @@ public class RobotMap {
 
     public final Intake m_robotIntake;
     public final Shooter m_robotShooter;
-    public final Climber m_robotClimber;
+    // public final Climber m_robotClimber;
 
 
     public RobotMap(SimConstants.Mode mode) {
@@ -87,17 +87,17 @@ public class RobotMap {
         final TalonFX pivotMotor = new TalonFX(IntakeConstants.PIVOT_MOTOR_ID.id);
 
         /* Climber Subsystem */
-        final TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_MOTOR_ID.id);
+        // final TalonFX climbMotor = new TalonFX(ClimbConstants.CLIMB_MOTOR_ID.id);
 
         m_robotIntake = new Intake(intakeMotor, pivotMotor);
         m_robotShooter = new Shooter(leftShooter, rightShooter);
-        m_robotClimber = new Climber(climbMotor);
+        // m_robotClimber = new Climber(climbMotor);
 
         FaultTalonFX.addDevice(leftShooter, "Left Shooter");
         FaultTalonFX.addDevice(rightShooter, "Right Shooter");
         FaultTalonFX.addDevice(intakeMotor, "Intake Motor");
         FaultTalonFX.addDevice(pivotMotor, "Pivot Motor");
-        FaultTalonFX.addDevice(climbMotor, "Climb Motor");
+        // FaultTalonFX.addDevice(climbMotor, "Climb Motor");
 
 
         switch (mode) {

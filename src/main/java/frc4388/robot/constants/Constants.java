@@ -32,7 +32,7 @@ import frc4388.utility.structs.LEDPatterns;
  */
 public final class Constants {
     public static final CANBus RIO_CANBUS = CANBus.roboRIO();
-    public static final CANBus CANIVORE_CANBUS = new CANBus("drivetrain");
+    // public static final CANBus CANIVORE_CANBUS = new CANBus("drivetrain");
 
     // public static final class LiDARConstants {
     //     public static final int REEF_LIDAR_DIO_CHANNEL = 7;

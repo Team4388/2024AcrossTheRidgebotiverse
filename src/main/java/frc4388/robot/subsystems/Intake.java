@@ -33,7 +33,9 @@ public class Intake extends SubsystemBase {
 
     // in init function, set slot 0 gains
     var slot0Configs = new Slot0Configs();
-    slot0Configs.kP = 1.3; // An error of 0.5 rotations results in 12 V output
+    // slot0Configs.kP = 1.3; // An error of 0.5 rotations results in 12 V output
+    slot0Configs.kP = 0.5; // An error of 0.5 rotations results in 12 V output
+
     slot0Configs.kI = 0.0; // no output for integrated error
     slot0Configs.kD = 0.21; // A velocity of 1 rps results in 0.1 V output
 
