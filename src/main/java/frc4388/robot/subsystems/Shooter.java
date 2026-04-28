@@ -8,10 +8,8 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.Constants.IntakeConstants;
-import frc4388.robot.Constants.ShooterConstants;
-
-import frc4388.robot.subsystems.Limelight;
+import frc4388.robot.constants.IntakeConstants;
+import frc4388.robot.constants.ShooterConstants;
 
 // import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -24,7 +22,7 @@ public class Shooter extends SubsystemBase {
   private TalonFX leftShooter;
   private TalonFX rightShooter;
 
-  private Limelight limelight;
+//   private Limelight limelight;
 
   private int spinMode = 0;
   // 0 = Stop / Coast
@@ -36,11 +34,11 @@ public class Shooter extends SubsystemBase {
   private double smartDashboardShooterSpeed;
 
   /** Creates a new Shooter. */
-  public Shooter(TalonFX leftTalonFX, TalonFX rightTalonFX, Limelight tmplimelight) {
+  public Shooter(TalonFX leftTalonFX, TalonFX rightTalonFX) {
     leftShooter  = leftTalonFX;
     rightShooter = rightTalonFX;
 
-    limelight = tmplimelight;
+    // limelight = tmplimelight;
 
     leftShooter.setNeutralMode(NeutralModeValue.Coast);
     rightShooter.setNeutralMode(NeutralModeValue.Coast);
@@ -85,7 +83,7 @@ public class Shooter extends SubsystemBase {
     spinMode = 0;
   }
 
-  public void idle() {
+  public void to_idle() {
     spin(ShooterConstants.SHOOTER_IDLE);
     spinMode = 1;
   }

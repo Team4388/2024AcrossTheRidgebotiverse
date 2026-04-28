@@ -1,0 +1,131 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.8969642857142865,
+        "y": 0.6757407407407425
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 5.1494880952380955,
+        "y": 0.6013571428571436
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.237607142857144,
+        "y": 1.4759642857142854
+      },
+      "prevControl": {
+        "x": 7.558649163266191,
+        "y": 0.2980245529994656
+      },
+      "nextControl": {
+        "x": 8.584042208300819,
+        "y": 2.0770024068622486
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.237607142857144,
+        "y": 3.8190476190476197
+      },
+      "prevControl": {
+        "x": 8.310074297364315,
+        "y": 3.5787466468913385
+      },
+      "nextControl": {
+        "x": 8.165425863946698,
+        "y": 4.058400628167732
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 8.237607142857144,
+        "y": 1.0872500000000003
+      },
+      "prevControl": {
+        "x": 9.520930827264253,
+        "y": 2.0312275985936155
+      },
+      "nextControl": {
+        "x": 7.304441714310592,
+        "y": 0.40083918172158384
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.4434642857142865,
+        "y": 0.6757407407407425
+      },
+      "prevControl": {
+        "x": 4.9917133086412,
+        "y": 0.5083004760390194
+      },
+      "nextControl": {
+        "x": 2.6336428571428576,
+        "y": 0.7633214285714289
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.61204761904762,
+        "y": 1.918666666666668
+      },
+      "prevControl": {
+        "x": 2.502511133859423,
+        "y": 1.6751404175218187
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "end of RIght trench first swipe"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.9709543568464838,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 3.4315352697095514,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 3.991228070175485,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 600.0,
+    "maxAngularAcceleration": 750.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -133.33166255170664
+  },
+  "reversed": false,
+  "folder": null,
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": false
+}

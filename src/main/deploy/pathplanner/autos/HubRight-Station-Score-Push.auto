@@ -1,0 +1,80 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "HubRight-PlayerStation"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Intake Extended"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Rev Up"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PlayerStation-Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Robot Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake Extended"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ReadyPush"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HubFarRight-NeutralZone 1-2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HubFarRight-NeutralZone 2-2"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Pikes Peak Autos",
+  "choreoAuto": false
+}

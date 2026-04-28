@@ -5,6 +5,7 @@
 package frc4388.robot.subsystems;
 
 import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.NeutralModeValue;
@@ -12,7 +13,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc4388.robot.Constants.ClimbConstants;
+import frc4388.robot.constants.ClimbConstants;
 
 public class Climber extends SubsystemBase {
   /** Creates a new Climber. */
@@ -20,9 +21,10 @@ public class Climber extends SubsystemBase {
 
   public Climber(TalonFX climbMotor) {
     this.climbMotor = climbMotor;
-    this.climbMotor.setInverted(true);
+    climbMotor.getConfigurator().apply(ClimbConstants.CLIMB_MOTOR_CONFIG);
+    // this.climbMotor.(true);
 
-    climbMotor.setNeutralMode(NeutralModeValue.Brake);
+    // climbMotor.setNeutralMode(NeutralModeValue.Brake);
     
     var slot0Configs = new Slot0Configs();
     slot0Configs.kP = 0.7; // An error of 0.5 rotations results in 12 V output
