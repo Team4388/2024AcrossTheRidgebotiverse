@@ -1,0 +1,27 @@
+{
+  "version": 1.0,
+  "grid_size": 128,
+  "tabs": [
+    {
+      "name": "Teleoperated",
+      "grid_layout": {
+        "layouts": [],
+        "containers": [
+          {
+            "title": "Controller Binds",
+            "x": 128.0,
+            "y": 0.0,
+            "width": 512.0,
+            "height": 512.0,
+            "type": "Large Text Display",
+            "properties": {
+              "topic": "/SmartDashboard/Controller Binds",
+              "period": 0.06,
+              "data_type": "string"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}
