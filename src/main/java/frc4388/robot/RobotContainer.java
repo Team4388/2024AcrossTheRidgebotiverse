@@ -137,22 +137,13 @@ public class RobotContainer {
         
     
 
-   private boolean lt_down() {
-        return getDeadbandedOperatorController().getLeftTriggerAxis() > 0.8;
-   }
-
-   private boolean rt_down() {
-        return getDeadbandedOperatorController().getRightTriggerAxis() > 0.8;
-   }
-
    private void configureButtonBindings() {
 
         String controllerInstructions = "" +
             "Driver Controller:\n" +
-            "- Back: Reset Gyro\n" +
+            "- A: Reset Gyro\n" +
             "- Right Bumper: Shift Up\n" +
             "- Left Bumper: Shift Down\n" +
-            //"- Back: Fix Intake Encoder + Update Shooter Gains\n" +
             "- X (hold): Defense X-Lock Wheels\n" +
             "- B (hold): Hold Current Position (PID Lock)\n" +
             "- Left Trigger (hold): Slow Mode + Rotation Boost\n" +
@@ -163,14 +154,14 @@ public class RobotContainer {
             "- X (hold): Arm Down + Spin Intake\n" +
             "- Y (hold): Arm Up + Stop Intake\n" +
             "- A (press): Handoff / Spit Out\n" +
-            "- Right Trigger (hold): Shoot\n"
-            //"- Left Trigger (hold): Switch to Override Mode (not yet implemented)"
+            "- Left Trigger (hold): Idle Intake + Rev Shooter (Spin Up)\n" +
+            "- Right Trigger (hold): Allow Shooting (Fire)\n"
             ;
 
         SmartDashboard.putString("Controller Binds", controllerInstructions);
 
         // Driver controls
-        new JoystickButton(getDeadbandedDriverController(), XboxController.BACK_BUTTON)
+        new JoystickButton(getDeadbandedDriverController(), XboxController.A_BUTTON)
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.resetGyro()));
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.RIGHT_BUMPER_BUTTON) // final
@@ -239,19 +230,18 @@ public class RobotContainer {
         
 
         
-        // Operator controls (Non-override, LT UP)
+        // Operator controls
 
-
-        // Arm down
-        new Trigger(() -> !lt_down() && getDeadbandedOperatorController().getXButton())
+        // Arm down + spin intake
+        new Trigger(() -> getDeadbandedOperatorController().getXButton())
             .onTrue(new InstantCommand(() -> {
                 m_robotMap.m_robotIntake.PIDOut();
                 m_robotMap.m_robotIntake.spinIntakeMotor();
             }, m_robotMap.m_robotIntake))
             .onFalse(new InstantCommand(() -> m_robotMap.m_robotIntake.stopArmMotor(), m_robotMap.m_robotIntake));
         
-        // Arm up
-        new Trigger(() -> !lt_down() && getDeadbandedOperatorController().getYButton())
+        // Arm up + stop intake
+        new Trigger(() -> getDeadbandedOperatorController().getYButton())
             .onTrue(new InstantCommand(() -> {
                 m_robotMap.m_robotIntake.PIDIn();
                 m_robotMap.m_robotIntake.stopIntakeMotors();
@@ -259,16 +249,23 @@ public class RobotContainer {
             .onFalse(new InstantCommand(() -> m_robotMap.m_robotIntake.stopArmMotor(), m_robotMap.m_robotIntake));
         
         // Handoff / spit out
-        new Trigger(() -> !lt_down() && getDeadbandedOperatorController().getAButton())
+        new Trigger(() -> getDeadbandedOperatorController().getAButton())
             .onTrue(new InstantCommand(() -> {
-                // m_robotMap.m_robotIntake.PIDIn();
                 m_robotMap.m_robotIntake.handoff();
             }, m_robotMap.m_robotIntake))
             .onFalse(new InstantCommand(() -> m_robotMap.m_robotIntake.stopIntakeMotors(), m_robotMap.m_robotIntake));
 
-        // Shoot
-        new Trigger(() -> !lt_down() && rt_down())
-            .onTrue(new InstantCommand(() -> m_robotMap.m_robotShooter.spin(0.5), m_robotMap.m_robotShooter))
+        // Left trigger: idle intake + rev shooter (spin up)
+        new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
+            .onTrue(new InstantCommand(() -> {
+                m_robotMap.m_robotIntake.stopIntakeMotors();
+                m_robotMap.m_robotShooter.spin(0.5);
+            }, m_robotMap.m_robotIntake, m_robotMap.m_robotShooter))
+            .onFalse(new InstantCommand(() -> m_robotMap.m_robotShooter.stop(), m_robotMap.m_robotShooter));
+
+        // Right trigger: allow shooting (fire)
+        new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)
+            .onTrue(new InstantCommand(() -> m_robotMap.m_robotShooter.spin(1.0), m_robotMap.m_robotShooter))
             .onFalse(new InstantCommand(() -> m_robotMap.m_robotShooter.stop(), m_robotMap.m_robotShooter));
         
     }
