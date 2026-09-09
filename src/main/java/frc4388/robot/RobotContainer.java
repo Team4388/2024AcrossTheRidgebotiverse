@@ -79,6 +79,8 @@ public class RobotContainer {
 
     // public List<Subsystem> subsystems = new ArrayList<>();
     private final StayInPosition m_stayInPosition = new StayInPosition(m_robotSwerveDrive);
+
+    private static final double AIM_LEAD_TIME = 0.0;
     
     private Pose2d currentPose = new Pose2d(0, 0, new Rotation2d());
         // ! Teleop Commands
@@ -98,7 +100,7 @@ public class RobotContainer {
         
         public RobotContainer() {
             
-            configureSINGLEBindings();
+            configureButtonBindings();
             
             // Called on first robot enable
             DeferredBlock.addBlock(() -> {
@@ -136,35 +138,34 @@ public class RobotContainer {
     
 
    private boolean lt_down() {
-        return getDeadbandedDriverController().getLeftTriggerAxis() > 0.8;
+        return getDeadbandedOperatorController().getLeftTriggerAxis() > 0.8;
    }
 
    private boolean rt_down() {
-        return getDeadbandedDriverController().getRightTriggerAxis() > 0.8;
+        return getDeadbandedOperatorController().getRightTriggerAxis() > 0.8;
    }
 
-   private void configureSINGLEBindings() {
+   private void configureButtonBindings() {
 
         String controllerInstructions = "" +
-            "Single Controller:\n" + 
-
-            // Driver controls.
-            "- Sticks: Field oriented controls\n" +
+            "Driver Controller:\n" +
+            "- Back: Reset Gyro\n" +
             "- Right Bumper: Shift Up\n" +
-            "- Left Bumper: Shift Down\n"  +
-            "- BACK (left small btn): Reset Gyro\n" +
-            "- DPAD: Fine Alignment\n" +
+            "- Left Bumper: Shift Down\n" +
+            //"- Back: Fix Intake Encoder + Update Shooter Gains\n" +
+            "- X (hold): Defense X-Lock Wheels\n" +
+            "- B (hold): Hold Current Position (PID Lock)\n" +
+            "- Left Trigger (hold): Slow Mode + Rotation Boost\n" +
+            "- Right Trigger (hold): Slow Mode + Aim/Drive Facing Hub\n" +
+            "- DPAD (hold): Fine Alignment\n" +
 
-            // Operator normal buttons
-            "- X (press): Roller Down\n" +
-            "- X (hold): Roller Spin\n" + 
-            "- B (hold): Roller Expel + Arm Stop\n" + 
-            "- Y : Roller Off + Arm Up \n" +
-            
-            // Operator override buttons
-            "- LT (hold): Switch over to OP override mode\n" +
-            "- LS Left+Right Override: Manually move intake\n" +
-            "- RS Up+Down Override: Manually move climber";
+            "Operator Controller:\n" +
+            "- X (hold): Arm Down + Spin Intake\n" +
+            "- Y (hold): Arm Up + Stop Intake\n" +
+            "- A (press): Handoff / Spit Out\n" +
+            "- Right Trigger (hold): Shoot\n"
+            //"- Left Trigger (hold): Switch to Override Mode (not yet implemented)"
+            ;
 
         SmartDashboard.putString("Controller Binds", controllerInstructions);
 
@@ -177,6 +178,51 @@ public class RobotContainer {
 
         new JoystickButton(getDeadbandedDriverController(), XboxController.LEFT_BUMPER_BUTTON) // final
             .onTrue(new InstantCommand(() -> m_robotSwerveDrive.shiftDown()));
+
+        // X-lock wheels
+        new JoystickButton(getDeadbandedDriverController(), XboxController.X_BUTTON)
+            .whileTrue(new RunCommand(() -> {
+                m_robotSwerveDrive.defenseXPosition();
+            }, m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> {
+                m_robotSwerveDrive.stopDefenseXPosition();
+            }));
+
+        // Hold current position (PID lock)
+        new JoystickButton(getDeadbandedDriverController(), XboxController.B_BUTTON)
+            .onTrue(new InstantCommand(() -> {
+                currentPose = m_robotSwerveDrive.getCurrentPose();
+            }))
+            .whileTrue(new RunCommand(() -> {
+                m_stayInPosition.goToTargetPose(currentPose);
+            }, m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> {
+                m_robotSwerveDrive.softStop();
+            }));
+
+        // Left trigger: slow mode + rotation boost
+        new Trigger(() -> getDeadbandedDriverController().getLeftTriggerAxis() >= 0.5)
+            .onTrue(new InstantCommand(() -> {
+                m_robotSwerveDrive.setPercentOutput(0.10);
+                m_robotSwerveDrive.shiftUpRot();
+            }))
+            .onFalse(new InstantCommand(() -> {
+                m_robotSwerveDrive.setToFast();
+            }));
+
+        // Right trigger: slow mode + aim/drive facing hub
+        new Trigger(() -> getDeadbandedDriverController().getRightTriggerAxis() >= 0.5)
+            .onTrue(new InstantCommand(() -> {
+                m_robotSwerveDrive.setToSlow();
+            }))
+            .whileTrue(new RunCommand(() -> {
+                m_robotSwerveDrive.driveFacingPosition(
+                    getDeadbandedDriverController().getLeft(),
+                    FieldPositions.HUB_POSITION,
+                    AIM_LEAD_TIME
+                );
+            }, m_robotSwerveDrive))
+            .onFalse(new InstantCommand(() -> m_robotSwerveDrive.softStop(), m_robotSwerveDrive));
 
         // Fine Alignment
         new Trigger(() -> getDeadbandedDriverController().getPOV() != -1)
@@ -197,7 +243,7 @@ public class RobotContainer {
 
 
         // Arm down
-        new Trigger(() -> !lt_down() && getDeadbandedDriverController().getXButton())
+        new Trigger(() -> !lt_down() && getDeadbandedOperatorController().getXButton())
             .onTrue(new InstantCommand(() -> {
                 m_robotMap.m_robotIntake.PIDOut();
                 m_robotMap.m_robotIntake.spinIntakeMotor();
@@ -205,7 +251,7 @@ public class RobotContainer {
             .onFalse(new InstantCommand(() -> m_robotMap.m_robotIntake.stopArmMotor(), m_robotMap.m_robotIntake));
         
         // Arm up
-        new Trigger(() -> !lt_down() && getDeadbandedDriverController().getYButton())
+        new Trigger(() -> !lt_down() && getDeadbandedOperatorController().getYButton())
             .onTrue(new InstantCommand(() -> {
                 m_robotMap.m_robotIntake.PIDIn();
                 m_robotMap.m_robotIntake.stopIntakeMotors();
@@ -213,7 +259,7 @@ public class RobotContainer {
             .onFalse(new InstantCommand(() -> m_robotMap.m_robotIntake.stopArmMotor(), m_robotMap.m_robotIntake));
         
         // Handoff / spit out
-        new Trigger(() -> !lt_down() && getDeadbandedDriverController().getAButton())
+        new Trigger(() -> !lt_down() && getDeadbandedOperatorController().getAButton())
             .onTrue(new InstantCommand(() -> {
                 // m_robotMap.m_robotIntake.PIDIn();
                 m_robotMap.m_robotIntake.handoff();
@@ -224,12 +270,7 @@ public class RobotContainer {
         new Trigger(() -> !lt_down() && rt_down())
             .onTrue(new InstantCommand(() -> m_robotMap.m_robotShooter.spin(0.5), m_robotMap.m_robotShooter))
             .onFalse(new InstantCommand(() -> m_robotMap.m_robotShooter.stop(), m_robotMap.m_robotShooter));
-            
-
-
-        // OP Override
         
-
     }
 
 //.onTrue(new InstantCommand(()  -> m_robotLED.setMode(LEDPatterns.SOLID_PINK_HOT)));
