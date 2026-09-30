@@ -11,7 +11,7 @@ public class ShooterConstants {
     public static final CanDevice RIGHT_SHOOTER_ID = new CanDevice("Right Shooter Motor", 46);
 
 
-    public static final ConfigurableDouble SHOOTER_SPEED = new ConfigurableDouble("Shooter % Output", 0.4;
+    public static final ConfigurableDouble SHOOTER_SPEED = new ConfigurableDouble("Shooter % Output", 0.4);
     public static final double SHOOTER_IDLE = 0.20; // final
     public static final double SHOOTER_IDLE_LIMELIGHT = 0.20;
 }
