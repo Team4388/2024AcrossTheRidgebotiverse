@@ -1,5 +1,6 @@
 package frc4388.robot.constants;
 
+import frc4388.utility.configurable.ConfigurableDouble;
 import frc4388.utility.status.CanDevice;
 
 public class ShooterConstants {
@@ -10,8 +11,7 @@ public class ShooterConstants {
     public static final CanDevice RIGHT_SHOOTER_ID = new CanDevice("Right Shooter Motor", 46);
 
 
-    
-    public static final double SHOOTER_SPEED = 0.50; // final
+    public static final ConfigurableDouble SHOOTER_SPEED = new ConfigurableDouble("Shooter % Output", 0.4;
     public static final double SHOOTER_IDLE = 0.20; // final
     public static final double SHOOTER_IDLE_LIMELIGHT = 0.20;
 }

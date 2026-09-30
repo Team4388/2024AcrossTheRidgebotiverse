@@ -42,7 +42,7 @@ public class Shooter extends SubsystemBase {
 
     leftShooter.setNeutralMode(NeutralModeValue.Coast);
     rightShooter.setNeutralMode(NeutralModeValue.Coast);
-    SmartDashboard.putNumber("Shooter Speed", ShooterConstants.SHOOTER_SPEED);
+    // SmartDashboard.putNumber("Shooter Speed", ShooterConstants.SHOOTER_SPEED);
 
   }
 
@@ -52,17 +52,12 @@ public class Shooter extends SubsystemBase {
   }
 
   public void singleSpin() {
-    leftShooter.set(1.0);
-    spinMode = 4;
-  }
-
-  public void singleSpin(double speed) {
-    leftShooter.set(speed);
+    leftShooter.set(ShooterConstants.SHOOTER_SPEED.get());
     spinMode = 4;
   }
 
   public void spin() {
-    spin(smartDashboardShooterSpeed);
+    spin(ShooterConstants.SHOOTER_SPEED.get());
     spinMode = 3;
   }
 

@@ -33,6 +33,7 @@ import frc4388.robot.commands.Swerve.StayInPosition;
 import frc4388.robot.constants.Constants;
 import frc4388.robot.constants.Constants.OIConstants;
 import frc4388.robot.constants.Constants.SimConstants.Mode;
+import frc4388.robot.constants.ShooterConstants;
 import frc4388.robot.subsystems.swerve.SimpleSwerveSim;
 import frc4388.robot.subsystems.swerve.SwerveDrive;
 import frc4388.robot.subsystems.vision.Vision;
@@ -259,13 +260,13 @@ public class RobotContainer {
         new Trigger(() -> getDeadbandedOperatorController().getLeftTriggerAxis() >= 0.5)
             .onTrue(new InstantCommand(() -> {
                 m_robotMap.m_robotIntake.stopIntakeMotors();
-                m_robotMap.m_robotShooter.spin(0.5);
+                m_robotMap.m_robotShooter.spin();
             }, m_robotMap.m_robotIntake, m_robotMap.m_robotShooter))
             .onFalse(new InstantCommand(() -> m_robotMap.m_robotShooter.stop(), m_robotMap.m_robotShooter));
 
         // Right trigger: allow shooting (fire)
         new Trigger(() -> getDeadbandedOperatorController().getRightTriggerAxis() >= 0.5)
-            .onTrue(new InstantCommand(() -> m_robotMap.m_robotShooter.spin(1.0), m_robotMap.m_robotShooter))
+            .onTrue(new InstantCommand(() -> m_robotMap.m_robotShooter.spin(ShooterConstants.SHOOTER_SPEED.get()), m_robotMap.m_robotShooter))
             .onFalse(new InstantCommand(() -> m_robotMap.m_robotShooter.stop(), m_robotMap.m_robotShooter));
         
     }
